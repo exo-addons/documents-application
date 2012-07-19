@@ -1,0 +1,11 @@
+<div class="container">
+<% if (files!=null) { %>
+  <ul>
+  <%
+     files.each { file -> %>
+       <li>${file.name}
+
+  <% } %>
+  </ul>
+<% } %>
+</div>
