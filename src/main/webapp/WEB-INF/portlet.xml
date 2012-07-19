@@ -5,8 +5,8 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd
    http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
   <portlet>
-    <portlet-name>ListDocumentsApplication</portlet-name>
-    <display-name xml:lang="EN">List Documents</display-name>
+    <portlet-name>DocumentsListApplication</portlet-name>
+    <display-name xml:lang="EN">Documents List</display-name>
     <portlet-class>documents.portlet.list.ListPortlet</portlet-class>
     <init-param>
       <name>juzu.run_mode</name>
@@ -16,8 +16,8 @@
       <mime-type>text/html</mime-type>
     </supports>
     <portlet-info>
-      <title>List Documents</title>
-      <short-title>List Documents</short-title>
+      <title>Documents List</title>
+      <short-title>Documents List</short-title>
       <keywords>Content</keywords>
     </portlet-info>
   </portlet>

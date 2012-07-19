@@ -4,14 +4,11 @@
 
 @Assets(
         scripts = {
-                @Script(src = "js/jquery-1.7.1.min.js"),
-                @Script(src = "js/bootstrap-datepicker.js"),
-                @Script(src = "js/jquery.ba-dotimeout.min.js")
+                @Script(src = "js/jquery-1.7.1.min.js")
         },
         stylesheets = {
                 @Stylesheet(src = "css/bootstrap.css"),
                 @Stylesheet(src = "css/bootstrap-responsive.css"),
-                @Stylesheet(src = "css/datepicker.css"),
                 @Stylesheet(src = "css/main.css")
         }
 )
