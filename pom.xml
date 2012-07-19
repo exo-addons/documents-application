@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.juzu</groupId>
-  <artifactId>listdocuments</artifactId>
+  <artifactId>documents</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>List Documents Application</name>
+  <name>Simple Documents Application</name>
 
   <properties>
     <maven.compiler.target>1.5</maven.compiler.target>
@@ -101,7 +101,7 @@
   </dependencies>
 
   <build>
-    <finalName>listdocuments</finalName>
+    <finalName>documents</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -155,12 +155,12 @@
                   <artifactItems>
                     <artifactItem>
                       <groupId>org.gatein.portal</groupId>
-                      <artifactId>listdocuments</artifactId>
+                      <artifactId>documents</artifactId>
                       <version>1.0-SNAPSHOT</version>
                       <type>war</type>
                       <overWrite>false</overWrite>
-                      <outputDirectory>/Users/benjamin/java/demos/eXo-Platform-tomcat-3.5.3-SS/tomcat-bundle/webapps</outputDirectory>
-                      <destFileName>listdocuments.war</destFileName>
+                      <outputDirectory>/Users/benjamin/java/demos/eXo-Platform-tomcat-3.5.3-MOD/tomcat-bundle/webapps</outputDirectory>
+                      <destFileName>documents.war</destFileName>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
