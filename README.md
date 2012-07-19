@@ -1,0 +1,4 @@
+documents
+=========
+
+Simple Documents application
