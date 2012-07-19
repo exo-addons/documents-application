@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.juzu</groupId>
+  <artifactId>listdocuments</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>List Documents Application</name>
+
+  <properties>
+    <maven.compiler.target>1.5</maven.compiler.target>
+    <maven.compiler.source>1.5</maven.compiler.source>
+  </properties>
+
+  <dependencies>
+
+    <!-- Application dependencies-->
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-builder</artifactId>
+      <version>0.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-portlet</artifactId>
+      <version>0.5.0</version>
+    </dependency>
+
+
+    <!-- -->
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
+      <version>2.3.4-GA</version>
+      <scope>provided</scope>
+    </dependency>
+      <dependency>
+          <groupId>org.exoplatform.core</groupId>
+          <artifactId>exo.core.component.organization.api</artifactId>
+          <version>2.3.4-GA</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.exoplatform.portal</groupId>
+          <artifactId>exo.portal.component.portal</artifactId>
+          <version>3.2.3-PLF</version>
+          <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.exoplatform.portal</groupId>
+          <artifactId>exo.portal.webui.portal</artifactId>
+          <version>3.2.3-PLF</version>
+          <scope>provided</scope>
+      </dependency>
+
+    <dependency>
+      <groupId>org.chromattic</groupId>
+      <artifactId>chromattic.api</artifactId>
+      <version>1.1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.chromattic</groupId>
+      <artifactId>chromattic.core</artifactId>
+      <version>1.1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.chromattic</groupId>
+      <artifactId>chromattic.metamodel</artifactId>
+      <version>1.1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.chromattic</groupId>
+      <artifactId>chromattic.apt</artifactId>
+      <version>1.1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.chromattic</groupId>
+      <artifactId>chromattic.spi</artifactId>
+      <version>1.1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>3.8</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>listdocuments</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.3</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.juzu</groupId>
+            <artifactId>juzu-builder</artifactId>
+            <version>0.5.0</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <appendAssemblyId>false</appendAssemblyId>
+          <attach>true</attach>
+        </configuration>
+        <executions>
+          <execution>
+            <id>gatein</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <descriptorRefs>
+                <descriptorRef>gatein</descriptorRef>
+              </descriptorRefs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>deploy</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.4</version>
+            <executions>
+              <execution>
+                <id>copy</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.gatein.portal</groupId>
+                      <artifactId>listdocuments</artifactId>
+                      <version>1.0-SNAPSHOT</version>
+                      <type>war</type>
+                      <overWrite>false</overWrite>
+                      <outputDirectory>/Users/benjamin/java/demos/eXo-Platform-tomcat-3.5.3-SS/tomcat-bundle/webapps</outputDirectory>
+                      <destFileName>listdocuments.war</destFileName>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

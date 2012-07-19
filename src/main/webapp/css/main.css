@@ -1,0 +1,54 @@
+.container {
+  width: 100% !important;
+  background-color: white;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.row-fluid {
+  padding: 0px 0px 10px 0px;
+}
+
+#tt-error-panel {
+  color:#B94A48;
+  background-color:#F2DEDE;
+  border:1px solid #FBEED5;
+  padding: 5px 0px 5px 5px;
+  width: 100%;
+  text-align: center;
+}
+
+#tt-success-panel {
+  color:#468847;
+  background-color:#DFF0D8;
+  border:1px solid #FBEED5;
+  padding: 5px 0px 5px 5px;
+  width: 100%;
+  text-align: center;
+}
+
+td.sep, th.sep {
+  width: 2px;
+  min-width: 2px;
+  border-left: 1px solid #DDD;
+  border-right: 1px solid #DDD;
+  padding: 0px !important;
+}
+
+table.table {
+  border-bottom: 1px solid #DDD;
+}
+
+.table .top-align th {
+  vertical-align: top !important;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+input, select {
+  margin-bottom: 0px !important;
+}

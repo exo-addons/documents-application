@@ -1,4 +1,4 @@
-documents
-=========
+list-documents
+============
 
-Simple Documents application
+List Documents Application
