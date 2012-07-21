@@ -24,7 +24,7 @@ public class DocumentsApplication extends juzu.Controller
   @View
   public void index() throws IOException
   {
-    System.out.println("Documents List : INDEX");
+    System.out.println("Documents List : INDEX LOADED");
     indexTemplate.with().set("files", documentsData.getNodes()).render();
   }
 
