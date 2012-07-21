@@ -58,7 +58,7 @@ public class DocumentsData {
   }
 
 
-  public String getUserPrivatePath()
+  private String getUserPrivatePath()
   {
     String userName = Util.getPortalRequestContext().getRemoteUser();
 

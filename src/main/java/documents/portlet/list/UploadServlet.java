@@ -7,31 +7,21 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 
-//@WebServlet(urlPatterns={"/uploadServlet"})
 public class UploadServlet extends HttpServlet
 {
-
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-    System.out.println("UPLOAD GET");
-  }
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -71,8 +61,7 @@ public class UploadServlet extends HttpServlet
       //get info
       Session session = sessionProvider.getSession("collaboration", repositoryService.getCurrentRepository());
 
-      Node userNode =
-              nodeHierarchyCreator.getUserNode(sessionProvider, userName);
+      Node userNode = nodeHierarchyCreator.getUserNode(sessionProvider, userName);
       Node homeNode = userNode.getNode("Private");
 
       Node docNode = homeNode.getNode("Documents");
@@ -101,7 +90,6 @@ public class UploadServlet extends HttpServlet
     catch (Exception e)
     {
       System.out.println("JCR::" + e.getMessage());
-      e.printStackTrace();
     }
     finally
     {
