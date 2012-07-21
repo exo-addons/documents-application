@@ -14,10 +14,3 @@
 		</div>
 
 </div>
-
-
-<script>
-
-var jzDocumentsUploadFiles = "/documents/uploadServlet";
-
-</script>

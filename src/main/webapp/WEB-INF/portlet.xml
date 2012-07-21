@@ -22,7 +22,7 @@
     </portlet-info>
   </portlet>
 
-  <portlet>
+  <!--portlet>
     <portlet-name>DocumentsJCRApplication</portlet-name>
     <display-name xml:lang="EN">Documents JCR</display-name>
     <portlet-class>documents.portlet.jcr.JcrPortlet</portlet-class>
@@ -38,6 +38,6 @@
       <short-title>Documents JCR</short-title>
       <keywords>Content</keywords>
     </portlet-info>
-  </portlet>
+  </portlet-->
 
 </portlet-app>
