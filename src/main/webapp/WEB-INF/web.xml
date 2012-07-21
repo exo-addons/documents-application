@@ -1,3 +1,15 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<web-app>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+  <display-name>Documents</display-name>
+  <servlet>
+    <servlet-name>UploadServlet</servlet-name>
+    <servlet-class>documents.portlet.list.UploadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UploadServlet</servlet-name>
+    <url-pattern>/uploadServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

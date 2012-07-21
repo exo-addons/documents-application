@@ -1,10 +1,14 @@
+@Application
+@Portlet
 @Bindings(
         @Binding(value = org.exoplatform.services.jcr.RepositoryService.class, implementation=GateInMetaProvider.class)
 )
 
 @Assets(
         scripts = {
-                @Script(src = "js/jquery-1.7.1.min.js")
+                @Script(src = "js/jquery-1.7.1.min.js"),
+                @Script(src = "js/jquery.filedrop.js"),
+                @Script(src = "js/main.js")
         },
         stylesheets = {
                 @Stylesheet(src = "css/bootstrap.css"),
@@ -13,8 +17,7 @@
         }
 )
 
-@Application
-@Portlet package documents.portlet.list;
+package documents.portlet.list;
 
 import juzu.Application;
 import juzu.plugin.asset.Assets;

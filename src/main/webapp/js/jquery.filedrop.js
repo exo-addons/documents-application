@@ -207,7 +207,7 @@
 			upload.currentProgress = 0;
 			upload.startData = 0;
 			upload.addEventListener("progress", progress, false);
-			
+      console.log("POST:"+opts.url);
 			xhr.open("POST", opts.url, true);
 			xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' 
 			    + boundary);

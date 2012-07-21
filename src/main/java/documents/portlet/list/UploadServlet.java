@@ -5,17 +5,23 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.Session;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.List;
 
-@WebServlet(urlPatterns={"/uploadServlet"})
+//@WebServlet(urlPatterns={"/uploadServlet"})
 public class UploadServlet extends HttpServlet
 {
 
@@ -33,16 +39,14 @@ public class UploadServlet extends HttpServlet
       List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
       for (FileItem item : items)
       {
-        if (item.getFieldName().equals("file"))
+        if (item.getFieldName().equals("pic"))
         {
-          String filename = FilenameUtils.getName(item.getName());
-          InputStream content = item.getInputStream();
 
-          System.out.println("UPLOAD POST : "+filename);
+          storeFile(item);
 
-          response.setContentType("text/plain");
+          response.setContentType("application/json");
           response.setCharacterEncoding("UTF-8");
-          response.getWriter().write("File " + filename + " successfully uploaded");
+          response.getWriter().write("{\"status\":\"File was uploaded successfuly!\"}");
           return;
         }
       }
@@ -50,6 +54,48 @@ public class UploadServlet extends HttpServlet
     catch (FileUploadException e)
     {
       throw new ServletException("Parsing file upload failed.", e);
+    }
+  }
+
+  private void storeFile(FileItem item)
+  {
+    String filename = FilenameUtils.getName(item.getName());
+    RepositoryService repositoryService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try
+    {
+      //get info
+      Session session = sessionProvider.getSession("collaboration", repositoryService.getCurrentRepository());
+
+
+      Node rootNode = session.getRootNode();
+      Node docNode = rootNode.getNode("Documents");
+      if (!docNode.hasNode(filename))
+      {
+        Node fileNode = docNode.addNode(filename, "nt:file");
+        Node jcrContent = fileNode.addNode("jcr:content", "nt:resource");
+        jcrContent.setProperty("jcr:data", item.getInputStream());
+        jcrContent.setProperty("jcr:lastModified", Calendar.getInstance());
+        jcrContent.setProperty("jcr:encoding", "UTF-8");
+        if (filename.endsWith(".jpg"))
+          jcrContent.setProperty("jcr:mimeType", "image/jpeg");
+        else if (filename.endsWith(".png"))
+          jcrContent.setProperty("jcr:mimeType", "image/png");
+        else if (filename.endsWith(".pdf"))
+          jcrContent.setProperty("jcr:mimeType", "application/pdf");
+        docNode.save();
+        session.save();
+      }
+
+
+    }
+    catch (Exception e)
+    {
+      System.out.println("JCR::\n" + e.getMessage());
+    }
+    finally
+    {
+      sessionProvider.close();
     }
   }
 

@@ -1,3 +1,5 @@
+@Application
+@Portlet
 @Bindings(
         @Binding(value = org.exoplatform.services.jcr.RepositoryService.class, implementation=GateInMetaProvider.class)
 )
@@ -13,8 +15,7 @@
         }
 )
 
-@Application
-@Portlet package documents.portlet.jcr;
+package documents.portlet.jcr;
 
 import juzu.Application;
 import juzu.plugin.asset.Assets;

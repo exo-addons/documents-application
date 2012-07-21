@@ -1,6 +1,4 @@
 $(function(){
-
-  console.log("ACTION::"+jzDocumentsUploadFiles);
 	
 	var dropbox = $('#dropbox'),
 		message = $('.message', dropbox);
@@ -82,7 +80,7 @@ $(function(){
 			// e.target.result holds the DataURL which
 			// can be used as a source of the image:
 			if (file.type == "application/pdf"){
-				image.attr('src','/html5-file-upload/assets/img/pdf-icon.jpg');
+				image.attr('src','/documents/img/pdf-icon.jpg');
 			}
 			else {
 				image.attr('src',e.target.result);
