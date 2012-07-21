@@ -7,7 +7,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -41,8 +43,7 @@ public class UploadServlet extends HttpServlet
       {
         if (item.getFieldName().equals("pic"))
         {
-
-          storeFile(item);
+          storeFile(item, request.getRemoteUser());
 
           response.setContentType("application/json");
           response.setCharacterEncoding("UTF-8");
@@ -57,19 +58,27 @@ public class UploadServlet extends HttpServlet
     }
   }
 
-  private void storeFile(FileItem item)
+  private void storeFile(FileItem item, String userName)
   {
     String filename = FilenameUtils.getName(item.getName());
     RepositoryService repositoryService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
+    NodeHierarchyCreator nodeHierarchyCreator = (NodeHierarchyCreator)PortalContainer.getInstance().getComponentInstanceOfType(NodeHierarchyCreator.class);
+
+
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
     {
       //get info
       Session session = sessionProvider.getSession("collaboration", repositoryService.getCurrentRepository());
 
+      Node userNode =
+              nodeHierarchyCreator.getUserNode(sessionProvider, userName);
+      Node homeNode = userNode.getNode("Private");
 
-      Node rootNode = session.getRootNode();
-      Node docNode = rootNode.getNode("Documents");
+      Node docNode = homeNode.getNode("Documents");
+      if (isImage(filename))
+        docNode = homeNode.getNode("Pictures");
+
       if (!docNode.hasNode(filename))
       {
         Node fileNode = docNode.addNode(filename, "nt:file");
@@ -91,12 +100,20 @@ public class UploadServlet extends HttpServlet
     }
     catch (Exception e)
     {
-      System.out.println("JCR::\n" + e.getMessage());
+      System.out.println("JCR::" + e.getMessage());
+      e.printStackTrace();
     }
     finally
     {
       sessionProvider.close();
     }
+  }
+
+  private boolean isImage(String filename)
+  {
+    if (filename.endsWith(".jpg") || filename.endsWith(".png"))
+      return true;
+    return false;
   }
 
 }

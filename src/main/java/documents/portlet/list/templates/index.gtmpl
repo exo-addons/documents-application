@@ -10,7 +10,7 @@
 <% } %>
 
 		<div id="dropbox">
-			<span class="message">Drop images here to upload. <br /><i>(they will only be visible to you)</i></span>
+			<span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
 		</div>
 
 </div>
