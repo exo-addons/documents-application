@@ -1,21 +1,20 @@
-package documents.portlet.list;
+package documents.portlet.list.controllers;
 
 import documents.ChromatticService;
 import documents.DocumentsService;
-import juzu.*;
+import juzu.Path;
+import juzu.SessionScoped;
+import juzu.View;
 import juzu.template.Template;
-import org.chromattic.ext.ntdef.NTFile;
-import org.chromattic.ext.ntdef.NTHierarchyNode;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Map;
 
 /** @author <a href="mailto:benjamin.paillereau@exoplatform.com">Benjamin Paillereau</a> */
 @SessionScoped
-public class Controller extends juzu.Controller
+public class DocumentsApplication extends juzu.Controller
 {
 
   /** . */
@@ -29,11 +28,14 @@ public class Controller extends juzu.Controller
 
   DocumentsService documentsService_;
 
+  String userPrivatePath;
+
   @Inject
-  public Controller(ChromatticService chromatticService, DocumentsService documentsService)
+  public DocumentsApplication(ChromatticService chromatticService, DocumentsService documentsService, RepositoryService repositoryService, NodeHierarchyCreator nodeHierarchyCreator)
   {
     documentsService_ = documentsService;
     documentsService_.initChromattic(chromatticService.init());
+
   }
 
   @View
