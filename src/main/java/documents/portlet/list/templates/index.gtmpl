@@ -8,4 +8,16 @@
   <% } %>
   </ul>
 <% } %>
+
+		<div id="dropbox">
+			<span class="message">Drop images here to upload. <br /><i>(they will only be visible to you)</i></span>
+		</div>
+
 </div>
+
+
+<script>
+
+var jzDocumentsUploadFiles = "/documents/uploadServlet";
+
+</script>

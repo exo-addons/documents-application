@@ -2,10 +2,7 @@ package documents.portlet.list;
 
 import documents.ChromatticService;
 import documents.DocumentsService;
-import juzu.Action;
-import juzu.Path;
-import juzu.SessionScoped;
-import juzu.View;
+import juzu.*;
 import juzu.template.Template;
 import org.chromattic.ext.ntdef.NTFile;
 import org.chromattic.ext.ntdef.NTHierarchyNode;
@@ -26,6 +23,10 @@ public class Controller extends juzu.Controller
   @Path("index.gtmpl")
   Template indexTemplate;
 
+  @Inject
+  @Path("status.gtmpl")
+  Template statusTemplate;
+
   DocumentsService documentsService_;
 
   @Inject
@@ -38,13 +39,8 @@ public class Controller extends juzu.Controller
   @View
   public void index() throws IOException
   {
+    System.out.println("Documents List : INDEX");
     indexTemplate.with().set("files", documentsService_.getFiles()).render();
-  }
-
-  @Action
-  public void updateData() throws ParseException
-  {
-    Map<String, String[]> params = actionContext.getParameters();
   }
 
 }

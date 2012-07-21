@@ -23,7 +23,7 @@ public class DocumentsService {
     String username = Util.getPortalRequestContext().getRemoteUser();
     if (username!=null)
     {
-      ChromatticSession session = chromattic_.openSession("wcm-system");
+      ChromatticSession session = chromattic_.openSession("portal-system");
       try
       {
         NTFolder documents = session.findByPath(NTFolder.class, "documents");
