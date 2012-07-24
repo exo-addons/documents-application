@@ -1,16 +1,29 @@
-<div class="container">
+<div class="container" id="container-documents">
+<h2>All Files and Folders</h2>
 <% if (files!=null) { %>
-  <ul>
+<table class="table">
   <%
      files.each { file -> %>
-       <li>${file.name}
+     <tr>
+       <td width="32px"><img src="/documents/img/Files-text.png" width="32px" height="32px"/></td>
+       <td>
+         <div style="float:left">
+           <b>${file.name}</b>
+         </div>
+         <div>
+           <div class="document-action" style="float:right"><img src="/documents/img/triangle-big-circle-1-01.png" width="16px" height="16px"/></div>
+           <div class="document-action" style="float:right"><img src="/documents/img/Communication-94.png" width="16px" height="16px"/></div>
+           <div class="document-action" style="float:right"><a href="#">Share</a></div>
+         </div>
+       </td>
+     </tr>
 
   <% } %>
-  </ul>
+</table>
 <% } %>
 
-		<div id="dropbox">
-			<span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
-		</div>
+<div id="dropbox">
+  <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
+</div>
 
 </div>
