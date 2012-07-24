@@ -21,6 +21,8 @@ public class DocumentsData {
 
   NodeHierarchyCreator nodeHierarchyCreator_;
 
+  public enum Type { IMAGE, DOCUMENT}
+
   @Inject
   public DocumentsData(RepositoryService repositoryService, NodeHierarchyCreator nodeHierarchyCreator)
   {
@@ -29,7 +31,7 @@ public class DocumentsData {
   }
 
 
-  protected NodeIterator getNodes()
+  protected NodeIterator getNodes(Type type)
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
@@ -39,7 +41,20 @@ public class DocumentsData {
 
 
       Node rootNode = session.getRootNode();
-      Node docNode = rootNode.getNode(getUserPrivatePath());
+      String docFolder;
+      switch (type)
+      {
+        case DOCUMENT:
+          docFolder = "/Documents";
+          break;
+        case IMAGE:
+          docFolder = "/Images";
+          break;
+        default:
+          docFolder = "/Documents";
+
+      }
+      Node docNode = rootNode.getNode(getUserPrivatePath()+docFolder);
 
       NodeIterator nodes = docNode.getNodes();
 
@@ -66,7 +81,7 @@ public class DocumentsData {
     try
     {
       Node userNode = nodeHierarchyCreator_.getUserNode(sessionProvider, userName);
-      return userNode.getPath().substring(1)+"/Private"+"/Documents";
+      return userNode.getPath().substring(1)+"/Private";
     }
     catch (Exception e)
     {
