@@ -1,9 +1,11 @@
 package documents.portlet.list.controllers;
 
 
+import documents.portlet.list.bean.File;
 import juzu.SessionScoped;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
@@ -12,6 +14,9 @@ import javax.inject.Named;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Named("documentsData")
 @SessionScoped
@@ -21,7 +26,8 @@ public class DocumentsData {
 
   NodeHierarchyCreator nodeHierarchyCreator_;
 
-  public enum Type { IMAGE, DOCUMENT}
+  public static final String TYPE_DOCUMENT="Documents";
+  public static final String TYPE_IMAGE="Pictures";
 
   @Inject
   public DocumentsData(RepositoryService repositoryService, NodeHierarchyCreator nodeHierarchyCreator)
@@ -31,7 +37,7 @@ public class DocumentsData {
   }
 
 
-  protected NodeIterator getNodes(Type type)
+  protected List<File> getNodes(String type)
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
@@ -41,24 +47,37 @@ public class DocumentsData {
 
 
       Node rootNode = session.getRootNode();
-      String docFolder;
-      switch (type)
-      {
-        case DOCUMENT:
-          docFolder = "/Documents";
-          break;
-        case IMAGE:
-          docFolder = "/Images";
-          break;
-        default:
-          docFolder = "/Documents";
-
-      }
-      Node docNode = rootNode.getNode(getUserPrivatePath()+docFolder);
+      Node docNode = rootNode.getNode(getUserPrivatePath()+"/"+type);
 
       NodeIterator nodes = docNode.getNodes();
+      List<File> files = new ArrayList<File>();
+      while (nodes.hasNext())
+      {
+        Node node = nodes.nextNode();
+        if (isAcceptedFile(node.getName()))
+        {
+          File file = new File();
+          //set name
+          file.setName(node.getName());
+          // set creted date
+          file.setCreatedDate(node.getProperty("exo:dateCreated").getDate());
+          //set file size
+          if (node.hasNode("jcr:content")) {
+            Node contentNode = node.getNode("jcr:content");
+            if (contentNode.hasProperty("jcr:data")) {
+              double size = contentNode.getProperty("jcr:data").getLength();
+              String fileSize = calculateFileSize(size);
+              file.setSize(fileSize);
+            }
+          }
+          // set path
+          file.setPath(node.getPath());
 
-      return nodes;
+          files.add(file);
+        }
+      }
+
+      return files;
 
     }
     catch (Exception e)
@@ -94,5 +113,39 @@ public class DocumentsData {
 
     return null;
   }
+
+  public static String calculateFileSize(double fileLengthLong) {
+    int fileLengthDigitCount = Double.toString(fileLengthLong).length();
+    double fileSizeKB = 0.0;
+    String howBig = "";
+    if (fileLengthDigitCount < 5) {
+      fileSizeKB = Math.abs(fileLengthLong);
+      howBig = "Byte(s)";
+    } else if (fileLengthDigitCount >= 5 && fileLengthDigitCount <= 6) {
+      fileSizeKB = Math.abs((fileLengthLong / 1024));
+      howBig = "KB";
+    } else if (fileLengthDigitCount >= 7 && fileLengthDigitCount <= 9) {
+      fileSizeKB = Math.abs(fileLengthLong / (1024 * 1024));
+      howBig = "MB";
+    } else if (fileLengthDigitCount > 9) {
+      fileSizeKB = Math.abs((fileLengthLong / (1024 * 1024 * 1024)));
+      howBig = "GB";
+    }
+    String finalResult = roundTwoDecimals(fileSizeKB);
+    return finalResult + " " + howBig;
+  }
+
+  private static String roundTwoDecimals(double d) {
+    DecimalFormat twoDForm = new DecimalFormat("#.##");
+    return twoDForm.format(d);
+  }
+
+  private boolean isAcceptedFile(String filename)
+  {
+    if (filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".pdf"))
+      return true;
+    return false;
+  }
+
 
 }

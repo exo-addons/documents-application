@@ -1,38 +1,55 @@
 <div class="container" id="container-documents">
   <div class="btn-group-title" style="float:left"><h2>Personal Files and Folders</h2></div>
-  <% if (files!=null) { %>
 
   <div class="btn-group" data-toggle="buttons-radio" style="float:right;">
-    <button class="btn btn-inverse active">Documents</button>
-    <button class="btn btn-inverse">Images</button>
+    <button class="btn btn-inverse active" id="documents-type-button">Documents</button>
+    <button class="btn btn-inverse" id="images-type-button">Images</button>
   </div>
 
-
+  <div id="documents-files">
   <table class="table">
-    <%
-       files.each { file -> %>
        <tr>
-         <td width="32px"><img src="/documents/img/Files-text.png" width="32px" height="32px"/></td>
-         <td>
-           <div style="float:left">
-             <b>${file.name}</b>
-           </div>
-           <div>
-             <div class="document-action" style="float:right"><img src="/documents/img/triangle-big-circle-1-01.png" width="16px" height="16px"/></div>
-             <div class="document-action" style="float:right"><img src="/documents/img/Communication-94.png" width="16px" height="16px"/></div>
-             <div class="document-action" style="float:right"><a href="#">Share</a></div>
-           </div>
-         </td>
+         <td>&nbsp;</td>
        </tr>
-
-    <% } %>
   </table>
 
-
-  <% } %>
+  </div>
 
   <div id="dropbox">
     <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
   </div>
 
 </div>
+
+
+<script>
+
+var jzDocumentsGetFiles = "@{getFiles()}";
+
+$(document).ready(function(){
+  console.log('inside block');
+
+  $('#documents-files').load(jzDocumentsGetFiles, {"type": "Documents"}, function () {
+    console.log('files loaded !');
+  });
+
+
+  $('#images-type-button').on("click", function() {
+    console.log("images-type-button clicked");
+    $('#documents-files').load(jzDocumentsGetFiles, {"type": "Pictures"}, function () {
+      console.log('files loaded !');
+    });
+  });
+
+  $('#documents-type-button').on("click", function() {
+    console.log("documents-type-button clicked");
+    $('#documents-files').load(jzDocumentsGetFiles, {"type": "Documents"}, function () {
+      console.log('files loaded !');
+    });
+  });
+
+
+
+});
+
+</script>

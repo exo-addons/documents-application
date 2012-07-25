@@ -1,6 +1,7 @@
 package documents.portlet.list.controllers;
 
 import juzu.Path;
+import juzu.Resource;
 import juzu.SessionScoped;
 import juzu.View;
 import juzu.template.Template;
@@ -19,12 +20,22 @@ public class DocumentsApplication extends juzu.Controller
   Template indexTemplate;
 
   @Inject
+  @Path("files.gtmpl")
+  Template filesTemplate;
+
+  @Inject
   DocumentsData documentsData;
 
   @View
   public void index() throws IOException
   {
-    indexTemplate.with().set("files", documentsData.getNodes(DocumentsData.Type.DOCUMENT)).render();
+    indexTemplate.with().set("type", DocumentsData.TYPE_DOCUMENT).render();
+  }
+
+  @Resource
+  public void getFiles(String type)
+  {
+    filesTemplate.with().set("files", documentsData.getNodes(type)).render();
   }
 
 

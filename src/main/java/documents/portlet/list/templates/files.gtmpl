@@ -1,0 +1,26 @@
+  <% if (files!=null) { %>
+  <table class="table">
+    <%
+       files.each { file -> %>
+       <tr>
+         <td width="32px">
+            <div class="thumbnail">
+              <img src="${file.icon}" width="32px" height="32px"/>
+            </div>
+         </td>
+         <td>
+           <div style="float:left">
+             <b><a href="${file.path}" target="_new">${file.name}</a></b><br/>
+             Created ${file.createdDate} by You - ${file.size}
+           </div>
+           <div>
+             <div class="document-action" style="float:right"><img src="/documents/img/triangle-big-circle-1-01.png" width="16px" height="16px"/></div>
+             <div class="document-action" style="float:right"><img src="/documents/img/Communication-94.png" width="16px" height="16px"/></div>
+             <div class="document-action" style="float:right"><a href="#">Share</a></div>
+           </div>
+         </td>
+       </tr>
+
+    <% } %>
+  </table>
+  <% } %>
