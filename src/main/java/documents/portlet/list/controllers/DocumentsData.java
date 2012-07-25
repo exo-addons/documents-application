@@ -3,6 +3,7 @@ package documents.portlet.list.controllers;
 
 import documents.portlet.list.bean.File;
 import juzu.SessionScoped;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -59,6 +60,8 @@ public class DocumentsData {
           File file = new File();
           //set name
           file.setName(node.getName());
+          //set uuid
+          file.setUuid(node.getUUID());
           // set creted date
           file.setCreatedDate(node.getProperty("exo:dateCreated").getDate());
           //set file size
@@ -72,6 +75,9 @@ public class DocumentsData {
           }
           // set path
           file.setPath(node.getPath());
+          // set public url
+          String url = "http://localhost:8080/documents/file/"+Util.getPortalRequestContext().getRemoteUser()+"/"+file.getUuid()+"/"+file.getName();
+          file.setPublicUrl(url);
 
           files.add(file);
         }

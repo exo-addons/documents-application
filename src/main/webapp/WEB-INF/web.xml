@@ -8,8 +8,16 @@
     <servlet-name>UploadServlet</servlet-name>
     <servlet-class>documents.portlet.list.UploadServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>DownloadServlet</servlet-name>
+    <servlet-class>documents.portlet.list.DownloadServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>UploadServlet</servlet-name>
     <url-pattern>/uploadServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DownloadServlet</servlet-name>
+    <url-pattern>/file/*</url-pattern>
   </servlet-mapping>
 </web-app>

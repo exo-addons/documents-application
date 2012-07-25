@@ -9,6 +9,8 @@ public class File {
   String icon;
   String size;
   String path;
+  String uuid;
+  String publicUrl;
 
 
   public String getName() {
@@ -49,5 +51,21 @@ public class File {
 
   public void setPath(String path) {
     this.path = path;
+  }
+
+  public String getUuid() {
+    return uuid;
+  }
+
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
+
+  public String getPublicUrl() {
+    return publicUrl;
+  }
+
+  public void setPublicUrl(String publicUrl) {
+    this.publicUrl = publicUrl;
   }
 }
