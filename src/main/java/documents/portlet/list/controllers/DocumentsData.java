@@ -9,12 +9,14 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.jboss.weld.context.http.Http;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
+import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,11 @@ public class DocumentsData {
           // set path
           file.setPath(node.getPath());
           // set public url
-          String url = "http://localhost:8080/documents/file/"+Util.getPortalRequestContext().getRemoteUser()+"/"+file.getUuid()+"/"+file.getName();
+          HttpServletRequest request = Util.getPortalRequestContext().getRequest();
+          String baseURI = request.getScheme() + "://" + request.getServerName() + ":"
+                  + String.format("%s", request.getServerPort());
+
+          String url = baseURI+"/documents/file/"+Util.getPortalRequestContext().getRemoteUser()+"/"+file.getUuid()+"/"+file.getName();
           file.setPublicUrl(url);
 
           files.add(file);
