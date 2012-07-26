@@ -32,7 +32,8 @@ public class File {
 
   public String getIcon() {
     if (name.endsWith(".pdf"))
-      return "/documents/img/Files-text.png";
+      return "/portal/rest/pdfviewer/repository/collaboration/1/0.0/0.25/"+getUuid();
+//      return "/documents/img/Files-text.png";
     else
       return "/rest/thumbnailImage/custom/32x32/repository/collaboration"+path;
   }
