@@ -12,6 +12,9 @@
   padding: 10px 10px 0px 10px;
 }
 
+.label-small {
+  font-size: 8px;
+}
 
 /*-------------------------
 	Dropbox Element

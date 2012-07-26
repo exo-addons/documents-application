@@ -5,6 +5,7 @@ import documents.portlet.list.bean.File;
 import juzu.SessionScoped;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.cms.folksonomy.NewFolksonomyService;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -27,16 +28,19 @@ public class DocumentsData {
 
   RepositoryService repositoryService_;
 
+  NewFolksonomyService newFolksonomyService_;
+
   NodeHierarchyCreator nodeHierarchyCreator_;
 
   public static final String TYPE_DOCUMENT="Documents";
   public static final String TYPE_IMAGE="Pictures";
 
   @Inject
-  public DocumentsData(RepositoryService repositoryService, NodeHierarchyCreator nodeHierarchyCreator)
+  public DocumentsData(RepositoryService repositoryService, NodeHierarchyCreator nodeHierarchyCreator, NewFolksonomyService newFolksonomyService)
   {
     repositoryService_ = repositoryService;
     nodeHierarchyCreator_= nodeHierarchyCreator;
+    newFolksonomyService_ = newFolksonomyService;
   }
 
 
@@ -84,6 +88,21 @@ public class DocumentsData {
 
           String url = baseURI+"/documents/file/"+Util.getPortalRequestContext().getRemoteUser()+"/"+file.getUuid()+"/"+file.getName();
           file.setPublicUrl(url);
+
+          //set tags
+          List<Node> tags = newFolksonomyService_.getLinkedTagsOfDocumentByScope(NewFolksonomyService.PRIVATE,
+                  Util.getPortalRequestContext().getRemoteUser(),
+                  node, "collaboration");
+          List<String> stags = new ArrayList<String>();
+          if (tags!=null && tags.size()>0)
+          {
+
+            for (Node tag:tags)
+            {
+              stags.add(tag.getName());
+            }
+          }
+          file.setTags(stags);
 
           files.add(file);
         }

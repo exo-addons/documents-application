@@ -2,6 +2,7 @@ package documents.portlet.list.bean;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 public class File {
   String name;
@@ -11,6 +12,7 @@ public class File {
   String path;
   String uuid;
   String publicUrl;
+  List<String> tags;
 
 
   public String getName() {
@@ -68,5 +70,13 @@ public class File {
 
   public void setPublicUrl(String publicUrl) {
     this.publicUrl = publicUrl;
+  }
+
+  public List<String> getTags() {
+    return tags;
+  }
+
+  public void setTags(List<String> tags) {
+    this.tags = tags;
   }
 }

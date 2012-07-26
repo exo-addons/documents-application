@@ -3,6 +3,7 @@
 @Bindings(
         {
                 @Binding(value = org.exoplatform.services.jcr.RepositoryService.class, implementation=GateInMetaProvider.class),
+                @Binding(value = org.exoplatform.services.cms.folksonomy.NewFolksonomyService.class, implementation=GateInMetaProvider.class),
                 @Binding(value = org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator.class, implementation=GateInMetaProvider.class)
         }
 

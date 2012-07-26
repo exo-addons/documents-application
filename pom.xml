@@ -56,6 +56,12 @@
           <version>3.2.3-PLF</version>
           <scope>provided</scope>
       </dependency>
+      <dependency>
+          <groupId>org.exoplatform.ecms</groupId>
+          <artifactId>ecms-core-services</artifactId>
+          <version>4.0.0.Alpha1-SNAPSHOT</version>
+          <scope>provided</scope>
+      </dependency>
     <!--dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>

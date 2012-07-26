@@ -10,8 +10,14 @@
          </td>
          <td>
            <div style="float:left">
-             <b><a href="${file.path}" target="_new">${file.name}</a></b><br/>
-             Created ${file.createdDate} by You - ${file.size}
+             <b><a href="${file.path}" target="_new">${file.name}</a></b>
+             <br/>Created ${file.createdDate} by You - ${file.size}
+             <% if (file.tags.size>0) { %>
+               <br/>
+               <% file.tags.each { tag -> %>
+                 <span class="label label-small">${tag}</span>
+               <% } %>
+             <% } %>
            </div>
            <div>
              <!-- div class="document-action" style="float:right"><img src="/documents/img/triangle-big-circle-1-01.png" width="16px" height="16px"/></div>
