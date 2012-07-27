@@ -92,7 +92,7 @@
   </div>
 
   <!-- ################################## -->
-  <!-- ######### REMOVE MODAL ########### -->
+  <!-- ######### RENAME MODAL ########### -->
   <!-- ################################## -->
   <div class="modal hide fade" id="RenameModal">
     <div class="modal-header">
@@ -102,16 +102,19 @@
     <div class="modal-body-no">
 
       <form class="form-horizontal">
-        <fieldset class="medium-padding">
+        <fieldset class="medium-padding control-group">
           <label>Enter a new name</label>
           <input type="text" class="input-xxlarge" id="file-name" value="">
+          <label id="rename-error"></label>
         </fieldset>
       </form>
 
     </div>
     <div class="modal-footer">
-      <a href="#" class="btn btn-primary" data-uuid="---" id="rename-button">Rename</a>
-      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+      <div class="actions">
+        <a href="#" class="btn btn-primary" data-uuid="---" id="rename-button">Rename</a>
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+      </div>
     </div>
   </div>
 
@@ -149,20 +152,33 @@
     name = name.substr(0, name.indexOf(".") );
     $('#file-name').attr("value", name);
     $('#rename-button').attr('data-uuid', uuid);
+    $('#rename-error').html("");
     $('#RenameModal').modal('show');
   });
 
   $('#rename-button').on("click", function() {
     var uuid = $(this).attr('data-uuid');
-    var type = 'Pictures';
-    if ( $('#documents-type-button').hasClass('active') ) {
-      type = 'Documents';
-    }
     var name = $('#file-name').attr("value");
-    $('#RenameModal').modal('hide');
-    $('#documents-files').load(jzDocumentsRenameFile, {"type": type, "uuid": uuid, "name": name}, function () {
-      console.log("file renamed !");
+    $.ajax({
+      url: jzDocumentsRenameFile,
+      data: {"uuid": uuid, "name": name},
+
+      success:function(response){
+        $('#RenameModal').modal('hide');
+        var type = 'Pictures';
+        if ( $('#documents-type-button').hasClass('active') ) {
+          type = 'Documents';
+        }
+        $('#documents-files').load(jzDocumentsGetFiles, {"type": type}, function () {});
+      },
+
+      error:function (xhr, status, error){
+        $("#rename-error").html(xhr.responseText);
+        $("#rename-error").closest(".control-group").addClass("error");
+      }
+
     });
+
   });
 
 
@@ -174,6 +190,8 @@
 
   $('#RenameModal input[type=text]').click(function() {
     $(this).select();
+    $(this).closest(".control-group").removeClass("error");
+    $('#rename-error').html("");
   });
 
 

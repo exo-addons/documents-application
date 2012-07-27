@@ -1,9 +1,6 @@
 package documents.portlet.list.controllers;
 
-import juzu.Path;
-import juzu.Resource;
-import juzu.SessionScoped;
-import juzu.View;
+import juzu.*;
 import juzu.template.Template;
 
 import javax.inject.Inject;
@@ -47,11 +44,21 @@ public class DocumentsApplication extends juzu.Controller
   }
 
   @Resource
-  public void renameFile(String uuid, String name, String type)
+  public Response.Content renameFile(String uuid, String name)
   {
-    System.out.println(uuid+"::"+name+"::"+type);
-    documentsData.renameFile(uuid, name);
-    filesTemplate.with().set("files", documentsData.getNodes(type)).render();
+    try
+    {
+      documentsData.renameFile(uuid, name);
+    }
+    catch (IllegalArgumentException e)
+    {
+      return Response.notFound(e.getMessage());
+    }
+    catch (Exception e)
+    {
+      return Response.notFound("Your file cannot be renamed. Please, try later");
+    }
+    return Response.ok("Successfully renamed.");
   }
 
 

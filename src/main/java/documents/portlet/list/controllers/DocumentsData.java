@@ -2,15 +2,13 @@ package documents.portlet.list.controllers;
 
 
 import documents.portlet.list.bean.File;
+import documents.portlet.list.controllers.validator.NameValidator;
 import juzu.SessionScoped;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.cms.folksonomy.NewFolksonomyService;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
-import org.jboss.weld.context.http.Http;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -142,8 +140,9 @@ public class DocumentsData {
 
   }
 
-  protected boolean renameFile(String uuid, String name)
+  protected void renameFile(String uuid, String name) throws Exception
   {
+    NameValidator.validateName(name);
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
     {
@@ -155,16 +154,11 @@ public class DocumentsData {
       session.move(node.getPath(), newPath.toString());
       session.save();
     }
-    catch (Exception e)
-    {
-      System.out.println("JCR::" + e.getMessage());
-    }
     finally
     {
       sessionProvider.close();
     }
 
-    return false;
   }
 
   private String getUserPrivatePath()
