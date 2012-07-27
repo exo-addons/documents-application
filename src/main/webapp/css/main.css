@@ -5,8 +5,8 @@
 }
 
 /* QUICK FIX FOR BTN */
-.btn-inverted:hover {
-  border: 1px solid black;
+.btn-inverse:hover {
+  border: 1px solid black !important;
 }
 
 .document-action {
@@ -114,13 +114,14 @@
 
 #dropbox .message{
 	font-size: 11px;
-    text-align: center;
-    padding-top:40px;
-    display: block;
+  text-align: center;
+  padding-top:40px;
+  display: block;
+	color:#ccc;
 }
 
 #dropbox .message i{
-	color:#ccc;
+	color:#888;
 	font-size:10px;
 }
 
