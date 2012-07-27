@@ -136,15 +136,29 @@
 
   $('#delete-button').on("click", function() {
     var uuid = $(this).attr('data-uuid');
-    var type = 'Pictures';
-    if ( $('#documents-type-button').hasClass('active') ) {
-      type = 'Documents';
-    }
-    $('#DeleteModal').modal('hide');
-    $('#documents-files').load(jzDocumentsDeleteFile, {"type": type, "uuid": uuid}, function () {
-      console.log("file deleted !");
+
+    $.ajax({
+      url: jzDocumentsDeleteFile,
+      data: {"uuid": uuid},
+
+      success:function(response){
+        $('#DeleteModal').modal('hide');
+        var type = 'Pictures';
+        if ( $('#documents-type-button').hasClass('active') ) {
+          type = 'Documents';
+        }
+        $('#documents-files').load(jzDocumentsGetFiles, {"type": type}, function () {});
+      },
+
+      error:function (xhr, status, error){
+        $("#delete-label").html(xhr.responseText);
+        $("#delete-label").addClass("error");
+      }
+
     });
+
   });
+
 
   $('.rename-link').on("click", function() {
     var name = $(this).closest(".dropdown-menu").attr("data-name");

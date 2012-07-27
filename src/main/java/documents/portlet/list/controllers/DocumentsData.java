@@ -120,7 +120,7 @@ public class DocumentsData {
     return null;
   }
 
-  protected void deleteFile(String uuid)
+  protected void deleteFile(String uuid) throws Exception
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
@@ -128,10 +128,6 @@ public class DocumentsData {
       Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
       session.getNodeByUUID(uuid).remove();
       session.save();
-    }
-    catch (Exception e)
-    {
-      System.out.println("JCR::" + e.getMessage());
     }
     finally
     {

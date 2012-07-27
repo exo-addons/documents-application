@@ -36,11 +36,17 @@ public class DocumentsApplication extends juzu.Controller
   }
 
   @Resource
-  public void deleteFile(String uuid, String type)
+  public Response.Content deleteFile(String uuid)
   {
-    System.out.println(uuid+"::"+type);
-    documentsData.deleteFile(uuid);
-    filesTemplate.with().set("files", documentsData.getNodes(type)).render();
+    try
+    {
+      documentsData.deleteFile(uuid);
+    }
+    catch (Exception e)
+    {
+      return Response.notFound("Your file cannot be deleted. Please, try later");
+    }
+    return Response.ok("Successfully deleted.");
   }
 
   @Resource
