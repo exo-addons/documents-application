@@ -9,20 +9,33 @@
             </div>
          </td>
          <td>
-           <div style="float:left">
-             <b><a href="${file.path}" target="_new">${file.name}</a></b>
+           <div class="left">
+             <b><a href="#">${file.name}</a></b>
              <br/>Created ${file.createdDate} by You - ${file.size}
+           </div>
+           <div class="right">
+             <li class="document-action dropdown right">
+               <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
+               <ul class="dropdown-menu">
+                 <li><a href="#"><i class="minicon-preview"></i>Preview&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
+                 <li><a href="#"><i class="minicon-upload"></i>Upload New Version&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li class="divider"></li>
+                 <li><a href="#" class="share-button" data="${file.publicUrl}"><i class="minicon-share"></i>Share</a></li>
+                 <li><a href="#"><i class="minicon-tags"></i>Add/Edit Tags&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li class="divider"></li>
+                 <li><a href="#"><i class="minicon-properties"></i>File Properties&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li><a href="#"><i class="minicon-rename"></i>Rename&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li><a href="#"><i class="minicon-delete"></i>Delete&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+               </ul>
+             </li>
+             <div class="document-action right"><a href="#" class="share-button" data="${file.publicUrl}">Share</a></div>
              <% if (file.tags.size>0) { %>
                <br/>
                <% file.tags.each { tag -> %>
-                 <span class="label label-small">${tag}</span>
+                 <span class="label label-small right">${tag}</span>
                <% } %>
              <% } %>
-           </div>
-           <div>
-             <!-- div class="document-action" style="float:right"><img src="/documents/img/triangle-big-circle-1-01.png" width="16px" height="16px"/></div>
-             <div class="document-action" style="float:right"><img src="/documents/img/Communication-94.png" width="16px" height="16px"/></div -->
-             <div class="document-action" style="float:right"><a href="#" class="share-button" data="${file.publicUrl}">Share</a></div>
            </div>
          </td>
        </tr>

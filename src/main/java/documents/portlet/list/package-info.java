@@ -15,6 +15,7 @@
                 @Script(src = "js/jquery.filedrop.js"),
                 @Script(src = "js/bootstrap-button.js"),
                 @Script(src = "js/bootstrap-modal.js"),
+                @Script(src = "js/bootstrap-dropdown.js"),
                 @Script(src = "js/main.js")
         },
         stylesheets = {

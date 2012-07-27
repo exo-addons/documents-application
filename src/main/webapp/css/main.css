@@ -5,7 +5,7 @@
 }
 
 .document-action {
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 .medium-padding {
@@ -14,6 +14,75 @@
 
 .label-small {
   font-size: 8px;
+  margin-left: 5px;
+  margin-top: 3px;
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+[class^="minicon-"], [class*="minicon-"] {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  vertical-align: text-top;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+
+.no-margin {
+  margin: 0px;
+}
+
+.minicon-more {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Triangle-medium-circle-1-01.png');
+}
+
+.minicon-preview {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Edition-24.png');
+}
+
+.minicon-rename {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Edition-31.png');
+}
+
+.minicon-upload {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Transfers-5.png');
+}
+
+.minicon-download {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Transfers-6.png');
+}
+
+.minicon-share {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Interface-3.png');
+}
+
+.minicon-properties {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Interface-58.png');
+}
+
+.minicon-tags {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Vote-2.png');
+}
+
+.minicon-delete {
+ background-position: 0px 0px;
+ background:url('../img/minicons/Interface-71.png');
 }
 
 /*-------------------------
