@@ -16,20 +16,20 @@
            <div class="right">
              <li class="document-action dropdown right">
                <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
-               <ul class="dropdown-menu">
+               <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}">
                  <li><a href="#"><i class="minicon-preview"></i>Preview&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
                  <li><a href="#"><i class="minicon-upload"></i>Upload New Version&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li class="divider"></li>
-                 <li><a href="#" class="share-button" data="${file.publicUrl}"><i class="minicon-share"></i>Share</a></li>
+                 <li><a href="#" class="share-link" data="${file.publicUrl}"><i class="minicon-share"></i>Share</a></li>
                  <li><a href="#"><i class="minicon-tags"></i>Add/Edit Tags&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li class="divider"></li>
                  <li><a href="#"><i class="minicon-properties"></i>File Properties&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li><a href="#"><i class="minicon-rename"></i>Rename&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
-                 <li><a href="#"><i class="minicon-delete"></i>Delete&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li><a href="#" class="delete-link"><i class="minicon-delete"></i>Delete</a></li>
                </ul>
              </li>
-             <div class="document-action right"><a href="#" class="share-button" data="${file.publicUrl}">Share</a></div>
+             <div class="document-action right"><a href="#" class="share-link" data="${file.publicUrl}">Share</a></div>
              <% if (file.tags.size>0) { %>
                <br/>
                <% file.tags.each { tag -> %>
@@ -66,13 +66,52 @@
     </div>
   </div>
 
+  <div class="modal hide fade" id="DeleteModal">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">x</a>
+      <h3>Delete File</h3>
+    </div>
+    <div class="modal-body-no">
+
+      <form class="form-horizontal">
+        <fieldset class="medium-padding">
+          <label id="delete-label"></label>
+        </fieldset>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-danger" data-uuid="---" id="delete-button">Delete</a>
+      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    </div>
+  </div>
+
 
 <script>
 
-  $('.share-button').on("click", function() {
-    console.log("share-button clicked");
+  $('.share-link').on("click", function() {
     $('#file-share-link').attr("value", $(this).attr("data") );
     $('#ShareModal').modal('show');
+  });
+
+  $('.delete-link').on("click", function() {
+    var name = $(this).closest(".dropdown-menu").attr("data-name");
+    var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
+    $('#delete-label').html('Are you sure you want to delete the file "' + name + '"?');
+    $('#delete-button').attr('data-uuid', uuid);
+    $('#DeleteModal').modal('show');
+  });
+
+  $('#delete-button').on("click", function() {
+    var uuid = $(this).attr('data-uuid');
+    var type = 'Pictures';
+    if ( $('#documents-type-button').hasClass('active') ) {
+      type = 'Documents';
+    }
+    $('#DeleteModal').modal('hide');
+    $('#documents-files').load(jzDocumentsDeleteFile, {"type": type, "uuid": uuid}, function () {
+      console.log("file deleted !");
+    });
   });
 
   $('#ShareModal input[type=text]').click(function() {

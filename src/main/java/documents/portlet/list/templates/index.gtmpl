@@ -25,26 +25,22 @@
 <script>
 
 var jzDocumentsGetFiles = "@{getFiles()}";
+var jzDocumentsDeleteFile = "@{deleteFile()}";
 
 $(document).ready(function(){
-  console.log('inside block');
 
   $('#documents-files').load(jzDocumentsGetFiles, {"type": "Documents"}, function () {
-    console.log('files loaded !');
   });
 
 
   $('#images-type-button').on("click", function() {
-    console.log("images-type-button clicked");
     $('#documents-files').load(jzDocumentsGetFiles, {"type": "Pictures"}, function () {
-      console.log('files loaded !');
     });
   });
 
   $('#documents-type-button').on("click", function() {
     console.log("documents-type-button clicked");
     $('#documents-files').load(jzDocumentsGetFiles, {"type": "Documents"}, function () {
-      console.log('files loaded !');
     });
   });
 

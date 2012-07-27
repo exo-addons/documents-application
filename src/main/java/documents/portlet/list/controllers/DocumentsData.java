@@ -122,6 +122,25 @@ public class DocumentsData {
     return null;
   }
 
+  protected void deleteFile(String uuid)
+  {
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try
+    {
+      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+      session.getNodeByUUID(uuid).remove();
+      session.save();
+    }
+    catch (Exception e)
+    {
+      System.out.println("JCR::" + e.getMessage());
+    }
+    finally
+    {
+      sessionProvider.close();
+    }
+
+  }
 
   private String getUserPrivatePath()
   {

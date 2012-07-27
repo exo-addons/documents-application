@@ -38,6 +38,14 @@ public class DocumentsApplication extends juzu.Controller
     filesTemplate.with().set("files", documentsData.getNodes(type)).render();
   }
 
+  @Resource
+  public void deleteFile(String uuid, String type)
+  {
+    System.out.println(uuid+"::"+type);
+    documentsData.deleteFile(uuid);
+    filesTemplate.with().set("files", documentsData.getNodes(type)).render();
+  }
+
 
 
 
