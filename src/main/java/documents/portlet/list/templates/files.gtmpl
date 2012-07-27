@@ -25,7 +25,7 @@
                  <li><a href="#"><i class="minicon-tags"></i>Add/Edit Tags&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li class="divider"></li>
                  <li><a href="#"><i class="minicon-properties"></i>File Properties&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
-                 <li><a href="#"><i class="minicon-rename"></i>Rename&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li><a href="#" class="rename-link"><i class="minicon-rename"></i>Rename</a></li>
                  <li><a href="#" class="delete-link"><i class="minicon-delete"></i>Delete</a></li>
                </ul>
              </li>
@@ -44,7 +44,9 @@
   </table>
   <% } %>
 
-
+  <!-- ################################## -->
+  <!-- ######### SHARE MODAL ############ -->
+  <!-- ################################## -->
   <div class="modal hide fade" id="ShareModal">
     <div class="modal-header">
       <a class="close" data-dismiss="modal">x</a>
@@ -66,6 +68,9 @@
     </div>
   </div>
 
+  <!-- ################################## -->
+  <!-- ######### DELETE MODAL ########### -->
+  <!-- ################################## -->
   <div class="modal hide fade" id="DeleteModal">
     <div class="modal-header">
       <a class="close" data-dismiss="modal">x</a>
@@ -82,6 +87,30 @@
     </div>
     <div class="modal-footer">
       <a href="#" class="btn btn-danger" data-uuid="---" id="delete-button">Delete</a>
+      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    </div>
+  </div>
+
+  <!-- ################################## -->
+  <!-- ######### REMOVE MODAL ########### -->
+  <!-- ################################## -->
+  <div class="modal hide fade" id="RenameModal">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">x</a>
+      <h3>Rename File</h3>
+    </div>
+    <div class="modal-body-no">
+
+      <form class="form-horizontal">
+        <fieldset class="medium-padding">
+          <label>Enter a new name</label>
+          <input type="text" class="input-xxlarge" id="file-name" value="">
+        </fieldset>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary" data-uuid="---" id="rename-button">Rename</a>
       <a href="#" class="btn" data-dismiss="modal">Cancel</a>
     </div>
   </div>
@@ -114,7 +143,36 @@
     });
   });
 
+  $('.rename-link').on("click", function() {
+    var name = $(this).closest(".dropdown-menu").attr("data-name");
+    var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
+    name = name.substr(0, name.indexOf(".") );
+    $('#file-name').attr("value", name);
+    $('#rename-button').attr('data-uuid', uuid);
+    $('#RenameModal').modal('show');
+  });
+
+  $('#rename-button').on("click", function() {
+    var uuid = $(this).attr('data-uuid');
+    var type = 'Pictures';
+    if ( $('#documents-type-button').hasClass('active') ) {
+      type = 'Documents';
+    }
+    var name = $('#file-name').attr("value");
+    $('#RenameModal').modal('hide');
+    $('#documents-files').load(jzDocumentsRenameFile, {"type": type, "uuid": uuid, "name": name}, function () {
+      console.log("file renamed !");
+    });
+  });
+
+
+
+
   $('#ShareModal input[type=text]').click(function() {
+    $(this).select();
+  });
+
+  $('#RenameModal input[type=text]').click(function() {
     $(this).select();
   });
 

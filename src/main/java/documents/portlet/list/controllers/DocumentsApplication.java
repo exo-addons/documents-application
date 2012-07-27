@@ -46,6 +46,14 @@ public class DocumentsApplication extends juzu.Controller
     filesTemplate.with().set("files", documentsData.getNodes(type)).render();
   }
 
+  @Resource
+  public void renameFile(String uuid, String name, String type)
+  {
+    System.out.println(uuid+"::"+name+"::"+type);
+    documentsData.renameFile(uuid, name);
+    filesTemplate.with().set("files", documentsData.getNodes(type)).render();
+  }
+
 
 
 

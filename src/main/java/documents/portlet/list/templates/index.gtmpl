@@ -26,6 +26,7 @@
 
 var jzDocumentsGetFiles = "@{getFiles()}";
 var jzDocumentsDeleteFile = "@{deleteFile()}";
+var jzDocumentsRenameFile = "@{renameFile()}";
 
 $(document).ready(function(){
 

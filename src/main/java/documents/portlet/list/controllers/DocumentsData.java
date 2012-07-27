@@ -142,6 +142,31 @@ public class DocumentsData {
 
   }
 
+  protected boolean renameFile(String uuid, String name)
+  {
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try
+    {
+      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+      Node node = session.getNodeByUUID(uuid);
+      String extension = node.getName().substring(node.getName().lastIndexOf("."));
+      StringBuilder newPath = new StringBuilder(node.getParent().getPath()).append('/')
+              .append(name).append(extension);
+      session.move(node.getPath(), newPath.toString());
+      session.save();
+    }
+    catch (Exception e)
+    {
+      System.out.println("JCR::" + e.getMessage());
+    }
+    finally
+    {
+      sessionProvider.close();
+    }
+
+    return false;
+  }
+
   private String getUserPrivatePath()
   {
     String userName = Util.getPortalRequestContext().getRemoteUser();
