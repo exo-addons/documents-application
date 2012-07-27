@@ -26,13 +26,13 @@ public class DocumentsApplication extends juzu.Controller
   @View
   public void index() throws IOException
   {
-    indexTemplate.with().set("type", DocumentsData.TYPE_DOCUMENT).render();
+    indexTemplate.with().set("filter", DocumentsData.TYPE_DOCUMENT).render();
   }
 
   @Resource
-  public void getFiles(String type)
+  public void getFiles(String filter)
   {
-    filesTemplate.with().set("files", documentsData.getNodes(type)).render();
+    filesTemplate.with().set("files", documentsData.getNodes(filter)).render();
   }
 
   @Resource

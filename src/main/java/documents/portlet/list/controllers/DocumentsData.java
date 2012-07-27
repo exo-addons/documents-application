@@ -6,12 +6,14 @@ import documents.portlet.list.controllers.validator.NameValidator;
 import juzu.SessionScoped;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.cms.folksonomy.NewFolksonomyService;
+import org.exoplatform.services.cms.link.LinkManager;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
@@ -30,19 +32,22 @@ public class DocumentsData {
 
   NodeHierarchyCreator nodeHierarchyCreator_;
 
+  LinkManager linkManager_;
+
   public static final String TYPE_DOCUMENT="Documents";
   public static final String TYPE_IMAGE="Pictures";
 
   @Inject
-  public DocumentsData(RepositoryService repositoryService, NodeHierarchyCreator nodeHierarchyCreator, NewFolksonomyService newFolksonomyService)
+  public DocumentsData(RepositoryService repositoryService, NodeHierarchyCreator nodeHierarchyCreator, NewFolksonomyService newFolksonomyService, LinkManager linkManager)
   {
     repositoryService_ = repositoryService;
     nodeHierarchyCreator_= nodeHierarchyCreator;
     newFolksonomyService_ = newFolksonomyService;
+    linkManager_ = linkManager;
   }
 
 
-  protected List<File> getNodes(String type)
+  protected List<File> getNodes(String filter)
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
@@ -52,13 +57,14 @@ public class DocumentsData {
 
 
       Node rootNode = session.getRootNode();
-      Node docNode = rootNode.getNode(getUserPrivatePath()+"/"+type);
+      Node docNode = rootNode.getNode(getUserPrivatePath()+"/"+filter);
 
       NodeIterator nodes = docNode.getNodes();
       List<File> files = new ArrayList<File>();
       while (nodes.hasNext())
       {
         Node node = nodes.nextNode();
+        node = getTargetNode(node);
         if (isAcceptedFile(node.getName()))
         {
           File file = new File();
@@ -119,6 +125,21 @@ public class DocumentsData {
     }
     return null;
   }
+
+  private Node getTargetNode(Node showingNode) throws Exception {
+    Node targetNode = null;
+    if (linkManager_.isLink(showingNode)) {
+      try {
+        targetNode = linkManager_.getTarget(showingNode);
+      } catch (ItemNotFoundException e) {
+        targetNode = showingNode;
+      }
+    } else {
+      targetNode = showingNode;
+    }
+    return targetNode;
+  }
+
 
   protected void deleteFile(String uuid) throws Exception
   {

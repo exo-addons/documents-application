@@ -33,7 +33,7 @@
              <% if (file.tags.size>0) { %>
                <br/>
                <% file.tags.each { tag -> %>
-                 <span class="label label-small right">${tag}</span>
+                 <span class="label label-small right label-tag">${tag}</span>
                <% } %>
              <% } %>
            </div>
@@ -171,11 +171,7 @@
 
       success:function(response){
         $('#DeleteModal').modal('hide');
-        var type = 'Pictures';
-        if ( $('#documents-type-button').hasClass('active') ) {
-          type = 'Documents';
-        }
-        $('#documents-files').load(jzDocumentsGetFiles, {"type": type}, function () {});
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {});
       },
 
       error:function (xhr, status, error){
@@ -207,11 +203,7 @@
 
       success:function(response){
         $('#RenameModal').modal('hide');
-        var type = 'Pictures';
-        if ( $('#documents-type-button').hasClass('active') ) {
-          type = 'Documents';
-        }
-        $('#documents-files').load(jzDocumentsGetFiles, {"type": type}, function () {});
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {});
       },
 
       error:function (xhr, status, error){
@@ -242,11 +234,7 @@
 
       success:function(response){
         $('#TagsModal').modal('hide');
-        var type = 'Pictures';
-        if ( $('#documents-type-button').hasClass('active') ) {
-          type = 'Documents';
-        }
-        $('#documents-files').load(jzDocumentsGetFiles, {"type": type}, function () {});
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {});
       },
 
       error:function (xhr, status, error){
@@ -256,6 +244,17 @@
 
     });
 
+  });
+
+  $('.label-tag').on("click", function() {
+    currentTag = $(this).html();
+    documentFilter = "Folksonomy/"+currentTag;
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+      $(".btn-inverse").removeClass("active");
+      $(".filter-files").css("display", "none");
+      $(".filter-tag").css("display", "inline");
+      $("#tag-type-button").html('<i class="minicon-delete"></i>'+currentTag);
+    });
   });
 
 

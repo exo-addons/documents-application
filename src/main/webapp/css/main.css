@@ -9,6 +9,10 @@
   border: 1px solid black !important;
 }
 
+.label-tag:hover {
+  cursor:pointer;
+}
+
 .document-action {
   padding-left: 10px;
 }

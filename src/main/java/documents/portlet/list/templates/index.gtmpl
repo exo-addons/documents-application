@@ -1,9 +1,14 @@
 <div class="container" id="container-documents">
   <div class="btn-group-title" style="float:left"><h2>Personal Files and Folders</h2></div>
 
-  <div class="btn-group" data-toggle="buttons-radio" style="float:right;">
+  <div class="btn-group filter-files" data-toggle="buttons-radio" style="float:right;">
     <button class="btn btn-inverse active" id="documents-type-button">Documents</button>
     <button class="btn btn-inverse" id="images-type-button">Images</button>
+  </div>
+
+  <div class="filter-tag" style="float:right;display:none;">
+    <label class="left" style="padding-top: 5px;">Filter By&nbsp;</label>
+    <button class="btn btn-inverse active right" id="tag-type-button"></button>
   </div>
 
   <div id="documents-files">
@@ -28,21 +33,33 @@ var jzDocumentsGetFiles = "@{getFiles()}";
 var jzDocumentsDeleteFile = "@{deleteFile()}";
 var jzDocumentsRenameFile = "@{renameFile()}";
 var jzDocumentsEditTags = "@{editTags()}";
+var documentFilter = "Documents";
+var currentTag = "";
 
 $(document).ready(function(){
 
-  $('#documents-files').load(jzDocumentsGetFiles, {"type": "Documents"}, function () {
+  $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
   });
 
 
   $('#images-type-button').on("click", function() {
-    $('#documents-files').load(jzDocumentsGetFiles, {"type": "Pictures"}, function () {
+    documentFilter = "Pictures";
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
     });
   });
 
   $('#documents-type-button').on("click", function() {
-    console.log("documents-type-button clicked");
-    $('#documents-files').load(jzDocumentsGetFiles, {"type": "Documents"}, function () {
+    documentFilter = "Documents";
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+    });
+  });
+
+  $('#tag-type-button').on("click", function() {
+    documentFilter = "Documents";
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+      $("#documents-type-button").addClass("active");
+      $(".filter-tag").css("display", "none");
+      $(".filter-files").css("display", "inline");
     });
   });
 
