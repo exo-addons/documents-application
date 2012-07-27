@@ -67,6 +67,24 @@ public class DocumentsApplication extends juzu.Controller
     return Response.ok("Successfully renamed.");
   }
 
+  @Resource
+  public Response.Content editTags(String uuid, String tags)
+  {
+    try
+    {
+      documentsData.editTags(uuid, tags);
+    }
+    catch (IllegalArgumentException e)
+    {
+      return Response.notFound(e.getMessage());
+    }
+    catch (Exception e)
+    {
+      return Response.notFound("Tags cannot be edited. Please, try later");
+    }
+    return Response.ok("Successfully tagged.");
+  }
+
 
 
 

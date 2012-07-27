@@ -157,6 +157,46 @@ public class DocumentsData {
 
   }
 
+  protected void editTags(String uuid, String tags) throws Exception
+  {
+    if (tags==null || "".equals(tags)) throw new IllegalArgumentException("Tags list must be non-null and non-empty");
+    String tagsPath = "/"+getUserPrivatePath()+"/Folksonomy/";
+
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try
+    {
+      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+      Node node = session.getNodeByUUID(uuid);
+
+      String[] atags = tags.replaceAll(" ", "").toLowerCase().split(",");
+
+
+      /**
+       * TODO : Remove existing if not in new list, add only if new
+       * */
+      List<Node> tagsNodes = newFolksonomyService_.getLinkedTagsOfDocumentByScope(NewFolksonomyService.PRIVATE,
+              Util.getPortalRequestContext().getRemoteUser(),
+              node, "collaboration");
+      if (tagsNodes!=null && tagsNodes.size()>0)
+      {
+        for (Node tag:tagsNodes)
+        {
+          newFolksonomyService_.removeTagOfDocument(tagsPath+tag.getName(), node, "collaboration");
+        }
+      }
+
+
+      newFolksonomyService_.addPrivateTag(atags, node, "collaboration", Util.getPortalRequestContext().getRemoteUser());
+
+      session.save();
+    }
+    finally
+    {
+      sessionProvider.close();
+    }
+
+  }
+
   private String getUserPrivatePath()
   {
     String userName = Util.getPortalRequestContext().getRemoteUser();

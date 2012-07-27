@@ -79,4 +79,15 @@ public class File {
   public void setTags(List<String> tags) {
     this.tags = tags;
   }
+
+  public String getTagsAsString() {
+    StringBuffer sb = new StringBuffer();
+    boolean first=true;
+    for (String tag:tags)
+    {
+      sb.append( (first)?"":", " ).append(tag);
+      first=false;
+    }
+    return sb.toString();
+  }
 }

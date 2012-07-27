@@ -16,13 +16,13 @@
            <div class="right">
              <li class="document-action dropdown right">
                <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
-               <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}">
+               <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-tags="${file.tagsAsString}">
                  <li><a href="#"><i class="minicon-preview"></i>Preview&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
                  <li><a href="#"><i class="minicon-upload"></i>Upload New Version&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li class="divider"></li>
                  <li><a href="#" class="share-link" data="${file.publicUrl}"><i class="minicon-share"></i>Share</a></li>
-                 <li><a href="#"><i class="minicon-tags"></i>Add/Edit Tags&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li><a href="#" class="tags-link"><i class="minicon-tags"></i>Add/Edit Tags</a></li>
                  <li class="divider"></li>
                  <li><a href="#"><i class="minicon-properties"></i>File Properties&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li><a href="#" class="rename-link"><i class="minicon-rename"></i>Rename</a></li>
@@ -118,6 +118,34 @@
     </div>
   </div>
 
+  <!-- ################################## -->
+  <!-- ########## TAGS MODAL ############ -->
+  <!-- ################################## -->
+  <div class="modal hide fade" id="TagsModal">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">x</a>
+      <h3>Add / Edit Tags</h3>
+    </div>
+    <div class="modal-body-no">
+
+      <form class="form-horizontal">
+        <label id="tags-label" style="padding-left: 10px;"></label>
+        <fieldset class="medium-padding control-group">
+          <label><b>Tags (separate with comma)</b></label>
+          <input type="text" class="input-xxlarge" id="file-tags" value="">
+          <label id="tags-error"></label>
+        </fieldset>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div class="actions">
+        <a href="#" class="btn btn-primary" data-uuid="---" id="tags-save-button">Save</a>
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+      </div>
+    </div>
+  </div>
+
 
 <script>
 
@@ -195,7 +223,40 @@
 
   });
 
+  $('.tags-link').on("click", function() {
+    var name = $(this).closest(".dropdown-menu").attr("data-name");
+    var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
+    var tags = $(this).closest(".dropdown-menu").attr("data-tags");
+    $('#tags-label').html('You are editing tags for "' + name + '"');
+    $('#file-tags').val(tags);
+    $('#tags-save-button').attr('data-uuid', uuid);
+    $('#TagsModal').modal('show');
+  });
 
+  $('#tags-save-button').on("click", function() {
+    var uuid = $(this).attr('data-uuid');
+    var tags = $('#file-tags').val();
+    $.ajax({
+      url: jzDocumentsEditTags,
+      data: {"uuid": uuid, "tags": tags},
+
+      success:function(response){
+        $('#TagsModal').modal('hide');
+        var type = 'Pictures';
+        if ( $('#documents-type-button').hasClass('active') ) {
+          type = 'Documents';
+        }
+        $('#documents-files').load(jzDocumentsGetFiles, {"type": type}, function () {});
+      },
+
+      error:function (xhr, status, error){
+        $("#tags-error").html(xhr.responseText);
+        $("#tags-error").closest(".control-group").addClass("error");
+      }
+
+    });
+
+  });
 
 
   $('#ShareModal input[type=text]').click(function() {
