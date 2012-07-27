@@ -105,3 +105,35 @@ $(function(){
 	}
 
 });
+
+
+$(document).ready(function(){
+
+  $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+  });
+
+
+  $('#images-type-button').on("click", function() {
+    documentFilter = "Pictures";
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+    });
+  });
+
+  $('#documents-type-button').on("click", function() {
+    documentFilter = "Documents";
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+    });
+  });
+
+  $('#tag-type-button').on("click", function() {
+    documentFilter = "Documents";
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+      $("#documents-type-button").addClass("active");
+      $(".filter-tag").css("display", "none");
+      $(".filter-files").css("display", "inline");
+    });
+  });
+
+
+
+});
