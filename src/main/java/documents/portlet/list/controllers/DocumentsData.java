@@ -4,6 +4,7 @@ package documents.portlet.list.controllers;
 import documents.portlet.list.bean.File;
 import documents.portlet.list.controllers.validator.NameValidator;
 import juzu.SessionScoped;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.cms.folksonomy.NewFolksonomyService;
 import org.exoplatform.services.cms.link.LinkManager;
@@ -57,7 +58,21 @@ public class DocumentsData {
 
 
       Node rootNode = session.getRootNode();
-      Node docNode = rootNode.getNode(getUserPrivatePath()+"/"+filter);
+      String space = getSpaceName();
+      String path = (space!=null)?getSpacePath(space):getUserPrivatePath();
+
+      if (space != null && filter.startsWith("Folksonomy/"))
+      {
+        filter = filter.replace("Folksonomy/", "ApplicationData/Tags/");
+      }
+
+      if (!rootNode.hasNode(path+"/"+filter)) {
+        Node parentNode = rootNode.getNode(path);
+        parentNode.addNode(filter, "nt:folder");
+        parentNode.save();
+      }
+
+      Node docNode = rootNode.getNode(path+"/"+filter);
 
       NodeIterator nodes = docNode.getNodes();
       List<File> files = new ArrayList<File>();
@@ -94,9 +109,21 @@ public class DocumentsData {
           file.setPublicUrl(url);
 
           //set tags
-          List<Node> tags = newFolksonomyService_.getLinkedTagsOfDocumentByScope(NewFolksonomyService.PRIVATE,
-                  Util.getPortalRequestContext().getRemoteUser(),
-                  node, "collaboration");
+          List<Node> tags;
+          if (space!=null)
+          {
+            tags = newFolksonomyService_.getLinkedTagsOfDocumentByScope(NewFolksonomyService.GROUP,
+                    "/spaces/"+space,
+                    node, "collaboration");
+          }
+          else
+          {
+            tags = newFolksonomyService_.getLinkedTagsOfDocumentByScope(NewFolksonomyService.PRIVATE,
+                    Util.getPortalRequestContext().getRemoteUser(),
+                    node, "collaboration");
+          }
+
+
           List<String> stags = new ArrayList<String>();
           if (tags!=null && tags.size()>0)
           {
@@ -191,9 +218,20 @@ public class DocumentsData {
       /**
        * TODO : Optimize this, remove existing if not in new list, add only if new
        * */
-      List<Node> tagsNodes = newFolksonomyService_.getLinkedTagsOfDocumentByScope(NewFolksonomyService.PRIVATE,
-              Util.getPortalRequestContext().getRemoteUser(),
-              node, "collaboration");
+      List<Node> tagsNodes;
+      String space = getSpaceName();
+      if (space!=null)
+      {
+        tagsNodes = newFolksonomyService_.getLinkedTagsOfDocumentByScope(NewFolksonomyService.GROUP,
+                "/spaces/"+space,
+                node, "collaboration");
+      }
+      else
+      {
+        tagsNodes = newFolksonomyService_.getLinkedTagsOfDocumentByScope(NewFolksonomyService.PRIVATE,
+                Util.getPortalRequestContext().getRemoteUser(),
+                node, "collaboration");
+      }
       if (tagsNodes!=null && tagsNodes.size()>0)
       {
         for (Node tag:tagsNodes)
@@ -205,7 +243,14 @@ public class DocumentsData {
       if (tags!=null && !"".equals(tags))
       {
         String[] atags = tags.replaceAll(" ", "").toLowerCase().split(",");
-        newFolksonomyService_.addPrivateTag(atags, node, "collaboration", Util.getPortalRequestContext().getRemoteUser());
+        if (space!=null)
+        {
+          newFolksonomyService_.addGroupsTag(atags, node, "collaboration", new String[]{"/spaces/"+space});
+        }
+        else
+        {
+          newFolksonomyService_.addPrivateTag(atags, node, "collaboration", Util.getPortalRequestContext().getRemoteUser());
+        }
 
         session.save();
       }
@@ -239,6 +284,11 @@ public class DocumentsData {
     return null;
   }
 
+  private static String getSpacePath(String space)
+  {
+    return "Groups/spaces/"+space;
+  }
+
   public static String calculateFileSize(double fileLengthLong) {
     int fileLengthDigitCount = Double.toString(fileLengthLong).length();
     double fileSizeKB = 0.0;
@@ -259,6 +309,26 @@ public class DocumentsData {
     String finalResult = roundTwoDecimals(fileSizeKB);
     return finalResult + " " + howBig;
   }
+
+  public String getSpaceName()
+  {
+    PortalRequestContext portalRequestContext = PortalRequestContext.getCurrentInstance();
+    // /portal/g/:spaces:espace_rh/espace_rh/DocumentsListApplication
+    String uri = portalRequestContext.getRequest().getRequestURI();
+
+    // /Groups/spaces/espace_rh/Documents
+
+    int io = uri.indexOf(":spaces:");
+    if (io==-1) return null;
+
+    String suri = uri.substring(io+8);
+    suri = suri.substring(0, suri.indexOf("/"));
+
+    return suri;
+  }
+
+
+
 
   private static String roundTwoDecimals(double d) {
     DecimalFormat twoDForm = new DecimalFormat("#.##");

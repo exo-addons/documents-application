@@ -26,6 +26,11 @@ public class UploadServlet extends HttpServlet
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
+
+    String appContext = request.getHeader("app-context");
+    boolean isPrivateContext = "Personal".equals(appContext);
+    String name = (isPrivateContext)?request.getRemoteUser():request.getHeader("app-space");
+
     try
     {
       List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -33,7 +38,7 @@ public class UploadServlet extends HttpServlet
       {
         if (item.getFieldName().equals("pic"))
         {
-          storeFile(item, request.getRemoteUser());
+          storeFile(item, name, isPrivateContext);
 
           response.setContentType("application/json");
           response.setCharacterEncoding("UTF-8");
@@ -48,7 +53,7 @@ public class UploadServlet extends HttpServlet
     }
   }
 
-  private void storeFile(FileItem item, String userName)
+  private void storeFile(FileItem item, String name, boolean isPrivateContext)
   {
     String filename = FilenameUtils.getName(item.getName());
     RepositoryService repositoryService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
@@ -61,12 +66,28 @@ public class UploadServlet extends HttpServlet
       //get info
       Session session = sessionProvider.getSession("collaboration", repositoryService.getCurrentRepository());
 
-      Node userNode = nodeHierarchyCreator.getUserNode(sessionProvider, userName);
-      Node homeNode = userNode.getNode("Private");
+      Node homeNode;
+
+      if (isPrivateContext)
+      {
+        Node userNode = nodeHierarchyCreator.getUserNode(sessionProvider, name);
+        homeNode = userNode.getNode("Private");
+      }
+      else
+      {
+        Node rootNode = session.getRootNode();
+        homeNode = rootNode.getNode(getSpacePath(name));
+      }
 
       Node docNode = homeNode.getNode("Documents");
       if (isImage(filename))
+      {
+        if (!homeNode.hasNode("Pictures")) {
+          homeNode.addNode("Pictures", "nt:folder");
+          homeNode.save();
+        }
         docNode = homeNode.getNode("Pictures");
+      }
 
       if (!docNode.hasNode(filename))
       {
@@ -102,6 +123,11 @@ public class UploadServlet extends HttpServlet
     if (filename.endsWith(".jpg") || filename.endsWith(".png"))
       return true;
     return false;
+  }
+
+  private static String getSpacePath(String space)
+  {
+    return "Groups/spaces/"+space;
   }
 
 }

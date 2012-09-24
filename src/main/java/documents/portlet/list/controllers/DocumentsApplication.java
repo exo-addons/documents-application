@@ -2,9 +2,12 @@ package documents.portlet.list.controllers;
 
 import juzu.*;
 import juzu.template.Template;
+import org.exoplatform.portal.application.PortalRequestContext;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** @author <a href="mailto:benjamin.paillereau@exoplatform.com">Benjamin Paillereau</a> */
 @SessionScoped
@@ -26,7 +29,19 @@ public class DocumentsApplication extends juzu.Controller
   @View
   public void index() throws IOException
   {
-    indexTemplate.with().set("filter", DocumentsData.TYPE_DOCUMENT).render();
+    String space = documentsData.getSpaceName();
+    String context;
+    if (space!=null)
+    {
+      context = "Community";
+    }
+    else
+    {
+      context = "Personal";
+      space = "";
+    }
+
+    indexTemplate.with().set("filter", DocumentsData.TYPE_DOCUMENT).set("context", context).set("space", space).render();
   }
 
   @Resource

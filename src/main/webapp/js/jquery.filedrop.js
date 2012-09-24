@@ -211,7 +211,11 @@
 			xhr.open("POST", opts.url, true);
 			xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' 
 			    + boundary);
-			    
+			xhr.setRequestHeader('app-context', docAppContext);
+			xhr.setRequestHeader('app-space', docAppSpace);
+			console.log("context=="+docAppContext);
+			console.log("space=="+docAppSpace);
+
 			xhr.sendAsBinary(builder);  
 			
 			opts.uploadStarted(index, file, files_count);  
