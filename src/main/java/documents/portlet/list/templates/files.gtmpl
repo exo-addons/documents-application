@@ -19,8 +19,10 @@
                 <a href="#" class="btn">Cancel</a>
              </span>
              <br/>
-             <% if (!"".equals(file.version)) { %><span class="document-version">${file.version}</span><% } %>
-             Created ${file.createdDate} by You - ${file.size}
+             <span>
+               <% if (!"".equals(file.version)) { %><div class="label label-info left file-version">${file.version}</div><% } %>
+               <div class="file-date left">Created ${file.createdDate} by You - ${file.size}</div>
+             </span>
            </div>
            <div class="right">
              <li class="document-action dropdown right">
