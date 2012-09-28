@@ -13,6 +13,7 @@ public class File {
   String uuid;
   String publicUrl;
   List<String> tags;
+  String version;
 
 
   public String getName() {
@@ -89,5 +90,13 @@ public class File {
       first=false;
     }
     return sb.toString();
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
   }
 }

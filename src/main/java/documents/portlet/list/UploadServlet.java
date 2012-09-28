@@ -105,6 +105,20 @@ public class UploadServlet extends HttpServlet
         docNode.save();
         session.save();
       }
+      else
+      {
+        Node fileNode = docNode.getNode(filename);
+        if (fileNode.canAddMixin("mix:versionable")) fileNode.addMixin("mix:versionable");
+        if (!fileNode.isCheckedOut()) {
+          fileNode.checkout();
+        }
+        fileNode.save();
+        fileNode.checkin();
+        fileNode.checkout();
+        Node jcrContent = fileNode.getNode("jcr:content");
+        jcrContent.setProperty("jcr:data", item.getInputStream());
+        session.save();
+      }
 
 
     }

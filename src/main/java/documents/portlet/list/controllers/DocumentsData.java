@@ -98,6 +98,13 @@ public class DocumentsData {
               file.setSize(fileSize);
             }
           }
+          // set versions
+          String version = "";
+          if (node.isNodeType("mix:versionable"))
+          {
+            version = (node.getVersionHistory().getAllVersions().getSize()==0)?"":"V"+node.getVersionHistory().getAllVersions().getSize();
+          }
+          file.setVersion(version);
           // set path
           file.setPath(node.getPath());
           // set public url
