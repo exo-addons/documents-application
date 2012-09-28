@@ -4,7 +4,7 @@
        files.each { file -> %>
        <tr>
          <td width="32px">
-            <div class="thumbnail">
+            <div class="thumbnail" data="${file.preview}" style="cursor:pointer;">
               <img src="${file.icon}" width="32px" height="32px"/>
             </div>
          </td>
@@ -28,7 +28,7 @@
              <li class="document-action dropdown right">
                <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
                <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-tags="${file.tagsAsString}">
-                 <li><a href="#"><i class="minicon-preview"></i>Preview&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li><a href="#" class="preview-link" data="${file.preview}"><i class="minicon-preview"></i>Preview</a></li>
                  <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
                  <li><a href="#"><i class="minicon-upload"></i>Upload New Version&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
                  <li class="divider"></li>
@@ -54,6 +54,26 @@
     <% } %>
   </table>
   <% } %>
+
+  <!-- ################################## -->
+  <!-- ######### PREVIEW MODAL ############ -->
+  <!-- ################################## -->
+  <div class="modal hide fade" id="PreviewModal">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">x</a>
+      <h3>Preview</h3>
+    </div>
+    <div class="modal-body-no">
+
+      <div class="thumbnail" style="margin:5px 50px;">
+        <img src="" width="450px" height="450px" id="preview-image" />
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    </div>
+  </div>
 
   <!-- ################################## -->
   <!-- ######### SHARE MODAL ############ -->
@@ -159,6 +179,16 @@
 
 
 <script>
+
+  $('.preview-link').on("click", function() {
+    $('#preview-image').attr("src", $(this).attr("data") );
+    $('#PreviewModal').modal('show');
+  });
+
+  $('.thumbnail').on("click", function() {
+    $('#preview-image').attr("src", $(this).attr("data") );
+    $('#PreviewModal').modal('show');
+  });
 
   $('.share-link').on("click", function() {
     $('#file-share-link').attr("value", $(this).attr("data") );

@@ -8,6 +8,7 @@ public class File {
   String name;
   Calendar createdDate;
   String icon;
+  String preview;
   String size;
   String path;
   String uuid;
@@ -39,6 +40,14 @@ public class File {
 //      return "/documents/img/Files-text.png";
     else
       return "/rest/thumbnailImage/custom/32x32/repository/collaboration"+path;
+  }
+
+  public String getPreview() {
+    if (name.endsWith(".pdf"))
+      return "/portal/rest/pdfviewer/repository/collaboration/1/0.0/1.0/"+getUuid();
+//      return "/documents/img/Files-text.png";
+    else
+      return "/rest/thumbnailImage/custom/450x0/repository/collaboration"+path;
   }
 
   public String getSize() {
