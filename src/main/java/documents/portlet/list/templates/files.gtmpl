@@ -65,8 +65,8 @@
     </div>
     <div class="modal-body-no">
 
-      <div class="thumbnail" style="margin:5px 50px;">
-        <img src="" width="450px" height="450px" id="preview-image" />
+      <div class="thumbnail" style="margin:5px; height:340px; overflow: auto;">
+        <img src="" width="550px" height="550px" id="preview-image" />
       </div>
 
     </div>
