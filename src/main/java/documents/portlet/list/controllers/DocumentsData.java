@@ -102,7 +102,8 @@ public class DocumentsData {
           String version = "";
           if (node.isNodeType("mix:versionable"))
           {
-            version = (node.getVersionHistory().getAllVersions().getSize()==0)?"":"V"+node.getVersionHistory().getAllVersions().getSize();
+            long ivers = node.getVersionHistory().getAllVersions().getSize() - 1;
+            version = (ivers<=0)?"":"V"+ivers;
           }
           file.setVersion(version);
           // set path
