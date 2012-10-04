@@ -134,6 +134,34 @@ $(document).ready(function(){
     });
   });
 
+  $('#hideDropzone').on("click", function() {
+    console.log("hiding dropzone");
+    $("#dropzone").css("display", "none");
+    $("#dropbox").html('<span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>');
+
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+    });
+
+  });
 
 
 });
+
+
+// Show the dropzone when dragging files (not folders or page
+// elements). The dropzone is hidden after a timer to prevent
+// flickering to occur as `dragleave` is fired constantly.
+var dragTimer;
+$(document).on('dragover', function(e) {
+    var dt = e.originalEvent.dataTransfer;
+    if(dt.types != null && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('application/x-moz-file'))) {
+        $("#dropzone").show();
+        window.clearTimeout(dragTimer);
+    }
+});
+$(document).on('dragleave', function(e) {
+    dragTimer = window.setTimeout(function() {
+        $("#dropzone").hide();
+        }, 250);
+});
+

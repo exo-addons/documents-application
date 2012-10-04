@@ -10,8 +10,11 @@
     <button class="btn btn-inverse active right" id="tag-type-button"></button>
   </div>
 
-  <div id="dropbox" style="display: none; clear: both;">
-    <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
+  <div id="dropzone" style="display: none; clear: both;">
+    <div id="hideDropzone" style="width: 300px; padding: 10px; margin: auto; text-align: center; cursor:pointer;">Click here to clear your Drop zone</div>
+    <div id="dropbox">
+      <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
+    </div>
   </div>
 
   <div id="documents-files">
@@ -36,23 +39,5 @@ var documentFilter = "Documents";
 var currentTag = "";
 var docAppContext = "<%=context%>";
 var docAppSpace = "<%=space%>";
-
-
-// Show the dropzone when dragging files (not folders or page
-// elements). The dropzone is hidden after a timer to prevent
-// flickering to occur as `dragleave` is fired constantly.
-var dragTimer;
-$(document).on('dragover', function(e) {
-    var dt = e.originalEvent.dataTransfer;
-    if(dt.types != null && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('application/x-moz-file'))) {
-        $("#dropbox").show();
-        window.clearTimeout(dragTimer);
-    }
-});
-$(document).on('dragleave', function(e) {
-    dragTimer = window.setTimeout(function() {
-        $("#dropbox").hide();
-        }, 25);
-});
 
 </script>
