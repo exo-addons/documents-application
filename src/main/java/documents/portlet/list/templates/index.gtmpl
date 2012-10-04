@@ -1,5 +1,5 @@
 <div class="container" id="container-documents">
-  <div class="btn-group-title" style="float:left"><h3 style="line-height:0px;"><%=context%> Files and Folders</h3></div>
+  <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;"><%=context%> Files and Folders</h3></div>
   <div class="btn-group filter-files" data-toggle="buttons-radio" style="float:right;">
     <button class="btn btn-inverse active" id="documents-type-button">Documents</button>
     <button class="btn btn-inverse" id="images-type-button">Images</button>
