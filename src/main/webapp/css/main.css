@@ -66,6 +66,7 @@
 
 .file-version {
   margin-right: 4px;
+  cursor: pointer;
 }
 
 .file-date {

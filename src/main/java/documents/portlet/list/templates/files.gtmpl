@@ -20,7 +20,7 @@
              </span>
              <br/>
              <span>
-               <% if (!"".equals(file.version)) { %><div class="label label-info left file-version">${file.version}</div><% } %>
+               <% if (!"".equals(file.version)) { %><div class="label label-info left file-version" data-uuid="${file.uuid}">${file.version}</div><% } %>
                <div class="file-date left">Created ${file.createdDate} by You - ${file.size}</div>
              </span>
            </div>
@@ -238,6 +238,15 @@
   $('.properties-link').on("click", function() {
     var uuid = $(this).attr("data-uuid");
     $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid}, function () {
+      $('#propertiesTab a:first').tab('show');
+      $('#PropertiesModal').modal('show');
+    });
+  });
+
+  $('.file-version').on("click", function() {
+    var uuid = $(this).attr("data-uuid");
+    $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid}, function () {
+      $('#propertiesTab a:last').tab('show');
       $('#PropertiesModal').modal('show');
     });
   });

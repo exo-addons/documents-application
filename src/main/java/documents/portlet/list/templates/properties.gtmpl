@@ -70,7 +70,7 @@
 
 <script>
   $(function () {
-    $('#propertiesTab a:first').tab('show');
+    //$('#propertiesTab a:first').tab('show');
   });
 
   $('#propertiesTab a').click(function (e) {
