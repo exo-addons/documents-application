@@ -8,6 +8,7 @@ public class VersionBean implements Comparable<VersionBean>
   Date createdDate;
   String name;
 
+
   public String getCreatedDate() {
     SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
     return formatter.format(createdDate.getTime());
@@ -21,8 +22,16 @@ public class VersionBean implements Comparable<VersionBean>
     return name;
   }
 
+  public String getReadableName() {
+    return ("jcr:rootVersion".equals(name))?"Base Version":name;
+  }
+
+  public boolean isRootVersion() {
+    return "jcr:rootVersion".equals(name);
+  }
+
   public void setName(String name) {
-    this.name = ("jcr:rootVersion".equals(name))?"Base Version":name;
+    this.name = name;
   }
 
   public int compareTo(VersionBean version) {

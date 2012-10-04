@@ -47,6 +47,29 @@ public class DocumentsData {
     linkManager_ = linkManager;
   }
 
+  protected boolean restoreVersion(String uuid, String name)
+  {
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try
+    {
+      //get info
+      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+
+      Node node = session.getNodeByUUID(uuid);
+      node.restore(name, true);
+      return true;
+    }
+    catch (Exception e)
+    {
+      System.out.println("JCR::\n" + e.getMessage());
+    }
+    finally
+    {
+      sessionProvider.close();
+    }
+    return false;
+  }
+
   protected File getNode(String uuid)
   {
 

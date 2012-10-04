@@ -61,6 +61,13 @@ public class DocumentsApplication extends juzu.Controller
   }
 
   @Resource
+  public void restore(String uuid, String name)
+  {
+    documentsData.restoreVersion(uuid, name);
+    propertiesTemplate.with().set("file", documentsData.getNode(uuid)).render();
+  }
+
+  @Resource
   public Response.Content deleteFile(String uuid)
   {
     try

@@ -45,13 +45,19 @@
         <tr>
           <th>Versions</th>
           <th>Created Date</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
          <% file.versions.each { version -> %>
           <tr>
-            <td><%=version.name%></td>
+            <td><%=version.readableName%></td>
             <td><%=version.createdDate%></td>
+            <td>
+              <% if (!version.isRootVersion()) { %>
+                <a href="#" class="restore-link" data="<%=version.name%>" data-uuid="<%=file.uuid%>">Restore</a>
+              <% } %>
+            </td>
           </tr>
          <% } %>
       </tbody>
@@ -71,6 +77,13 @@
     e.preventDefault();
     $(this).tab('show');
   })
+
+  $('.restore-link').on("click", function() {
+    var name = $(this).attr("data");
+    var uuid = $(this).attr("data-uuid");
+    $('#document-properties').load(jzDocumentsRestore, {"uuid": uuid, "name": name}, function () {
+    });
+  });
 
 </script>
 
