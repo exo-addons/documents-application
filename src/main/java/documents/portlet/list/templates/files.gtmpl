@@ -11,7 +11,7 @@
          <td>
            <div class="left">
              <span>
-               <b><a href="#">${file.name}</a></b>
+               <b><a href="${file.path}" target="_new">${file.name}</a></b>
              </span>
              <span style="display:none;position:relative;">
                 <input type="text" class="input-xlarge input no-margin" value="${file.name}" />
