@@ -12,6 +12,7 @@ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,11 @@ import java.util.List;
 
 public class UploadServlet extends HttpServlet
 {
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+  {
+    doPost(request, response);
+  }
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -30,20 +36,53 @@ public class UploadServlet extends HttpServlet
     String appContext = request.getHeader("app-context");
     boolean isPrivateContext = "Personal".equals(appContext);
     String name = (isPrivateContext)?request.getRemoteUser():request.getHeader("app-space");
+    String uuid = null;
 
     try
     {
       List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
       for (FileItem item : items)
       {
+        if (item.isFormField())
+        {
+          String fieldName = item.getFieldName();
+          if ("app-context".equals(fieldName))
+          {
+            appContext = item.getString();
+            isPrivateContext = "Personal".equals(appContext);
+          }
+          if ("app-space".equals(fieldName))
+          {
+            name = (isPrivateContext)?request.getRemoteUser():item.getString();
+          }
+          if ("data-uuid".equals(fieldName)) uuid = item.getString();
+
+        }
         if (item.getFieldName().equals("pic"))
         {
-          storeFile(item, name, isPrivateContext);
+//          System.out.println("\n#########################");
+//          System.out.println("######### UPLOAD ########");
+//          System.out.println("# name :: "+name);
+//          System.out.println("# isPrivate :: "+isPrivateContext);
+//          System.out.println("# uuid :: "+uuid);
+//          System.out.println("# item value :: "+item.getFieldName());
 
-          response.setContentType("application/json");
-          response.setCharacterEncoding("UTF-8");
-          response.getWriter().write("{\"status\":\"File was uploaded successfuly!\"}");
-          return;
+          if (uuid!=null)
+          {
+            storeFile(item, name, isPrivateContext, uuid);
+            response.setContentType("text/html");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("<div style='background-color:#ffa; padding:20px'>File has been uploaded successfully!</div>");
+            return;
+          }
+          else
+          {
+            storeFile(item, name, isPrivateContext);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"status\":\"File has been uploaded successfully!\"}");
+            return;
+          }
         }
       }
     }
@@ -54,6 +93,11 @@ public class UploadServlet extends HttpServlet
   }
 
   private void storeFile(FileItem item, String name, boolean isPrivateContext)
+  {
+    storeFile(item, name, isPrivateContext, null);
+  }
+
+   private void storeFile(FileItem item, String name, boolean isPrivateContext, String uuid)
   {
     String filename = FilenameUtils.getName(item.getName());
     RepositoryService repositoryService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
@@ -89,7 +133,10 @@ public class UploadServlet extends HttpServlet
         docNode = homeNode.getNode("Pictures");
       }
 
-      if (!docNode.hasNode(filename))
+//      System.out.println("# docNode :: "+docNode.getPath());
+
+
+      if (!docNode.hasNode(filename) && uuid==null)
       {
         Node fileNode = docNode.addNode(filename, "nt:file");
         Node jcrContent = fileNode.addNode("jcr:content", "nt:resource");
@@ -107,7 +154,14 @@ public class UploadServlet extends HttpServlet
       }
       else
       {
-        Node fileNode = docNode.getNode(filename);
+        Node fileNode=null;
+        if (uuid!=null) {
+          fileNode = session.getNodeByUUID(uuid);
+        }
+        else
+        {
+          fileNode = docNode.getNode(filename);
+        }
         if (fileNode.canAddMixin("mix:versionable")) fileNode.addMixin("mix:versionable");
         if (!fileNode.isCheckedOut()) {
           fileNode.checkout();
@@ -125,6 +179,7 @@ public class UploadServlet extends HttpServlet
     catch (Exception e)
     {
       System.out.println("JCR::" + e.getMessage());
+//      e.printStackTrace();
     }
     finally
     {

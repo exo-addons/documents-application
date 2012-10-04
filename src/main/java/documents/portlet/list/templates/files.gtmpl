@@ -30,7 +30,7 @@
                <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-tags="${file.tagsAsString}">
                  <li><a href="#" class="preview-link" data="${file.preview}"><i class="minicon-preview"></i>Preview</a></li>
                  <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
-                 <li><a href="#"><i class="minicon-upload"></i>Upload New Version&nbsp;<span class="label label-info right">Coming Soon</span></a></li>
+                 <li><a href="#" class="upload-link" data-uuid="${file.uuid}"><i class="minicon-upload"></i>Upload New Version</a></li>
                  <li class="divider"></li>
                  <li><a href="#" class="share-link" data="${file.publicUrl}"><i class="minicon-share"></i>Share</a></li>
                  <li><a href="#" class="tags-link"><i class="minicon-tags"></i>Add/Edit Tags</a></li>
@@ -68,6 +68,37 @@
       <div class="thumbnail" style="margin:5px; height:340px; overflow: auto;">
         <img src="" width="550px" height="550px" id="preview-image" />
       </div>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    </div>
+  </div>
+
+  <!-- ################################## -->
+  <!-- ######### UPLOAD MODAL ############ -->
+  <!-- ################################## -->
+  <div class="modal hide fade" id="UploadModal">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">x</a>
+      <h3>Upload New Version</h3>
+    </div>
+    <div class="modal-body-no" style="padding: 10px;">
+
+      <form action="/documents/uploadServlet" method="post" enctype="multipart/form-data">
+         <input type="hidden" name="app-context" value="---" id="file-upload-context" />
+         <input type="hidden" name="app-space" value="---" id="file-upload-space" />
+         <input type="hidden" name="data-uuid" value="---" id="file-upload-input" />
+         <input type="file" name="pic" style="width:400px; margin: auto; padding-left: 30px;" />
+         <input type="submit" value="Upload"/>
+      </form>
+
+      <div class="progress">
+          <div class="bar"></div>
+          <div class="percent">0%</div>
+      </div>
+
+      <div id="status"></div>
 
     </div>
     <div class="modal-footer">
@@ -195,6 +226,13 @@
     $('#ShareModal').modal('show');
   });
 
+  $('.upload-link').on("click", function() {
+    $('#file-upload-input').attr("value", $(this).attr("data-uuid") );
+    $('#file-upload-context').attr("value", docAppContext );
+    $('#file-upload-space').attr("value", docAppSpace );
+    $('#UploadModal').modal('show');
+  });
+
   $('.delete-link').on("click", function() {
     var name = $(this).closest(".dropdown-menu").attr("data-name");
     var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
@@ -308,6 +346,32 @@
     $(this).closest(".control-group").removeClass("error");
     $('#rename-error').html("");
   });
+
+
+  (function() {
+
+  var bar = $('.bar');
+  var percent = $('.percent');
+  var status = $('#status');
+
+  $('form').ajaxForm({
+      beforeSend: function() {
+          status.empty();
+          var percentVal = '0%';
+          bar.width(percentVal)
+          percent.html(percentVal);
+      },
+      uploadProgress: function(event, position, total, percentComplete) {
+          var percentVal = percentComplete + '%';
+          bar.width(percentVal)
+          percent.html(percentVal);
+      },
+    complete: function(xhr) {
+      status.html(xhr.responseText);
+    }
+  });
+
+  })();
 
 
 </script>

@@ -14,6 +14,7 @@
         scripts = {
                 @Script(src = "js/jquery-1.7.1.min.js"),
                 @Script(src = "js/jquery.filedrop.js"),
+                @Script(src = "js/jquery.form.js"),
                 @Script(src = "js/bootstrap-button.js"),
                 @Script(src = "js/bootstrap-modal.js"),
                 @Script(src = "js/bootstrap-dropdown.js"),
