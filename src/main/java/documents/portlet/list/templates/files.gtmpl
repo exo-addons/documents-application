@@ -385,6 +385,14 @@
 
   (function() {
 
+<% if (files!=null && files.size()==0) { %>
+
+  $('#hideDropzone').css("display", "none");
+  $('#dropzone').css("display", "block");
+
+<% } %>
+
+
   var bar = $('.bar');
   var percent = $('.percent');
   var status = $('#status');
