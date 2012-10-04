@@ -15,14 +15,11 @@
                 @Script(src = "js/jquery-1.7.1.min.js"),
                 @Script(src = "js/jquery.filedrop.js"),
                 @Script(src = "js/jquery.form.js"),
-                @Script(src = "js/bootstrap-button.js"),
-                @Script(src = "js/bootstrap-modal.js"),
-                @Script(src = "js/bootstrap-dropdown.js"),
+                @Script(src = "js/bootstrap.min.js"),
                 @Script(src = "js/main.js")
         },
         stylesheets = {
-                @Stylesheet(src = "css/bootstrap.css"),
-                @Stylesheet(src = "css/bootstrap-responsive.css"),
+                @Stylesheet(src = "css/bootstrap.min.css"),
                 @Stylesheet(src = "css/bootstrap-modal-fix.css"),
                 @Stylesheet(src = "css/main.css")
         }

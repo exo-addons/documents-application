@@ -2,6 +2,7 @@ package documents.portlet.list.bean;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class File {
@@ -15,6 +16,7 @@ public class File {
   String publicUrl;
   List<String> tags;
   String version;
+  List<VersionBean> versionBeans;
 
 
   public String getName() {
@@ -107,5 +109,14 @@ public class File {
 
   public void setVersion(String version) {
     this.version = version;
+  }
+
+  public List<VersionBean> getVersions() {
+    return versionBeans;
+  }
+
+  public void setVersions(List<VersionBean> versionBeans) {
+    this.versionBeans = versionBeans;
+    if (this.versionBeans.size()>1) Collections.sort(this.versionBeans, Collections.reverseOrder());
   }
 }

@@ -24,6 +24,10 @@ public class DocumentsApplication extends juzu.Controller
   Template filesTemplate;
 
   @Inject
+  @Path("properties.gtmpl")
+  Template propertiesTemplate;
+
+  @Inject
   DocumentsData documentsData;
 
   @View
@@ -48,6 +52,12 @@ public class DocumentsApplication extends juzu.Controller
   public void getFiles(String filter)
   {
     filesTemplate.with().set("files", documentsData.getNodes(filter)).render();
+  }
+
+  @Resource
+  public void getProperties(String uuid)
+  {
+    propertiesTemplate.with().set("file", documentsData.getNode(uuid)).render();
   }
 
   @Resource
