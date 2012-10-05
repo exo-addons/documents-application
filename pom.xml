@@ -31,43 +31,40 @@
     </dependency>
 
 
-    <!-- -->
+    <!-- eXo Platform 3.5.4 Dependencies -->
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
       <version>2.3.8-GA</version>
       <scope>provided</scope>
     </dependency>
-      <dependency>
-          <groupId>org.exoplatform.core</groupId>
-          <artifactId>exo.core.component.organization.api</artifactId>
-          <version>2.3.8-GA</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.exoplatform.portal</groupId>
-          <artifactId>exo.portal.component.portal</artifactId>
-          <version>3.2.5-PLF</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.exoplatform.portal</groupId>
-          <artifactId>exo.portal.webui.portal</artifactId>
-          <version>3.2.5-PLF</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.exoplatform.ecms</groupId>
-          <artifactId>exo-ecms-core-services</artifactId>
-          <version>2.3.8</version>
-          <scope>provided</scope>
-      </dependency>
-    <!--dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
-      <scope>provided</scope>
-    </dependency-->
+    <dependency>
+        <groupId>org.exoplatform.core</groupId>
+        <artifactId>exo.core.component.organization.api</artifactId>
+        <version>2.3.8-GA</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.exoplatform.portal</groupId>
+        <artifactId>exo.portal.component.portal</artifactId>
+        <version>3.2.5-PLF</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.exoplatform.portal</groupId>
+        <artifactId>exo.portal.webui.portal</artifactId>
+        <version>3.2.5-PLF</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.exoplatform.ecms</groupId>
+        <artifactId>exo-ecms-core-services</artifactId>
+        <version>2.3.8</version>
+        <scope>provided</scope>
+    </dependency>
+
+
+    <!-- Other Dependencies -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
