@@ -26,7 +26,37 @@ The same with Juzu : http://juzuweb.org
 
 Just to say it, Juzu is fun to develop with and eXo Platform is full of features to achieve my goal.
 
+## Some Screenshots
+
+### Drag n Drop : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/02-dragndrop.png "Drag n Drop")
+
+### Properties : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/03-properties.png "View Properties")
+
+### Preview : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/04-preview.png "Preview")
+
+### Public Sharing Link : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/05-sharing.png "Public Sharing")
+
+### Tags : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/06-tags.png "Tags")
+
+### View by Tags : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/07-filter-tags.png "View by Tags")
+
+### View and Restore Versions : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/08-versions.png "View and Restore Versions")
+
+### Private and Space contexts : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/09-space.png "Space Context")
+
+### Upload New Version : 
+![alt text](https://raw.github.com/benjp/documents/master/screenshots/10-upload.png "Upload New Version")
+
+
 ## Complete Demo from how to install it to how to use it :
 
-<p><a href="http://vimeo.com/50831296"><img src="https://raw.github.com/benjp/documents/master/screenshots/01-general.png"></img></a></p><p>from <a href="http://vimeo.com/user1241097">Benjamin Paillereau</a> on <a href="http://vimeo.com">Vimeo</a>.</p>
+<p><a href="http://vimeo.com/50831296" target="_vimeo"><img src="https://raw.github.com/benjp/documents/master/screenshots/01-general.png"></img></a></p><p>from <a href="http://vimeo.com/user1241097" target="_vimeo">Benjamin Paillereau</a> on <a href="http://vimeo.com" target="_vimeo">Vimeo</a>.</p>
 
