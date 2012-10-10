@@ -17,6 +17,8 @@ So, basically, my requirements are simple :
 
 This app was developped with eXo Platform 3.5 for the portal and documents stuff, Juzu to write the app and Bootstrap for the design.
 
+## eXo Powa Inside !
+
 If you want to develop on top of eXo Platform, you can find a lot of resources to help you here :
 http://community.exoplatform.com/portal/classic/documentation-public
 
