@@ -26,5 +26,5 @@ Just to say it, Juzu is fun to develop with and eXo Platform is full of features
 
 ## Complete Demo from how to install it to how to use it :
 
-<iframe src="http://player.vimeo.com/video/50831296" width="500" height="305" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe> <p><a href="http://vimeo.com/50831296">Documents Demo</a> from <a href="http://vimeo.com/user1241097">Benjamin Paillereau</a> on <a href="http://vimeo.com">Vimeo</a>.</p>
+<iframe src="http://player.vimeo.com/video/50831296" width="500" height="305" frameborder="0" webkitAllowFullScreen="webkitAllowFullScreen" mozallowfullscreen="mozallowfullscreen" allowfullscreen="allowfullscreen"></iframe> <p><a href="http://vimeo.com/50831296">Documents Demo</a> from <a href="http://vimeo.com/user1241097">Benjamin Paillereau</a> on <a href="http://vimeo.com">Vimeo</a>.</p>
 
