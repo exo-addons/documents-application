@@ -22,12 +22,12 @@
     <dependency>
       <groupId>org.juzu</groupId>
       <artifactId>juzu-builder</artifactId>
-      <version>0.5.0</version>
+      <version>0.5.1</version>
     </dependency>
     <dependency>
       <groupId>org.juzu</groupId>
       <artifactId>juzu-plugins-portlet</artifactId>
-      <version>0.5.0</version>
+      <version>0.5.1</version>
     </dependency>
 
 
