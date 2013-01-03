@@ -1,4 +1,4 @@
-package documents.portlet.list.controllers.validator;
+package org.benjp.documents.portlet.list.controllers.validator;
 
 import java.text.StringCharacterIterator;
 

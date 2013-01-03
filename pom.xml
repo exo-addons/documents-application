@@ -4,9 +4,9 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.juzu</groupId>
+  <groupId>org.benjp</groupId>
   <artifactId>documents</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Simple Documents Application</name>
@@ -14,6 +14,7 @@
   <properties>
     <maven.compiler.target>1.5</maven.compiler.target>
     <maven.compiler.source>1.5</maven.compiler.source>
+    <juzu.version>0.6.0-beta5</juzu.version>
   </properties>
 
   <dependencies>
@@ -21,13 +22,18 @@
     <!-- Application dependencies-->
     <dependency>
       <groupId>org.juzu</groupId>
-      <artifactId>juzu-builder</artifactId>
-      <version>0.5.1</version>
+      <artifactId>juzu-core</artifactId>
+      <version>${juzu.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-bom-core</artifactId>
+      <version>${juzu.version}</version>
     </dependency>
     <dependency>
       <groupId>org.juzu</groupId>
       <artifactId>juzu-plugins-portlet</artifactId>
-      <version>0.5.1</version>
+      <version>${juzu.version}</version>
     </dependency>
 
 
@@ -72,41 +78,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.api</artifactId>
-      <version>1.1.2</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.core</artifactId>
-      <version>1.1.2</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.metamodel</artifactId>
-      <version>1.1.2</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.apt</artifactId>
-      <version>1.1.2</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.spi</artifactId>
-      <version>1.1.2</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>
       <version>3.8</version>
@@ -123,8 +94,8 @@
         <dependencies>
           <dependency>
             <groupId>org.juzu</groupId>
-            <artifactId>juzu-builder</artifactId>
-            <version>0.5.0</version>
+            <artifactId>juzu-bom-core</artifactId>
+            <version>${juzu.version}</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -173,8 +144,8 @@
                       <version>1.0-SNAPSHOT</version>
                       <type>war</type>
                       <overWrite>false</overWrite>
-                      <outputDirectory>/Users/benjamin/java/demos/eXo-Platform-tomcat-3.5.3-MOD/tomcat-bundle/webapps</outputDirectory>
-                      <destFileName>documents.war</destFileName>
+                      <outputDirectory>/Users/benjamin/java/demos/eXo-Platform-tomcat-3.5.5/tomcat-bundle/webapps</outputDirectory>
+                      <destFileName>org.benjp.documents.war</destFileName>
                     </artifactItem>
                   </artifactItems>
                 </configuration>

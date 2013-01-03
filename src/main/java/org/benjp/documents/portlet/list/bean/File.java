@@ -1,4 +1,4 @@
-package documents.portlet.list.bean;
+package org.benjp.documents.portlet.list.bean;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

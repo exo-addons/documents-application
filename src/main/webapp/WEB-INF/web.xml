@@ -6,11 +6,11 @@
   <display-name>Documents</display-name>
   <servlet>
     <servlet-name>UploadServlet</servlet-name>
-    <servlet-class>documents.portlet.list.UploadServlet</servlet-class>
+    <servlet-class>org.benjp.documents.portlet.list.UploadServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>DownloadServlet</servlet-name>
-    <servlet-class>documents.portlet.list.DownloadServlet</servlet-class>
+    <servlet-class>org.benjp.documents.portlet.list.DownloadServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>UploadServlet</servlet-name>

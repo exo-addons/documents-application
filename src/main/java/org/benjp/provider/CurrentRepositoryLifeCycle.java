@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package documents.integration;
+package org.benjp.provider;
 
 import org.chromattic.spi.jcr.SessionLifeCycle;
 

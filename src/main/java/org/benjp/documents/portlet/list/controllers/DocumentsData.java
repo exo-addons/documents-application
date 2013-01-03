@@ -1,9 +1,9 @@
-package documents.portlet.list.controllers;
+package org.benjp.documents.portlet.list.controllers;
 
 
-import documents.portlet.list.bean.File;
-import documents.portlet.list.bean.VersionBean;
-import documents.portlet.list.controllers.validator.NameValidator;
+import org.benjp.documents.portlet.list.bean.File;
+import org.benjp.documents.portlet.list.bean.VersionBean;
+import org.benjp.documents.portlet.list.controllers.validator.NameValidator;
 import juzu.SessionScoped;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -20,7 +20,6 @@ import javax.jcr.version.VersionIterator;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Named("documentsData")
@@ -185,7 +184,7 @@ public class DocumentsData {
     String baseURI = request.getScheme() + "://" + request.getServerName() + ":"
             + String.format("%s", request.getServerPort());
 
-    String url = baseURI+"/documents/file/"+Util.getPortalRequestContext().getRemoteUser()+"/"+file.getUuid()+"/"+file.getName();
+    String url = baseURI+ "/documents/file/" +Util.getPortalRequestContext().getRemoteUser()+"/"+file.getUuid()+"/"+file.getName();
     file.setPublicUrl(url);
 
     //set tags

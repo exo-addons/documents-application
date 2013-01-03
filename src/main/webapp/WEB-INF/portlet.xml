@@ -7,7 +7,7 @@
   <portlet>
     <portlet-name>DocumentsListApplication</portlet-name>
     <display-name xml:lang="EN">Documents List</display-name>
-    <portlet-class>documents.portlet.list.ListPortlet</portlet-class>
+    <portlet-class>org.benjp.documents.portlet.list.ListPortlet</portlet-class>
     <init-param>
       <name>juzu.run_mode</name>
       <value>prod</value>

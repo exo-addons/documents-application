@@ -8,7 +8,7 @@ $(function(){
 		paramname:'pic',
 		
 		maxfiles: 20,
-		maxfilesize: 2,
+		maxfilesize: 15,
 		url: '/documents/uploadServlet',
 		
 		uploadFinished:function(i,file,response){
@@ -26,7 +26,7 @@ $(function(){
 					alert('Too many files! Please select 20 at most!');
 					break;
 				case 'FileTooLarge':
-					alert(file.name+' is too large! Please upload files up to 2mb.');
+					alert(file.name+' is too large! Please upload files up to 15mb.');
 					break;
 				default:
 					break;

@@ -1,17 +1,14 @@
-package documents.portlet.list.controllers;
+package org.benjp.documents.portlet.list.controllers;
 
 import juzu.*;
 import juzu.template.Template;
-import org.exoplatform.portal.application.PortalRequestContext;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /** @author <a href="mailto:benjamin.paillereau@exoplatform.com">Benjamin Paillereau</a> */
 @SessionScoped
-public class DocumentsApplication extends juzu.Controller
+public class DocumentsApplication
 {
 
   /** . */

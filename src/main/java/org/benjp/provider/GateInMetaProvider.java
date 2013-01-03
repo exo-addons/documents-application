@@ -1,4 +1,4 @@
-package documents.integration;
+package org.benjp.provider;
 
 import juzu.inject.ProviderFactory;
 import org.exoplatform.container.PortalContainer;

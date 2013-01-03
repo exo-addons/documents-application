@@ -1,4 +1,4 @@
-package documents.portlet.list;
+package org.benjp.documents.portlet.list;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -12,7 +12,6 @@ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
