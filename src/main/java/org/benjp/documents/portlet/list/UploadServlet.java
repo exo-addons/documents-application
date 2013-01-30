@@ -148,6 +148,18 @@ public class UploadServlet extends HttpServlet
           jcrContent.setProperty("jcr:mimeType", "image/png");
         else if (filename.endsWith(".pdf"))
           jcrContent.setProperty("jcr:mimeType", "application/pdf");
+        else if (filename.endsWith(".doc"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.ms-word");
+        else if (filename.endsWith(".xls"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.ms-excel");
+        else if (filename.endsWith(".ppt"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.ms-powerpoint");
+        else if (filename.endsWith(".docx"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        else if (filename.endsWith(".xlsx"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        else if (filename.endsWith(".pptx"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
         docNode.save();
         session.save();
       }

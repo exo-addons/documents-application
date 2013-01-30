@@ -422,7 +422,9 @@ public class DocumentsData {
 
   private boolean isAcceptedFile(String filename)
   {
-    if (filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".pdf"))
+    if (filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".pdf")
+            || filename.endsWith(".ppt") || filename.endsWith(".xls") || filename.endsWith(".doc")
+            || filename.endsWith(".pptx") || filename.endsWith(".xlsx") || filename.endsWith(".docx"))
       return true;
     return false;
   }
