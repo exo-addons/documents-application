@@ -160,6 +160,12 @@ public class UploadServlet extends HttpServlet
           jcrContent.setProperty("jcr:mimeType", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         else if (filename.endsWith(".pptx"))
           jcrContent.setProperty("jcr:mimeType", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+        else if (filename.endsWith(".odp"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.presentation");
+        else if (filename.endsWith(".odt"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.text");
+        else if (filename.endsWith(".ods"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.spreadsheet");
         docNode.save();
         session.save();
       }

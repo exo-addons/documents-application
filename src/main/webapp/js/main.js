@@ -42,6 +42,9 @@ $(function(){
         &&  file.type !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         &&  file.type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         &&  file.type !== "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        &&  file.type !== "application/vnd.oasis.opendocument.spreadsheet"
+        &&  file.type !== "application/vnd.oasis.opendocument.presentation"
+        &&  file.type !== "application/vnd.oasis.opendocument.text"
         &&  file.name.indexOf(".xls")<1
         ){
         alert('Only images and Office files are allowed!');
@@ -97,6 +100,12 @@ $(function(){
         image.attr('src','/documents/img/icon-ppt.png');
       } else if (file.type == "application/vnd.ms-word" || file.type == "application/msword" || file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
         image.attr('src','/documents/img/icon-doc.png');
+      } else if (file.type == "application/vnd.oasis.opendocument.text"){
+        image.attr('src','/documents/img/icon-odt.png');
+      } else if (file.type == "application/vnd.oasis.opendocument.spreadsheet"){
+        image.attr('src','/documents/img/icon-ods.png');
+      } else if (file.type == "application/vnd.oasis.opendocument.presentation"){
+        image.attr('src','/documents/img/icon-odp.png');
       } else {
         image.attr('src',e.target.result);
       }

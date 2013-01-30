@@ -424,7 +424,8 @@ public class DocumentsData {
   {
     if (filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".pdf")
             || filename.endsWith(".ppt") || filename.endsWith(".xls") || filename.endsWith(".doc")
-            || filename.endsWith(".pptx") || filename.endsWith(".xlsx") || filename.endsWith(".docx"))
+            || filename.endsWith(".pptx") || filename.endsWith(".xlsx") || filename.endsWith(".docx")
+            || filename.endsWith(".odt") || filename.endsWith(".ods") || filename.endsWith(".odp"))
       return true;
     return false;
   }

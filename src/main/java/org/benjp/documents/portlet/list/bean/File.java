@@ -37,7 +37,9 @@ public class File {
   }
 
   public String getIcon() {
-    if (name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx") || name.endsWith(".xls") || name.endsWith(".xlsx") || name.endsWith(".ppt") || name.endsWith(".pptx"))
+    if (name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx") || name.endsWith(".xls")
+            || name.endsWith(".xlsx") || name.endsWith(".ppt") || name.endsWith(".pptx")
+            || name.endsWith(".odt") || name.endsWith(".ods") || name.endsWith(".odp"))
       return "/portal/rest/pdfviewer/repository/collaboration/1/0.0/0.25/"+getUuid();
 //      return "/documents/img/Files-text.png";
     else
@@ -45,7 +47,9 @@ public class File {
   }
 
   public String getPreview() {
-    if (name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx") || name.endsWith(".xls") || name.endsWith(".xlsx") || name.endsWith(".ppt") || name.endsWith(".pptx"))
+    if (name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx") || name.endsWith(".xls")
+            || name.endsWith(".xlsx") || name.endsWith(".ppt") || name.endsWith(".pptx")
+            || name.endsWith(".odt") || name.endsWith(".ods") || name.endsWith(".odp"))
       return "/portal/rest/pdfviewer/repository/collaboration/1/0.0/1.0/"+getUuid();
 //      return "/documents/img/Files-text.png";
     else
