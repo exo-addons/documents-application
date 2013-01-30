@@ -88,48 +88,48 @@
 }
 
 .minicon-more {
- background-position: 0px 0px;
- background:url('../img/minicons/Triangle-medium-circle-1-01.png');
+ background: url('../img/minicons/triangle-medium-circle-1-01.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 .minicon-preview {
- background-position: 0px 0px;
- background:url('../img/minicons/Edition-24.png');
+ background: url('../img/minicons/Edition-24.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 .minicon-rename {
- background-position: 0px 0px;
- background:url('../img/minicons/Edition-31.png');
+ background: url('../img/minicons/Edition-31.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 .minicon-upload {
- background-position: 0px 0px;
- background:url('../img/minicons/Transfers-5.png');
+ background: url('../img/minicons/Transfers-5.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 .minicon-download {
- background-position: 0px 0px;
- background:url('../img/minicons/Transfers-6.png');
+ background: url('../img/minicons/Transfers-6.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 .minicon-share {
- background-position: 0px 0px;
- background:url('../img/minicons/Interface-3.png');
+ background: url('../img/minicons/Interface-3.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 .minicon-properties {
- background-position: 0px 0px;
- background:url('../img/minicons/Interface-58.png');
+ background: url('../img/minicons/Interface-58.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 .minicon-tags {
- background-position: 0px 0px;
- background:url('../img/minicons/Vote-2.png');
+ background: url('../img/minicons/Vote-2.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 .minicon-delete {
- background-position: 0px 0px;
- background:url('../img/minicons/Interface-71.png');
+ background: url('../img/minicons/Interface-71.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
 }
 
 /*-------------------------
