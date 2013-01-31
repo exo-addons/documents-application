@@ -201,6 +201,31 @@ $(document).ready(function(){
 
   });
 
+  function updateBreadcrumb() {
+    var $breadcrumb = $("#documents-breadcrumb");
+    var html = '<li class="breadcrumb-link" data-name="Documents"><a href="#">Home</a> <span class="divider">/</span></li>';
+    var filter = documentFilter;
+    var bc = "";
+    do {
+      ind = filter.indexOf("/");
+      if (ind>-1) {
+        var subs = filter.substr(0, ind);
+        filter = filter.substr(ind+1, filter.length-ind);
+        if (bc!=="") bc+="/"
+        bc = bc + subs;
+        html += '<li class="breadcrumb-link" data-name="'+bc+'"><a href="#'+bc+'">'+subs+'</a> <span class="divider">/</span></li>'
+      }
+    } while (ind>-1);
+    html += '<li class="active">'+filter+'</li>'
+    $breadcrumb.html(html);
+
+    if (documentFilter.indexOf("Folksonomy/")>-1) {
+      $(".new-folder-link").css("display", "none");
+    } else {
+      $(".new-folder-link").css("display", "initial");
+    }
+  }
+
 
 // Show the dropzone when dragging files (not folders or page
 // elements). The dropzone is hidden after a timer to prevent
@@ -227,6 +252,7 @@ $(document).ready(function(){
 
   function filesActions() {
 
+    updateBreadcrumb();
 
     $('.preview-link').on("click", function() {
       $('#preview-image').attr("src", $(this).attr("data") );
@@ -310,6 +336,11 @@ $(document).ready(function(){
       $('#RenameModal').modal('show');
     });
 
+    $('.new-folder-link').on("click", function() {
+      $('#rename-error').html("");
+      $('#NewFolderModal').modal('show');
+    });
+
     $('#rename-button').on("click", function() {
       var uuid = $(this).attr('data-uuid');
       var name = $('#file-name').attr("value");
@@ -366,15 +397,19 @@ $(document).ready(function(){
 
     });
 
-    $('.label-tag').on("click", function() {
-      currentTag = $(this).html();
-      documentFilter = "Folksonomy/"+currentTag;
+    $('.folder-link').on("click", function() {
+      folderName = $(this).attr("data-name");
+      documentFilter = documentFilter+"/"+folderName;
       $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
         filesActions();
-        $(".btn-inverse").removeClass("active");
-        $(".filter-files").css("display", "none");
-        $(".filter-tag").css("display", "inline");
-        $("#tag-type-button").html('<i class="minicon-delete"></i>'+currentTag);
+      });
+    });
+
+    $('.breadcrumb-link').on("click", function() {
+      folderName = $(this).attr("data-name");
+      documentFilter = folderName;
+      $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+        filesActions();
       });
     });
 

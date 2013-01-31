@@ -132,6 +132,11 @@
  background-size: 16px 16px;
 }
 
+.minicon-add {
+ background: url('../img/minicons/Interface-69.png') no-repeat 0px 0px;
+ background-size: 16px 16px;
+}
+
 /*-------------------------
 	Dropbox Element
 --------------------------*/

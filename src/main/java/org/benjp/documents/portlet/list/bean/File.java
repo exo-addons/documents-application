@@ -17,7 +17,17 @@ public class File {
   List<String> tags;
   String version;
   List<VersionBean> versionBeans;
+  boolean isFile=true;
 
+
+  public void setAsFolder()
+  {
+    this.isFile = false;
+  }
+
+  public boolean isFile() {
+    return isFile;
+  }
 
   public String getName() {
     return name;
@@ -42,7 +52,9 @@ public class File {
             || name.endsWith(".odt") || name.endsWith(".ods") || name.endsWith(".odp"))
       return "/portal/rest/pdfviewer/repository/collaboration/1/0.0/0.25/"+getUuid();
 //      return "/documents/img/Files-text.png";
-    else
+    else if (!isFile())
+      return "/documents/img/Files-folder.png";
+     else
       return "/rest/thumbnailImage/custom/32x32/repository/collaboration"+path;
   }
 
@@ -52,6 +64,8 @@ public class File {
             || name.endsWith(".odt") || name.endsWith(".ods") || name.endsWith(".odp"))
       return "/portal/rest/pdfviewer/repository/collaboration/1/0.0/1.0/"+getUuid();
 //      return "/documents/img/Files-text.png";
+    else if (!isFile())
+      return "/documents/img/Files-folder-big.png";
     else
       return "/rest/thumbnailImage/custom/550x0/repository/collaboration"+path;
   }

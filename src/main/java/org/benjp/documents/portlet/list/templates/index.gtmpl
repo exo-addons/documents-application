@@ -4,7 +4,7 @@
        data-app-context="<%=context%>"
        data-app-space="<%=space%>">
 
-  <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;"><%=context%> Files and Folders</h3></div>
+  <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;"><%=context%> Files</h3></div>
   <div class="btn-group filter-files" data-toggle="buttons-radio" style="float:right;">
     <button class="btn btn-inverse active" id="documents-type-button">Documents</button>
     <button class="btn btn-inverse" id="images-type-button">Images</button>
@@ -13,6 +13,14 @@
   <div class="filter-tag" style="float:right;display:none;">
     <label class="left" style="padding-top: 5px;">Filter By&nbsp;</label>
     <button class="btn btn-inverse active right" id="tag-type-button"></button>
+  </div>
+
+  <div style="clear: both;">
+    <ul class="breadcrumb" style="float: left;" id="documents-breadcrumb">
+      <li class="breadcrumb-link" data-name=""><a href="#">Home</a> <span class="divider">/</span></li>
+      <li class="active" class="breadcrumb-link" data-name="Documents">Documents</li>
+    </ul>
+    <a href="#" class="new-folder-link" style="float:right;line-height: 35px;"><i class="minicon-add"></i>New Folder</a>
   </div>
 
   <div id="dropzone" style="display: none; clear: both;">
@@ -172,6 +180,33 @@
   <div class="modal-footer">
     <div class="actions">
       <a href="#" class="btn btn-primary" data-uuid="---" id="rename-button">Rename</a>
+      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    </div>
+  </div>
+</div>
+
+<!-- ################################## -->
+<!-- ######### NEW FOLDER MODAL ########### -->
+<!-- ################################## -->
+<div class="modal hide fade" id="NewFolderModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">x</a>
+    <h3>New Folder</h3>
+  </div>
+  <div class="modal-body-no">
+
+    <form class="form-horizontal">
+      <fieldset class="medium-padding control-group">
+        <label>Enter a name</label>
+        <input type="text" class="input-xxlarge" id="folder-name" value="">
+        <label id="folder-error"></label>
+      </fieldset>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <div class="actions">
+      <a href="#" class="btn btn-primary" data-uuid="---" id="folder-button">Save</a>
       <a href="#" class="btn" data-dismiss="modal">Cancel</a>
     </div>
   </div>

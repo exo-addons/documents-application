@@ -131,7 +131,7 @@ public class DocumentsData {
       {
         Node node = nodes.nextNode();
         node = getTargetNode(node);
-        if (isAcceptedFile(node.getName()))
+        if (isAcceptedFile(node.getName()) || node.isNodeType("nt:folder"))
         {
           File file = getFileFromNode(node, space, false);
           files.add(file);
@@ -157,9 +157,11 @@ public class DocumentsData {
     //set name
     file.setName(node.getName());
     //set uuid
-    file.setUuid(node.getUUID());
-    // set creted date
+    if (node.isNodeType("mix:referenceable")) file.setUuid(node.getUUID());
+    // set created date
     file.setCreatedDate(node.getProperty("exo:dateCreated").getDate());
+    // is file or folder
+    if (node.isNodeType("nt:folder")) file.setAsFolder();
     //set file size
     if (node.hasNode("jcr:content")) {
       Node contentNode = node.getNode("jcr:content");
