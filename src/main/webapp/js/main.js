@@ -1,3 +1,5 @@
+var documentFilter, currentTag, docAppContext, docAppSpace;
+
 $(function(){
 
   var dropbox = $('#dropbox'),
@@ -153,10 +155,10 @@ $(document).ready(function(){
   var jzDocumentsDeleteFile = $documentsApplication.jzURL("DocumentsApplication.deleteFile");
   var jzDocumentsRenameFile = $documentsApplication.jzURL("DocumentsApplication.renameFile");
   var jzDocumentsEditTags = $documentsApplication.jzURL("DocumentsApplication.editTags");
-  var documentFilter = $documentsApplication.attr("data-document-filter");
-  var currentTag = $documentsApplication.attr("data-current-tag");
-  var docAppContext = $documentsApplication.attr("data-app-context");
-  var docAppSpace = $documentsApplication.attr("data-app-space");
+  documentFilter = $documentsApplication.attr("data-document-filter");
+  currentTag = $documentsApplication.attr("data-current-tag");
+  docAppContext = $documentsApplication.attr("data-app-context");
+  docAppSpace = $documentsApplication.attr("data-app-space");
 
 
   $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
