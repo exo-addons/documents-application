@@ -68,23 +68,4 @@
 
 </div>
 
-<script>
-  $(function () {
-    //$('#propertiesTab a:first').tab('show');
-  });
-
-  $('#propertiesTab a').click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-  })
-
-  $('.restore-link').on("click", function() {
-    var name = $(this).attr("data");
-    var uuid = $(this).attr("data-uuid");
-    $('#document-properties').load(jzDocumentsRestore, {"uuid": uuid, "name": name}, function () {
-    });
-  });
-
-</script>
-
 <% } %>

@@ -1,6 +1,7 @@
 package org.benjp.documents.portlet.list.controllers;
 
 import juzu.*;
+import juzu.plugin.ajax.Ajax;
 import juzu.template.Template;
 
 import javax.inject.Inject;
@@ -46,18 +47,21 @@ public class DocumentsApplication
   }
 
   @Resource
+  @Ajax
   public void getFiles(String filter)
   {
     filesTemplate.with().set("files", documentsData.getNodes(filter)).render();
   }
 
   @Resource
+  @Ajax
   public void getProperties(String uuid)
   {
     propertiesTemplate.with().set("file", documentsData.getNode(uuid)).render();
   }
 
   @Resource
+  @Ajax
   public void restore(String uuid, String name)
   {
     documentsData.restoreVersion(uuid, name);
@@ -65,6 +69,7 @@ public class DocumentsApplication
   }
 
   @Resource
+  @Ajax
   public Response.Content deleteFile(String uuid)
   {
     try
@@ -79,6 +84,7 @@ public class DocumentsApplication
   }
 
   @Resource
+  @Ajax
   public Response.Content renameFile(String uuid, String name)
   {
     try
@@ -97,6 +103,7 @@ public class DocumentsApplication
   }
 
   @Resource
+  @Ajax
   public Response.Content editTags(String uuid, String tags)
   {
     try

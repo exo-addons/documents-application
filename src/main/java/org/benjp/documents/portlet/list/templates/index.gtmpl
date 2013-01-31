@@ -1,4 +1,9 @@
-<div class="container" id="container-documents">
+<div class="container" id="container-documents"
+       data-document-filter="Documents"
+       data-current-tag=""
+       data-app-context="<%=context%>"
+       data-app-space="<%=space%>">
+
   <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;"><%=context%> Files and Folders</h3></div>
   <div class="btn-group filter-files" data-toggle="buttons-radio" style="float:right;">
     <button class="btn btn-inverse active" id="documents-type-button">Documents</button>
@@ -28,18 +33,175 @@
 
 </div>
 
+<!-- ################################## -->
+<!-- ######### PROPERTIES MODAL ############ -->
+<!-- ################################## -->
+<div class="modal hide fade" id="PropertiesModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">x</a>
+    <h3>Properties</h3>
+  </div>
+  <div class="modal-body-no">
 
-<script>
+    <div id="document-properties" style="width:100%;text-align:center;padding:10px;">Loading Properties, please wait...</div>
 
-var jzDocumentsGetFiles = "@{getFiles()}";
-var jzDocumentsGetProperties = "@{getProperties()}";
-var jzDocumentsRestore = "@{restore()}";
-var jzDocumentsDeleteFile = "@{deleteFile()}";
-var jzDocumentsRenameFile = "@{renameFile()}";
-var jzDocumentsEditTags = "@{editTags()}";
-var documentFilter = "Documents";
-var currentTag = "";
-var docAppContext = "<%=context%>";
-var docAppSpace = "<%=space%>";
+  </div>
 
-</script>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+  </div>
+</div>
+
+<!-- ################################## -->
+<!-- ######### PREVIEW MODAL ############ -->
+<!-- ################################## -->
+<div class="modal hide fade" id="PreviewModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">x</a>
+    <h3>Preview</h3>
+  </div>
+  <div class="modal-body-no">
+
+    <div class="thumbnail" style="margin:5px; height:340px; overflow: auto;">
+      <img src="" width="550px" height="550px" id="preview-image" />
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+  </div>
+</div>
+
+<!-- ################################## -->
+<!-- ######### UPLOAD MODAL ############ -->
+<!-- ################################## -->
+<div class="modal hide fade" id="UploadModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">x</a>
+    <h3>Upload New Version</h3>
+  </div>
+  <div class="modal-body-no" style="padding: 10px;">
+
+    <form action="/documents/uploadServlet" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="app-context" value="---" id="file-upload-context" />
+      <input type="hidden" name="app-space" value="---" id="file-upload-space" />
+      <input type="hidden" name="data-uuid" value="---" id="file-upload-input" />
+      <input type="file" name="pic" style="width:400px; margin: auto; padding-left: 30px;" />
+      <input type="submit" value="Upload"/>
+    </form>
+
+    <div class="progress">
+      <div class="bar"></div>
+      <div class="percent">0%</div>
+    </div>
+
+    <div id="status"></div>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+  </div>
+</div>
+
+<!-- ################################## -->
+<!-- ######### SHARE MODAL ############ -->
+<!-- ################################## -->
+<div class="modal hide fade" id="ShareModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">x</a>
+    <h3>Sharing settings</h3>
+  </div>
+  <div class="modal-body-no">
+
+    <form class="form-horizontal">
+      <fieldset class="medium-padding">
+        <label>Link to share</label>
+        <input type="text" class="input-xxlarge" id="file-share-link" value="">
+        <p class="help-block">This is the public address for this file. Use carefully, others can download your file even if it is stored in your Private place</p>
+      </fieldset>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+  </div>
+</div>
+
+<!-- ################################## -->
+<!-- ######### DELETE MODAL ########### -->
+<!-- ################################## -->
+<div class="modal hide fade" id="DeleteModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">x</a>
+    <h3>Delete File</h3>
+  </div>
+  <div class="modal-body-no">
+
+    <form class="form-horizontal">
+      <fieldset class="medium-padding">
+        <label id="delete-label"></label>
+      </fieldset>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-danger" data-uuid="---" id="delete-button">Delete</a>
+    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+  </div>
+</div>
+
+<!-- ################################## -->
+<!-- ######### RENAME MODAL ########### -->
+<!-- ################################## -->
+<div class="modal hide fade" id="RenameModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">x</a>
+    <h3>Rename File</h3>
+  </div>
+  <div class="modal-body-no">
+
+    <form class="form-horizontal">
+      <fieldset class="medium-padding control-group">
+        <label>Enter a new name</label>
+        <input type="text" class="input-xxlarge" id="file-name" value="">
+        <label id="rename-error"></label>
+      </fieldset>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <div class="actions">
+      <a href="#" class="btn btn-primary" data-uuid="---" id="rename-button">Rename</a>
+      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    </div>
+  </div>
+</div>
+
+<!-- ################################## -->
+<!-- ########## TAGS MODAL ############ -->
+<!-- ################################## -->
+<div class="modal hide fade" id="TagsModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">x</a>
+    <h3>Add / Edit Tags</h3>
+  </div>
+  <div class="modal-body-no">
+
+    <form class="form-horizontal">
+      <label id="tags-label" style="padding-left: 10px;"></label>
+      <fieldset class="medium-padding control-group">
+        <label><b>Tags (separate with comma)</b></label>
+        <input type="text" class="input-xxlarge" id="file-tags" value="">
+        <label id="tags-error"></label>
+      </fieldset>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <div class="actions">
+      <a href="#" class="btn btn-primary" data-uuid="---" id="tags-save-button">Save</a>
+      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    </div>
+  </div>
+</div>
+

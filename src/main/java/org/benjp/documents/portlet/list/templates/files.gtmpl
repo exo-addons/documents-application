@@ -1,15 +1,15 @@
-  <% if (files!=null) { %>
-  <table class="table">
-    <%
-       files.each { file -> %>
-       <tr>
-         <td width="32px">
-            <div class="thumbnail" data="${file.preview}" style="cursor:pointer;">
-              <img src="${file.icon}" width="32px" height="32px"/>
-            </div>
-         </td>
-         <td>
-           <div class="left">
+<% if (files!=null) { %>
+<table class="table">
+  <%
+    files.each { file -> %>
+  <tr>
+    <td width="32px">
+      <div class="thumbnail" data="${file.preview}" style="cursor:pointer;">
+        <img src="${file.icon}" width="32px" height="32px"/>
+      </div>
+    </td>
+    <td>
+      <div class="left">
              <span>
                <b><a href="${file.path}" target="_new">${file.name}</a></b>
              </span>
@@ -18,403 +18,56 @@
                 <a href="#" class="btn btn-primary">Save</a>
                 <a href="#" class="btn">Cancel</a>
              </span>
-             <br/>
+        <br/>
              <span>
                <% if (!"".equals(file.version)) { %><div class="label label-info left file-version" data-uuid="${file.uuid}">${file.version}</div><% } %>
                <div class="file-date left">Created ${file.createdDate} by You - ${file.size}</div>
              </span>
-           </div>
-           <div class="right">
-             <li class="document-action dropdown right">
-               <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
-               <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-tags="${file.tagsAsString}">
-                 <li><a href="#" class="preview-link" data="${file.preview}"><i class="minicon-preview"></i>Preview</a></li>
-                 <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
-                 <li><a href="#" class="upload-link" data-uuid="${file.uuid}"><i class="minicon-upload"></i>Upload New Version</a></li>
-                 <li class="divider"></li>
-                 <li><a href="#" class="share-link" data="${file.publicUrl}"><i class="minicon-share"></i>Share</a></li>
-                 <li><a href="#" class="tags-link"><i class="minicon-tags"></i>Add/Edit Tags</a></li>
-                 <li class="divider"></li>
-                 <li><a href="#" class="properties-link" data-uuid="${file.uuid}"><i class="minicon-properties"></i>File Properties</a></li>
-                 <li><a href="#" class="rename-link"><i class="minicon-rename"></i>Rename</a></li>
-                 <li><a href="#" class="delete-link"><i class="minicon-delete"></i>Delete</a></li>
-               </ul>
-             </li>
-             <div class="document-action right"><a href="#" class="share-link" data="${file.publicUrl}">Share</a></div>
-             <% if (file.tags.size>0) { %>
-               <br/>
-               <% file.tags.each { tag -> %>
-                 <span class="label label-small right label-tag">${tag}</span>
-               <% } %>
-             <% } %>
-           </div>
-         </td>
-       </tr>
+      </div>
+      <div class="right">
+        <li class="document-action dropdown right">
+          <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
+          <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-tags="${file.tagsAsString}">
+            <li><a href="#" class="preview-link" data="${file.preview}"><i class="minicon-preview"></i>Preview</a></li>
+            <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
+            <li><a href="#" class="upload-link" data-uuid="${file.uuid}"><i class="minicon-upload"></i>Upload New Version</a></li>
+            <li class="divider"></li>
+            <li><a href="#" class="share-link" data="${file.publicUrl}"><i class="minicon-share"></i>Share</a></li>
+            <li><a href="#" class="tags-link"><i class="minicon-tags"></i>Add/Edit Tags</a></li>
+            <li class="divider"></li>
+            <li><a href="#" class="properties-link" data-uuid="${file.uuid}"><i class="minicon-properties"></i>File Properties</a></li>
+            <li><a href="#" class="rename-link"><i class="minicon-rename"></i>Rename</a></li>
+            <li><a href="#" class="delete-link"><i class="minicon-delete"></i>Delete</a></li>
+          </ul>
+        </li>
+        <div class="document-action right"><a href="#" class="share-link" data="${file.publicUrl}">Share</a></div>
+        <% if (file.tags.size>0) { %>
+        <br/>
+        <% file.tags.each { tag -> %>
+        <span class="label label-small right label-tag">${tag}</span>
+        <% } %>
+        <% } %>
+      </div>
+    </td>
+  </tr>
 
-    <% } %>
-  </table>
   <% } %>
+</table>
+<% } %>
 
-  <!-- ################################## -->
-  <!-- ######### PROPERTIES MODAL ############ -->
-  <!-- ################################## -->
-  <div class="modal hide fade" id="PropertiesModal">
-    <div class="modal-header">
-      <a class="close" data-dismiss="modal">x</a>
-      <h3>Properties</h3>
-    </div>
-    <div class="modal-body-no">
 
-      <div id="document-properties" style="width:100%;text-align:center;padding:10px;">Loading Properties, please wait...</div>
-
-    </div>
-
-    <div class="modal-footer">
-      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
-    </div>
-  </div>
-
-  <!-- ################################## -->
-  <!-- ######### PREVIEW MODAL ############ -->
-  <!-- ################################## -->
-  <div class="modal hide fade" id="PreviewModal">
-    <div class="modal-header">
-      <a class="close" data-dismiss="modal">x</a>
-      <h3>Preview</h3>
-    </div>
-    <div class="modal-body-no">
-
-      <div class="thumbnail" style="margin:5px; height:340px; overflow: auto;">
-        <img src="" width="550px" height="550px" id="preview-image" />
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
-    </div>
-  </div>
-
-  <!-- ################################## -->
-  <!-- ######### UPLOAD MODAL ############ -->
-  <!-- ################################## -->
-  <div class="modal hide fade" id="UploadModal">
-    <div class="modal-header">
-      <a class="close" data-dismiss="modal">x</a>
-      <h3>Upload New Version</h3>
-    </div>
-    <div class="modal-body-no" style="padding: 10px;">
-
-      <form action="/documents/uploadServlet" method="post" enctype="multipart/form-data">
-         <input type="hidden" name="app-context" value="---" id="file-upload-context" />
-         <input type="hidden" name="app-space" value="---" id="file-upload-space" />
-         <input type="hidden" name="data-uuid" value="---" id="file-upload-input" />
-         <input type="file" name="pic" style="width:400px; margin: auto; padding-left: 30px;" />
-         <input type="submit" value="Upload"/>
-      </form>
-
-      <div class="progress">
-          <div class="bar"></div>
-          <div class="percent">0%</div>
-      </div>
-
-      <div id="status"></div>
-
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
-    </div>
-  </div>
-
-  <!-- ################################## -->
-  <!-- ######### SHARE MODAL ############ -->
-  <!-- ################################## -->
-  <div class="modal hide fade" id="ShareModal">
-    <div class="modal-header">
-      <a class="close" data-dismiss="modal">x</a>
-      <h3>Sharing settings</h3>
-    </div>
-    <div class="modal-body-no">
-
-      <form class="form-horizontal">
-        <fieldset class="medium-padding">
-          <label>Link to share</label>
-          <input type="text" class="input-xxlarge" id="file-share-link" value="">
-          <p class="help-block">This is the public address for this file. Use carefully, others can download your file even if it is stored in your Private place</p>
-        </fieldset>
-      </form>
-
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
-    </div>
-  </div>
-
-  <!-- ################################## -->
-  <!-- ######### DELETE MODAL ########### -->
-  <!-- ################################## -->
-  <div class="modal hide fade" id="DeleteModal">
-    <div class="modal-header">
-      <a class="close" data-dismiss="modal">x</a>
-      <h3>Delete File</h3>
-    </div>
-    <div class="modal-body-no">
-
-      <form class="form-horizontal">
-        <fieldset class="medium-padding">
-          <label id="delete-label"></label>
-        </fieldset>
-      </form>
-
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="btn btn-danger" data-uuid="---" id="delete-button">Delete</a>
-      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-    </div>
-  </div>
-
-  <!-- ################################## -->
-  <!-- ######### RENAME MODAL ########### -->
-  <!-- ################################## -->
-  <div class="modal hide fade" id="RenameModal">
-    <div class="modal-header">
-      <a class="close" data-dismiss="modal">x</a>
-      <h3>Rename File</h3>
-    </div>
-    <div class="modal-body-no">
-
-      <form class="form-horizontal">
-        <fieldset class="medium-padding control-group">
-          <label>Enter a new name</label>
-          <input type="text" class="input-xxlarge" id="file-name" value="">
-          <label id="rename-error"></label>
-        </fieldset>
-      </form>
-
-    </div>
-    <div class="modal-footer">
-      <div class="actions">
-        <a href="#" class="btn btn-primary" data-uuid="---" id="rename-button">Rename</a>
-        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ################################## -->
-  <!-- ########## TAGS MODAL ############ -->
-  <!-- ################################## -->
-  <div class="modal hide fade" id="TagsModal">
-    <div class="modal-header">
-      <a class="close" data-dismiss="modal">x</a>
-      <h3>Add / Edit Tags</h3>
-    </div>
-    <div class="modal-body-no">
-
-      <form class="form-horizontal">
-        <label id="tags-label" style="padding-left: 10px;"></label>
-        <fieldset class="medium-padding control-group">
-          <label><b>Tags (separate with comma)</b></label>
-          <input type="text" class="input-xxlarge" id="file-tags" value="">
-          <label id="tags-error"></label>
-        </fieldset>
-      </form>
-
-    </div>
-    <div class="modal-footer">
-      <div class="actions">
-        <a href="#" class="btn btn-primary" data-uuid="---" id="tags-save-button">Save</a>
-        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-      </div>
-    </div>
-  </div>
 
 
 <script>
 
-  $('.preview-link').on("click", function() {
-    $('#preview-image').attr("src", $(this).attr("data") );
-    $('#PreviewModal').modal('show');
-  });
-
-  $('.properties-link').on("click", function() {
-    var uuid = $(this).attr("data-uuid");
-    $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid}, function () {
-      $('#propertiesTab a:first').tab('show');
-      $('#PropertiesModal').modal('show');
-    });
-  });
-
-  $('.file-version').on("click", function() {
-    var uuid = $(this).attr("data-uuid");
-    $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid}, function () {
-      $('#propertiesTab a:last').tab('show');
-      $('#PropertiesModal').modal('show');
-    });
-  });
-
-  $('.thumbnail').on("click", function() {
-    $('#preview-image').attr("src", $(this).attr("data") );
-    $('#PreviewModal').modal('show');
-  });
-
-  $('.share-link').on("click", function() {
-    $('#file-share-link').attr("value", $(this).attr("data") );
-    $('#ShareModal').modal('show');
-  });
-
-  $('.upload-link').on("click", function() {
-    $('#file-upload-input').attr("value", $(this).attr("data-uuid") );
-    $('#file-upload-context').attr("value", docAppContext );
-    $('#file-upload-space').attr("value", docAppSpace );
-    $('#UploadModal').modal('show');
-  });
-
-  $('.delete-link').on("click", function() {
-    var name = $(this).closest(".dropdown-menu").attr("data-name");
-    var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
-    $('#delete-label').html('Are you sure you want to delete the file "' + name + '"?');
-    $('#delete-button').attr('data-uuid', uuid);
-    $('#DeleteModal').modal('show');
-  });
-
-  $('#delete-button').on("click", function() {
-    var uuid = $(this).attr('data-uuid');
-
-    $.ajax({
-      url: jzDocumentsDeleteFile,
-      data: {"uuid": uuid},
-
-      success:function(response){
-        $('#DeleteModal').modal('hide');
-        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {});
-      },
-
-      error:function (xhr, status, error){
-        $("#delete-label").html(xhr.responseText);
-        $("#delete-label").addClass("error");
-      }
-
-    });
-
-  });
-
-
-  $('.rename-link').on("click", function() {
-    var name = $(this).closest(".dropdown-menu").attr("data-name");
-    var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
-    name = name.substr(0, name.indexOf(".") );
-    $('#file-name').attr("value", name);
-    $('#rename-button').attr('data-uuid', uuid);
-    $('#rename-error').html("");
-    $('#RenameModal').modal('show');
-  });
-
-  $('#rename-button').on("click", function() {
-    var uuid = $(this).attr('data-uuid');
-    var name = $('#file-name').attr("value");
-    $.ajax({
-      url: jzDocumentsRenameFile,
-      data: {"uuid": uuid, "name": name},
-
-      success:function(response){
-        $('#RenameModal').modal('hide');
-        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {});
-      },
-
-      error:function (xhr, status, error){
-        $("#rename-error").html(xhr.responseText);
-        $("#rename-error").closest(".control-group").addClass("error");
-      }
-
-    });
-
-  });
-
-  $('.tags-link').on("click", function() {
-    var name = $(this).closest(".dropdown-menu").attr("data-name");
-    var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
-    var tags = $(this).closest(".dropdown-menu").attr("data-tags");
-    $('#tags-label').html('You are editing tags for "' + name + '"');
-    $('#file-tags').val(tags);
-    $('#tags-save-button').attr('data-uuid', uuid);
-    $('#TagsModal').modal('show');
-  });
-
-  $('#tags-save-button').on("click", function() {
-    var uuid = $(this).attr('data-uuid');
-    var tags = $('#file-tags').val();
-    $.ajax({
-      url: jzDocumentsEditTags,
-      data: {"uuid": uuid, "tags": tags},
-
-      success:function(response){
-        $('#TagsModal').modal('hide');
-        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {});
-      },
-
-      error:function (xhr, status, error){
-        $("#tags-error").html(xhr.responseText);
-        $("#tags-error").closest(".control-group").addClass("error");
-      }
-
-    });
-
-  });
-
-  $('.label-tag').on("click", function() {
-    currentTag = $(this).html();
-    documentFilter = "Folksonomy/"+currentTag;
-    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-      $(".btn-inverse").removeClass("active");
-      $(".filter-files").css("display", "none");
-      $(".filter-tag").css("display", "inline");
-      $("#tag-type-button").html('<i class="minicon-delete"></i>'+currentTag);
-    });
-  });
-
-
-  $('#ShareModal input[type=text]').click(function() {
-    $(this).select();
-  });
-
-  $('#RenameModal input[type=text]').click(function() {
-    $(this).select();
-    $(this).closest(".control-group").removeClass("error");
-    $('#rename-error').html("");
-  });
-
-
   (function() {
 
-<% if (files!=null && files.size()==0) { %>
-  $('#dropzone').css("display", "block");
-<% } else { %>
-  $('#dropzone').css("display", "none");
-<% } %>
-
-  $('#hideDropzone').css("display", "none");
-
-  var bar = $('.bar');
-  var percent = $('.percent');
-  var status = $('#status');
-
-  $('form').ajaxForm({
-      beforeSend: function() {
-          status.empty();
-          var percentVal = '0%';
-          bar.width(percentVal)
-          percent.html(percentVal);
-      },
-      uploadProgress: function(event, position, total, percentComplete) {
-          var percentVal = percentComplete + '%';
-          bar.width(percentVal)
-          percent.html(percentVal);
-      },
-    complete: function(xhr) {
-      status.html(xhr.responseText);
-    }
-  });
+    <% if (files!=null && files.size()==0) { %>
+    $('#dropzone').css("display", "block");
+    <% } else { %>
+    $('#dropzone').css("display", "none");
+    <% } %>
 
   })();
-
 
 </script>

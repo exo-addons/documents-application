@@ -13,11 +13,11 @@
 @Assets(
         location = AssetLocation.SERVER,
         scripts = {
-                @Script(src = "js/jquery-1.7.1.min.js"),
-                @Script(src = "js/jquery.filedrop.js"),
-                @Script(src = "js/jquery.form.js"),
-                @Script(src = "js/bootstrap.min.js"),
-                @Script(src = "js/main.js")
+                @Script(src = "js/jquery-1.7.1.min.js", id = "jquery"),
+                @Script(src = "js/jquery.filedrop.js", depends = "jquery", id = "filedrop"),
+                @Script(src = "js/jquery.form.js", depends = "jquery", id = "jqform"),
+                @Script(src = "js/bootstrap.min.js", id="bootstrap"),
+                @Script(src = "js/main.js", depends = "jquery, filedrop, jqform, bootstrap")
         },
         stylesheets = {
                 @Stylesheet(src = "css/bootstrap.min.css"),
