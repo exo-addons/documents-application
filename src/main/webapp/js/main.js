@@ -214,7 +214,10 @@ $(document).ready(function(){
         filter = filter.substr(ind+1, filter.length-ind);
         if (bc!=="") bc+="/"
         bc = bc + subs;
-        html += '<li class="breadcrumb-link" data-name="'+bc+'"><a href="#'+bc+'">'+subs+'</a> <span class="divider">/</span></li>'
+        if (bc=="Folksonomy")
+          html += '<li class="breadcrumb-link" data-name="Documents"><a href="#">'+subs+'</a> <span class="divider">/</span></li>'
+        else
+          html += '<li class="breadcrumb-link" data-name="'+bc+'"><a href="#'+bc+'">'+subs+'</a> <span class="divider">/</span></li>'
       }
     } while (ind>-1);
     html += '<li class="active">'+filter+'</li>'
@@ -441,6 +444,9 @@ $(document).ready(function(){
     });
 
     $('.breadcrumb-link').on("click", function() {
+      $("#documents-type-button").addClass("active");
+      $(".filter-tag").css("display", "none");
+      $(".filter-files").css("display", "inline");
       folderName = $(this).attr("data-name");
       documentFilter = folderName;
       $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
