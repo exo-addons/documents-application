@@ -213,8 +213,10 @@
 			    + boundary);
 			xhr.setRequestHeader('app-context', docAppContext);
 			xhr.setRequestHeader('app-space', docAppSpace);
+			xhr.setRequestHeader('app-filter', documentFilter);
 			console.log("context=="+docAppContext);
 			console.log("space=="+docAppSpace);
+			console.log("filter=="+documentFilter);
 
 			xhr.sendAsBinary(builder);  
 			

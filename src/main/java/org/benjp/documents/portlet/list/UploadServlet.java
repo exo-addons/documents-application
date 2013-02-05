@@ -33,6 +33,7 @@ public class UploadServlet extends HttpServlet
   {
 
     String appContext = request.getHeader("app-context");
+    String path = request.getHeader("app-filter");
     boolean isPrivateContext = "Personal".equals(appContext);
     String name = (isPrivateContext)?request.getRemoteUser():request.getHeader("app-space");
     String uuid = null;
@@ -68,7 +69,7 @@ public class UploadServlet extends HttpServlet
 
           if (uuid!=null)
           {
-            storeFile(item, name, isPrivateContext, uuid);
+            storeFile(path, item, name, isPrivateContext, uuid);
             response.setContentType("text/html");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write("<div style='background-color:#ffa; padding:20px'>File has been uploaded successfully!</div>");
@@ -76,7 +77,7 @@ public class UploadServlet extends HttpServlet
           }
           else
           {
-            storeFile(item, name, isPrivateContext);
+            storeFile(path, item, name, isPrivateContext);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write("{\"status\":\"File has been uploaded successfully!\"}");
@@ -91,12 +92,12 @@ public class UploadServlet extends HttpServlet
     }
   }
 
-  private void storeFile(FileItem item, String name, boolean isPrivateContext)
+  private void storeFile(String path, FileItem item, String name, boolean isPrivateContext)
   {
-    storeFile(item, name, isPrivateContext, null);
+    storeFile(path, item, name, isPrivateContext, null);
   }
 
-   private void storeFile(FileItem item, String name, boolean isPrivateContext, String uuid)
+   private void storeFile(String path, FileItem item, String name, boolean isPrivateContext, String uuid)
   {
     String filename = FilenameUtils.getName(item.getName());
     RepositoryService repositoryService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
@@ -130,6 +131,9 @@ public class UploadServlet extends HttpServlet
           homeNode.save();
         }
         docNode = homeNode.getNode("Pictures");
+      }
+      if (path.contains("/")) {
+        docNode = homeNode.getNode(path);
       }
 
 //      System.out.println("# docNode :: "+docNode.getPath());
