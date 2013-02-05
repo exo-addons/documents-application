@@ -132,7 +132,7 @@ public class UploadServlet extends HttpServlet
         }
         docNode = homeNode.getNode("Pictures");
       }
-      if (path.contains("/")) {
+      if (path.contains("/") && !path.startsWith("Folksonomy/")) {
         docNode = homeNode.getNode(path);
       }
 
@@ -172,6 +172,7 @@ public class UploadServlet extends HttpServlet
           jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.spreadsheet");
         docNode.save();
         session.save();
+        uuid = fileNode.getUUID();
       }
       else
       {
@@ -195,6 +196,20 @@ public class UploadServlet extends HttpServlet
         session.save();
       }
 
+      if (path.startsWith("Folksonomy/")) {
+        if (uuid!=null)
+        {
+          //Node fileNode = session.getNodeByUUID(uuid);
+          Node tagNode = homeNode.getNode(path);
+          Node linkNode = tagNode.addNode(filename, "exo:symlink");
+          linkNode.setProperty("exo:uuid", uuid);
+          linkNode.setProperty("exo:workspace", "collaboration");
+          linkNode.setProperty("exo:primaryType", "nt:file");
+          tagNode.save();
+          session.save();
+
+        }
+      }
 
     }
     catch (Exception e)
