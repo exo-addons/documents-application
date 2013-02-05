@@ -199,6 +199,8 @@ public class UploadServlet extends HttpServlet
       if (path.startsWith("Folksonomy/")) {
         if (uuid!=null)
         {
+          if (!isPrivateContext)
+            path = path.replace("Folksonomy/", "ApplicationData/Tags/");
           //Node fileNode = session.getNodeByUUID(uuid);
           Node tagNode = homeNode.getNode(path);
           Node linkNode = tagNode.addNode(filename, "exo:symlink");
