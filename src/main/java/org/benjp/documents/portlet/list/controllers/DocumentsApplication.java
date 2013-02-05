@@ -104,6 +104,17 @@ public class DocumentsApplication
 
   @Resource
   @Ajax
+  public Response.Content newFolder(String documentFilter, String name)
+  {
+    if (!documentsData.createNodeIfNotExist(documentFilter, name))
+    {
+      return Response.notFound("Folder cannot be created or already exists. Please, try later");
+    }
+    return Response.ok("Successfully created.");
+  }
+
+  @Resource
+  @Ajax
   public Response.Content editTags(String uuid, String tags)
   {
     try

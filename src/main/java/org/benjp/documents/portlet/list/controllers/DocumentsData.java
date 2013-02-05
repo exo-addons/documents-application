@@ -99,6 +99,42 @@ public class DocumentsData {
     return null;
   }
 
+  protected boolean createNodeIfNotExist(String filter, String name)
+  {
+    filter = filter+"/"+name;
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try
+    {
+      //get info
+      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+
+
+      Node rootNode = session.getRootNode();
+      String space = getSpaceName();
+      String path = (space!=null)?getSpacePath(space):getUserPrivatePath();
+
+      if (space != null && filter.startsWith("Folksonomy/"))
+      {
+        filter = filter.replace("Folksonomy/", "ApplicationData/Tags/");
+      }
+
+      if (!rootNode.hasNode(path+"/"+filter)) {
+        Node parentNode = rootNode.getNode(path);
+        parentNode.addNode(filter, "nt:folder");
+        parentNode.save();
+      }
+    } catch (Exception e)
+    {
+      return false;
+    }
+    finally {
+      sessionProvider.close();
+    }
+    return true;
+
+  }
+
+
   protected List<File> getNodes(String filter)
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();

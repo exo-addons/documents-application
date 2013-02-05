@@ -154,6 +154,7 @@ $(document).ready(function(){
   var jzDocumentsRestore = $documentsApplication.jzURL("DocumentsApplication.restore");
   var jzDocumentsDeleteFile = $documentsApplication.jzURL("DocumentsApplication.deleteFile");
   var jzDocumentsRenameFile = $documentsApplication.jzURL("DocumentsApplication.renameFile");
+  var jzDocumentsNewFolder = $documentsApplication.jzURL("DocumentsApplication.newFolder");
   var jzDocumentsEditTags = $documentsApplication.jzURL("DocumentsApplication.editTags");
   documentFilter = $documentsApplication.attr("data-document-filter");
   currentTag = $documentsApplication.attr("data-current-tag");
@@ -358,6 +359,28 @@ $(document).ready(function(){
         error:function (xhr, status, error){
           $("#rename-error").html(xhr.responseText);
           $("#rename-error").closest(".control-group").addClass("error");
+        }
+
+      });
+
+    });
+
+    $('#folder-button').on("click", function() {
+      var name = $('#folder-name').attr("value");
+      $.ajax({
+        url: jzDocumentsNewFolder,
+        data: {"documentFilter": documentFilter, "name": name},
+
+        success:function(response){
+          $('#NewFolderModal').modal('hide');
+          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+            filesActions();
+          });
+        },
+
+        error:function (xhr, status, error){
+          $("#folder-error").html(xhr.responseText);
+          $("#folder-error").closest(".control-group").addClass("error");
         }
 
       });
