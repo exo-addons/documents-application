@@ -397,6 +397,18 @@ $(document).ready(function(){
 
     });
 
+    $('.label-tag').on("click", function() {
+      currentTag = $(this).html();
+      documentFilter = "Folksonomy/"+currentTag;
+      $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+        filesActions();
+        $(".btn-inverse").removeClass("active");
+        $(".filter-files").css("display", "none");
+        $(".filter-tag").css("display", "inline");
+        $("#tag-type-button").html('<i class="minicon-delete"></i>'+currentTag);
+        });
+      });
+
     $('.folder-link').on("click", function() {
       folderName = $(this).attr("data-name");
       documentFilter = documentFilter+"/"+folderName;
