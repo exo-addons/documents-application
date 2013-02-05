@@ -120,4 +120,10 @@
     </plugins>
   </build>
 
+  <scm>
+    <connection>scm:git:git://github.com/benjp/documents.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/benjp/documents.git</developerConnection>
+    <url>https://github.com/benjp/documents</url>
+  </scm>
+
 </project>
