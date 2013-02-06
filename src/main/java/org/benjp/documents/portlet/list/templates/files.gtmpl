@@ -12,7 +12,7 @@
       <div class="left">
              <span>
                <% if (file.isFile) { %>
-                <b><a href="${file.path}" target="_new">${file.name}</a></b>
+                <b><a href="${file.restPath}" target="_new">${file.name}</a></b>
                <% } else { %>
                 <b><a href="#" class="folder-link" data-name="${file.name}">${file.name}</a></b>
                <% } %>
@@ -35,7 +35,7 @@
       <div class="right">
         <li class="document-action dropdown right">
           <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
-          <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-tags="${file.tagsAsString}">
+          <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-path="${file.path}" data-tags="${file.tagsAsString}">
             <% if (file.isFile) { %>
             <li><a href="#" class="preview-link" data="${file.preview}"><i class="minicon-preview"></i>Preview</a></li>
             <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
@@ -45,7 +45,7 @@
             <li><a href="#" class="tags-link"><i class="minicon-tags"></i>Add/Edit Tags</a></li>
             <li class="divider"></li>
             <% } %>
-            <li><a href="#" class="properties-link" data-uuid="${file.uuid}"><i class="minicon-properties"></i>Properties</a></li>
+            <li><a href="#" class="properties-link" data-uuid="${file.uuid}" data-path="${file.path}"><i class="minicon-properties"></i>Properties</a></li>
             <li><a href="#" class="rename-link"><i class="minicon-rename"></i>Rename</a></li>
             <li><a href="#" class="delete-link"><i class="minicon-delete"></i>Delete</a></li>
           </ul>

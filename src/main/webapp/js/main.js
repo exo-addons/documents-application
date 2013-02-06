@@ -265,7 +265,8 @@ $(document).ready(function(){
 
     $('.properties-link').on("click", function() {
       var uuid = $(this).attr("data-uuid");
-      $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid}, function () {
+      var path = $(this).attr("data-path");
+      $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid, "path": path}, function () {
         propertiesActions();
         $('#propertiesTab a:first').tab('show');
         $('#PropertiesModal').modal('show');
@@ -301,17 +302,20 @@ $(document).ready(function(){
     $('.delete-link').on("click", function() {
       var name = $(this).closest(".dropdown-menu").attr("data-name");
       var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
+      var path = $(this).closest(".dropdown-menu").attr("data-path");
       $('#delete-label').html('Are you sure you want to delete the file "' + name + '"?');
       $('#delete-button').attr('data-uuid', uuid);
+      $('#delete-button').attr('data-path', path);
       $('#DeleteModal').modal('show');
     });
 
     $('#delete-button').on("click", function() {
       var uuid = $(this).attr('data-uuid');
+      var path = $(this).attr('data-path');
 
       $.ajax({
         url: jzDocumentsDeleteFile,
-        data: {"uuid": uuid},
+        data: {"uuid": uuid, "path": path},
 
         success:function(response){
           $('#DeleteModal').modal('hide');
@@ -333,9 +337,11 @@ $(document).ready(function(){
     $('.rename-link').on("click", function() {
       var name = $(this).closest(".dropdown-menu").attr("data-name");
       var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
-      name = name.substr(0, name.indexOf(".") );
+      var path = $(this).closest(".dropdown-menu").attr("data-path");
+      if (name.indexOf(".")>-1) name = name.substr(0, name.indexOf(".") );
       $('#file-name').attr("value", name);
       $('#rename-button').attr('data-uuid', uuid);
+      $('#rename-button').attr('data-path', path);
       $('#rename-error').html("");
       $('#RenameModal').modal('show');
     });
@@ -347,10 +353,11 @@ $(document).ready(function(){
 
     $('#rename-button').on("click", function() {
       var uuid = $(this).attr('data-uuid');
+      var path = $(this).attr('data-path');
       var name = $('#file-name').attr("value");
       $.ajax({
         url: jzDocumentsRenameFile,
-        data: {"uuid": uuid, "name": name},
+        data: {"uuid": uuid, "name": name, "path": path},
 
         success:function(response){
           $('#RenameModal').modal('hide');

@@ -153,7 +153,7 @@
 
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-danger" data-uuid="---" id="delete-button">Delete</a>
+    <a href="#" class="btn btn-danger" data-uuid="---" data-path="---" id="delete-button">Delete</a>
     <a href="#" class="btn" data-dismiss="modal">Cancel</a>
   </div>
 </div>
@@ -179,7 +179,7 @@
   </div>
   <div class="modal-footer">
     <div class="actions">
-      <a href="#" class="btn btn-primary" data-uuid="---" id="rename-button">Rename</a>
+      <a href="#" class="btn btn-primary" data-uuid="---" data-path="---" id="rename-button">Rename</a>
       <a href="#" class="btn" data-dismiss="modal">Cancel</a>
     </div>
   </div>

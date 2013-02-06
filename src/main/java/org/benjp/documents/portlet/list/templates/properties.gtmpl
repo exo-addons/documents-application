@@ -2,7 +2,9 @@
 
 <ul class="nav nav-tabs" id="propertiesTab">
   <li class="active"><a href="#general">General</a></li>
+  <% if (file.isFile) { %>
   <li><a href="#versions">Versions</a></li>
+  <% } %>
 </ul>
 
 <div class="tab-content">
@@ -18,25 +20,28 @@
           <td>Created Date</td>
           <td><%=file.createdDate%></td>
         </tr>
-        <tr>
-          <td>Size</td>
-          <td><%=file.size%></td>
-        </tr>
-        <tr>
-          <td>Tags</td>
-          <td>
-             <% if (file.tags.size>0) { %>
-               <% file.tags.each { tag -> %>
-                 <span class="label label-info">${tag}</span>
+        <% if (file.isFile) { %>
+          <tr>
+            <td>Size</td>
+            <td><%=file.size%></td>
+          </tr>
+          <tr>
+            <td>Tags</td>
+            <td>
+               <% if (file.tags.size>0) { %>
+                 <% file.tags.each { tag -> %>
+                   <span class="label label-info">${tag}</span>
+                 <% } %>
                <% } %>
-             <% } %>
-          </td>
-        </tr>
+            </td>
+          </tr>
+        <% } %>
       </tbody>
     </table>
 
   </div>
 
+  <% if (file.isFile) { %>
   <div class="tab-pane" id="versions">
 
     <% if (file.versions!=null && file.versions.size()>0) { %>
@@ -65,6 +70,7 @@
     <% } %>
 
   </div>
+  <% } %>
 
 </div>
 

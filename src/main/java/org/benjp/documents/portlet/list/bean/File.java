@@ -12,7 +12,7 @@ public class File {
   String preview;
   String size;
   String path;
-  String uuid;
+  String uuid="";
   String publicUrl;
   List<String> tags;
   String version;
@@ -78,8 +78,12 @@ public class File {
     this.size = size;
   }
 
-  public String getPath() {
+  public String getRestPath() {
     return "/rest/jcr/repository/collaboration"+path;
+  }
+
+  public String getPath() {
+    return path;
   }
 
   public void setPath(String path) {

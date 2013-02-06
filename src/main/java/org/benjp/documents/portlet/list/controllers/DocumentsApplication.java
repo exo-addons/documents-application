@@ -3,6 +3,7 @@ package org.benjp.documents.portlet.list.controllers;
 import juzu.*;
 import juzu.plugin.ajax.Ajax;
 import juzu.template.Template;
+import org.benjp.documents.portlet.list.bean.File;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -55,9 +56,15 @@ public class DocumentsApplication
 
   @Resource
   @Ajax
-  public void getProperties(String uuid)
+  public void getProperties(String uuid, String path)
   {
-    propertiesTemplate.with().set("file", documentsData.getNode(uuid)).render();
+    File file = null;
+    if (uuid!=null && !"".equals(uuid))
+      file = documentsData.getNode(uuid);
+    else
+      file = documentsData.getNode(path);
+
+    propertiesTemplate.with().set("file", file).render();
   }
 
   @Resource
@@ -70,11 +77,14 @@ public class DocumentsApplication
 
   @Resource
   @Ajax
-  public Response.Content deleteFile(String uuid)
+  public Response.Content deleteFile(String uuid, String path)
   {
     try
     {
-      documentsData.deleteFile(uuid);
+      if (uuid!=null && !"".equals(uuid))
+        documentsData.deleteFile(uuid);
+      else
+        documentsData.deleteFile(path);
     }
     catch (Exception e)
     {
@@ -85,11 +95,15 @@ public class DocumentsApplication
 
   @Resource
   @Ajax
-  public Response.Content renameFile(String uuid, String name)
+  public Response.Content renameFile(String uuid, String name, String path)
   {
     try
     {
-      documentsData.renameFile(uuid, name);
+      if (uuid!=null && !"".equals(uuid))
+        documentsData.renameFile(uuid, name);
+      else
+        documentsData.renameFile(path, name);
+
     }
     catch (IllegalArgumentException e)
     {

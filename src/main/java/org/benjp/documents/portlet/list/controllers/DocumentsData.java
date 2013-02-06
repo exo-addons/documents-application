@@ -69,7 +69,7 @@ public class DocumentsData {
     return false;
   }
 
-  protected File getNode(String uuid)
+  protected File getNode(String id)
   {
 
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
@@ -78,7 +78,7 @@ public class DocumentsData {
       //get info
       Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
 
-      Node node = session.getNodeByUUID(uuid);
+      Node node = getNodeById(id, session);
 
       String space = getSpaceName();
 
@@ -291,13 +291,16 @@ public class DocumentsData {
   }
 
 
-  protected void deleteFile(String uuid) throws Exception
+  protected void deleteFile(String id) throws Exception
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
     {
       Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
-      session.getNodeByUUID(uuid).remove();
+
+      Node node = getNodeById(id, session);
+
+      node.remove();
       session.save();
     }
     finally
@@ -307,15 +310,17 @@ public class DocumentsData {
 
   }
 
-  protected void renameFile(String uuid, String name) throws Exception
+  protected void renameFile(String id, String name) throws Exception
   {
     NameValidator.validateName(name);
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
     {
       Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
-      Node node = session.getNodeByUUID(uuid);
-      String extension = node.getName().substring(node.getName().lastIndexOf("."));
+
+      Node node = getNodeById(id, session);
+      String extension = (!id.contains("/"))?node.getName().substring(node.getName().lastIndexOf(".")):"";
+
       StringBuilder newPath = new StringBuilder(node.getParent().getPath()).append('/')
               .append(name).append(extension);
       session.move(node.getPath(), newPath.toString());
@@ -326,6 +331,23 @@ public class DocumentsData {
       sessionProvider.close();
     }
 
+  }
+
+  private Node getNodeById(String id, Session session) throws Exception
+  {
+    Node node = null;
+    if (!id.contains("/"))
+    {
+      node = session.getNodeByUUID(id);
+    }
+    else
+    {
+      Node rootNode = session.getRootNode();
+      String path = (id.startsWith("/"))?id.substring(1):id;
+      node = rootNode.getNode(path);
+    }
+
+    return node;
   }
 
   protected void editTags(String uuid, String tags) throws Exception
