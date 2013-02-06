@@ -22,9 +22,11 @@
         stylesheets = {
                 @Stylesheet(src = "css/bootstrap.min.css"),
                 @Stylesheet(src = "css/bootstrap-modal-fix.css"),
-                @Stylesheet(src = "css/main.css")
+                @Stylesheet(src = "documents.css", location = AssetLocation.CLASSPATH)
         }
 )
+
+@Less(value = "documents.less", minify = true)
 
 package org.benjp.documents.portlet.list;
 
@@ -35,6 +37,7 @@ import juzu.plugin.asset.Script;
 import juzu.plugin.asset.Stylesheet;
 import juzu.plugin.binding.Binding;
 import juzu.plugin.binding.Bindings;
+import juzu.plugin.less.Less;
 import juzu.plugin.portlet.Portlet;
 import org.benjp.provider.GateInMetaProvider;
 

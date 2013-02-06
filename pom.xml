@@ -13,7 +13,7 @@
   <properties>
     <maven.compiler.target>1.5</maven.compiler.target>
     <maven.compiler.source>1.5</maven.compiler.source>
-    <juzu.version>0.6.0-beta8</juzu.version>
+    <juzu.version>0.6.0-beta15</juzu.version>
   </properties>
 
   <dependencies>
@@ -32,6 +32,11 @@
     <dependency>
       <groupId>org.juzu</groupId>
       <artifactId>juzu-plugins-portlet</artifactId>
+      <version>${juzu.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.juzu</groupId>
+      <artifactId>juzu-plugins-less</artifactId>
       <version>${juzu.version}</version>
     </dependency>
 

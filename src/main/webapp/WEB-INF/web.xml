@@ -5,6 +5,11 @@
          version="2.5">
   <display-name>Documents</display-name>
   <servlet>
+    <servlet-name>AssetServlet</servlet-name>
+    <servlet-class>juzu.impl.asset.AssetServlet</servlet-class>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet>
     <servlet-name>UploadServlet</servlet-name>
     <servlet-class>org.benjp.documents.portlet.list.UploadServlet</servlet-class>
   </servlet>
@@ -12,6 +17,10 @@
     <servlet-name>DownloadServlet</servlet-name>
     <servlet-class>org.benjp.documents.portlet.list.DownloadServlet</servlet-class>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>AssetServlet</servlet-name>
+    <url-pattern>/assets/*</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>UploadServlet</servlet-name>
     <url-pattern>/uploadServlet</url-pattern>
