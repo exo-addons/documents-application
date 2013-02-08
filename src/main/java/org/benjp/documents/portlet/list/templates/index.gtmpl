@@ -104,7 +104,7 @@
       <input type="hidden" name="app-space" value="---" id="file-upload-space" />
       <input type="hidden" name="data-uuid" value="---" id="file-upload-input" />
       <input type="file" name="pic" style="width:400px; margin: auto; padding-left: 30px;" />
-      <input type="submit" value="Upload"/>
+      <input type="submit" value="&{benjp.documents.upload}"/>
     </form>
 
     <div class="progress">
