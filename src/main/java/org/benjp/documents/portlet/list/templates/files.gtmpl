@@ -35,7 +35,7 @@
       <div class="right">
         <li class="document-action dropdown right">
           <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
-          <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-path="${file.path}" data-tags="${file.tagsAsString}">
+          <ul class="dropdown-menu" style="margin-left:-135px;" data-name="${file.name}" data-uuid="${file.uuid}" data-path="${file.path}" data-tags="${file.tagsAsString}">
             <% if (file.isFile) { %>
             <li><a href="#" class="preview-link" data="${file.preview}"><i class="minicon-preview"></i>&{benjp.documents.preview}</a></li>
             <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>&{benjp.documents.download}</a></li>

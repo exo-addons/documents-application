@@ -24,7 +24,18 @@
       <li class="breadcrumb-link" data-name=""><a href="#">&{benjp.documents.home}</a> <span class="divider">/</span></li>
       <li class="active" class="breadcrumb-link" data-name="Documents">&{benjp.documents.documents}</li>
     </ul>
-    <span style="float:right;">Sort By <a href="#" class="sort-by-link" style="line-height: 35px;">Name</a></span>
+    <span style="float:right;">
+      <li class="document-action dropdown right">
+        Sort By&nbsp;<a class="dropdown-toggle" id="order-by-link" data-toggle="dropdown" data-target="#" href="#" data-order="asc" data-by="name">Name</a>
+        <ul class="dropdown-menu order-by-menu" style="min-width: 50px;margin-left: 24px;">
+          <li data-by="name"><a href="#">Name</a></li>
+          <li data-by="date"><a href="#">Date</a></li>
+          <li data-by="size"><a href="#">Size</a></li>
+        </ul>
+      </li>
+
+    </span>
+
   </div>
 
   <div id="dropzone" style="display: none; clear: both;">

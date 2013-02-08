@@ -3,6 +3,8 @@ package org.benjp.documents.portlet.list.controllers;
 
 import org.benjp.documents.portlet.list.bean.File;
 import org.benjp.documents.portlet.list.bean.VersionBean;
+import org.benjp.documents.portlet.list.comparator.FileNameComparator;
+import org.benjp.documents.portlet.list.comparator.FileNameReverseComparator;
 import org.benjp.documents.portlet.list.controllers.validator.NameValidator;
 import juzu.SessionScoped;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -20,6 +22,8 @@ import javax.jcr.version.VersionIterator;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Named("documentsData")
@@ -138,6 +142,11 @@ public class DocumentsData {
 
   protected List<File> getNodes(String filter)
   {
+    return getNodes(filter, "asc", "name");
+  }
+
+  protected List<File> getNodes(String filter, String order, String by)
+  {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
     {
@@ -174,6 +183,11 @@ public class DocumentsData {
           files.add(file);
         }
       }
+
+      if ("asc".equals(order))
+        Collections.sort(files, new FileNameComparator());
+      else
+        Collections.sort(files, new FileNameReverseComparator());
 
       return files;
 

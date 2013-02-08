@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class File {
+public class File implements Comparable<File> {
   String name;
   Calendar createdDate;
   String icon;
@@ -140,5 +140,9 @@ public class File {
   public void setVersions(List<VersionBean> versionBeans) {
     this.versionBeans = versionBeans;
     if (this.versionBeans.size()>1) Collections.sort(this.versionBeans, Collections.reverseOrder());
+  }
+
+  public int compareTo(File file) {
+    return this.getName().compareToIgnoreCase(file.getName());
   }
 }

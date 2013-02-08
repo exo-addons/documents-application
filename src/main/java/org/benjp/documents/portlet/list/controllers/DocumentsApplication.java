@@ -9,12 +9,14 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.MissingResourceException;
+import java.util.logging.Logger;
 
 /** @author <a href="mailto:benjamin.paillereau@exoplatform.com">Benjamin Paillereau</a> */
 @SessionScoped
 public class DocumentsApplication
 {
 
+  Logger log = Logger.getLogger("DocumentsApplication");
   /** . */
   @Inject
   @Path("index.gtmpl")
@@ -54,9 +56,10 @@ public class DocumentsApplication
 
   @Resource
   @Ajax
-  public void getFiles(String filter)
+  public void getFiles(String filter, String order, String by)
   {
-    filesTemplate.with().set("files", documentsData.getNodes(filter)).render();
+    log.info("getFiles::"+filter+" ; "+order+" ; "+by);
+    filesTemplate.with().set("files", documentsData.getNodes(filter, order, by)).render();
   }
 
   @Resource

@@ -239,271 +239,300 @@ $(document).ready(function(){
   /************
    ***** FILES ACTIONS
    ************/
-
+  var filesLoaded = false;
   function filesActions() {
 
-    updateBreadcrumb();
+    if (!filesLoaded) {
+      filesLoaded = true
 
-    $('.preview-link').on("click", function() {
-      $('#preview-image').attr("src", $(this).attr("data") );
-      $('#PreviewModal').modal('show');
-    });
+      updateBreadcrumb();
 
-    $('.properties-link').on("click", function() {
-      var uuid = $(this).attr("data-uuid");
-      var path = $(this).attr("data-path");
-      $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid, "path": path}, function () {
-        propertiesActions();
-        $('#propertiesTab a:first').tab('show');
-        $('#PropertiesModal').modal('show');
+      $('.preview-link').on("click", function() {
+        $('#preview-image').attr("src", $(this).attr("data") );
+        $('#PreviewModal').modal('show');
       });
-    });
 
-    $('.file-version').on("click", function() {
-      var uuid = $(this).attr("data-uuid");
-      $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid}, function () {
-        propertiesActions();
-        $('#propertiesTab a:last').tab('show');
-        $('#PropertiesModal').modal('show');
+      $('.properties-link').on("click", function() {
+        var uuid = $(this).attr("data-uuid");
+        var path = $(this).attr("data-path");
+        $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid, "path": path}, function () {
+          propertiesActions();
+          $('#propertiesTab a:first').tab('show');
+          $('#PropertiesModal').modal('show');
+        });
       });
-    });
 
-    $('.thumbnail').on("click", function() {
-      $('#preview-image').attr("src", $(this).attr("data") );
-      $('#PreviewModal').modal('show');
-    });
+      $('.file-version').on("click", function() {
+        var uuid = $(this).attr("data-uuid");
+        $('#document-properties').load(jzDocumentsGetProperties, {"uuid": uuid}, function () {
+          propertiesActions();
+          $('#propertiesTab a:last').tab('show');
+          $('#PropertiesModal').modal('show');
+        });
+      });
 
-    $('.share-link').on("click", function() {
-      $('#file-share-link').attr("value", $(this).attr("data") );
-      $('#ShareModal').modal('show');
-    });
+      $('.thumbnail').on("click", function() {
+        $('#preview-image').attr("src", $(this).attr("data") );
+        $('#PreviewModal').modal('show');
+      });
 
-    $('.upload-link').on("click", function() {
-      $('#file-upload-input').attr("value", $(this).attr("data-uuid") );
-      $('#file-upload-context').attr("value", docAppContext );
-      $('#file-upload-space').attr("value", docAppSpace );
-      $('#file-upload-filter').attr("value", documentFilter );
-      $('#UploadModal').modal('show');
-    });
+      $('.share-link').on("click", function() {
+        $('#file-share-link').attr("value", $(this).attr("data") );
+        $('#ShareModal').modal('show');
+      });
 
-    $('.upload-button').on("click", function() {
-      $('#file-upload-context').attr("value", docAppContext );
-      $('#file-upload-space').attr("value", docAppSpace );
-      $('#file-upload-filter').attr("value", documentFilter );
-      $('#UploadModal').modal('show');
-    });
+      $('.upload-link').on("click", function() {
+        $('#file-upload-input').attr("value", $(this).attr("data-uuid") );
+        $('#file-upload-context').attr("value", docAppContext );
+        $('#file-upload-space').attr("value", docAppSpace );
+        $('#file-upload-filter').attr("value", documentFilter );
+        $('#UploadModal').modal('show');
+      });
 
-    $('.delete-link').on("click", function() {
-      var name = $(this).closest(".dropdown-menu").attr("data-name");
-      var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
-      var path = $(this).closest(".dropdown-menu").attr("data-path");
-      $('#delete-label').html('Are you sure you want to delete the file "' + name + '"?');
-      $('#delete-button').attr('data-uuid', uuid);
-      $('#delete-button').attr('data-path', path);
-      $('#DeleteModal').modal('show');
-    });
+      $('.upload-button').on("click", function() {
+        $('#file-upload-context').attr("value", docAppContext );
+        $('#file-upload-space').attr("value", docAppSpace );
+        $('#file-upload-filter').attr("value", documentFilter );
+        $('#UploadModal').modal('show');
+      });
 
-    $('#delete-button').on("click", function() {
-      var uuid = $(this).attr('data-uuid');
-      var path = $(this).attr('data-path');
+      $('.delete-link').on("click", function() {
+        var name = $(this).closest(".dropdown-menu").attr("data-name");
+        var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
+        var path = $(this).closest(".dropdown-menu").attr("data-path");
+        $('#delete-label').html('Are you sure you want to delete the file "' + name + '"?');
+        $('#delete-button').attr('data-uuid', uuid);
+        $('#delete-button').attr('data-path', path);
+        $('#DeleteModal').modal('show');
+      });
 
-      $.ajax({
-        url: jzDocumentsDeleteFile,
-        data: {"uuid": uuid, "path": path},
+      $('#delete-button').on("click", function() {
+        var uuid = $(this).attr('data-uuid');
+        var path = $(this).attr('data-path');
 
-        success:function(response){
-          $('#DeleteModal').modal('hide');
-          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-            filesActions();
-          });
-        },
+        $.ajax({
+          url: jzDocumentsDeleteFile,
+          data: {"uuid": uuid, "path": path},
 
-        error:function (xhr, status, error){
-          $("#delete-label").html(xhr.responseText);
-          $("#delete-label").addClass("error");
+          success:function(response){
+            $('#DeleteModal').modal('hide');
+            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+              filesActions();
+            });
+          },
+
+          error:function (xhr, status, error){
+            $("#delete-label").html(xhr.responseText);
+            $("#delete-label").addClass("error");
+          }
+
+        });
+
+      });
+
+
+      $('.rename-link').on("click", function() {
+        var name = $(this).closest(".dropdown-menu").attr("data-name");
+        var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
+        var path = $(this).closest(".dropdown-menu").attr("data-path");
+        if (name.indexOf(".")>-1) name = name.substr(0, name.indexOf(".") );
+        $('#file-name').attr("value", name);
+        $('#rename-button').attr('data-uuid', uuid);
+        $('#rename-button').attr('data-path', path);
+        $('#rename-error').html("");
+        $('#RenameModal').modal('show');
+      });
+
+      $('.new-folder-link').on("click", function() {
+        $('#rename-error').html("");
+        $('#NewFolderModal').modal('show');
+      });
+
+      $('ul.order-by-menu > li').on("click", function() {
+        var by = $(this).attr('data-by');
+        var order = "asc";
+        var oldBy = $("#order-by-link").attr('data-by');
+        var oldOrder = $("#order-by-link").attr('data-order');
+        console.log("by="+by+" ; oldBy="+oldBy+" ; oldOrder="+oldOrder);
+        if (by == oldBy) {
+          if (oldOrder=="asc") order = "desc";
+        } else {
+          if (by=="date")
+            order = "desc";
         }
+        $("#order-by-link").attr('data-by', by);
+        $("#order-by-link").attr('data-order', order);
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
+          filesActions();
+        });
+
+      })
+
+      $('#rename-button').on("click", function() {
+        var uuid = $(this).attr('data-uuid');
+        var path = $(this).attr('data-path');
+        var name = $('#file-name').attr("value");
+        $.ajax({
+          url: jzDocumentsRenameFile,
+          data: {"uuid": uuid, "name": name, "path": path},
+
+          success:function(response){
+            $('#RenameModal').modal('hide');
+            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+              filesActions();
+            });
+          },
+
+          error:function (xhr, status, error){
+            $("#rename-error").html(xhr.responseText);
+            $("#rename-error").closest(".control-group").addClass("error");
+          }
+
+        });
 
       });
 
-    });
+      $('#folder-button').on("click", function() {
+        var name = $('#folder-name').attr("value");
+        $.ajax({
+          url: jzDocumentsNewFolder,
+          data: {"documentFilter": documentFilter, "name": name},
 
+          success:function(response){
+            $('#NewFolderModal').modal('hide');
+            //documentFilter = documentFilter+"/"+name;
+            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+              filesActions();
+            });
+          },
 
-    $('.rename-link').on("click", function() {
-      var name = $(this).closest(".dropdown-menu").attr("data-name");
-      var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
-      var path = $(this).closest(".dropdown-menu").attr("data-path");
-      if (name.indexOf(".")>-1) name = name.substr(0, name.indexOf(".") );
-      $('#file-name').attr("value", name);
-      $('#rename-button').attr('data-uuid', uuid);
-      $('#rename-button').attr('data-path', path);
-      $('#rename-error').html("");
-      $('#RenameModal').modal('show');
-    });
+          error:function (xhr, status, error){
+            $("#folder-error").html(xhr.responseText);
+            $("#folder-error").closest(".control-group").addClass("error");
+          }
 
-    $('.new-folder-link').on("click", function() {
-      $('#rename-error').html("");
-      $('#NewFolderModal').modal('show');
-    });
-
-    $('#rename-button').on("click", function() {
-      var uuid = $(this).attr('data-uuid');
-      var path = $(this).attr('data-path');
-      var name = $('#file-name').attr("value");
-      $.ajax({
-        url: jzDocumentsRenameFile,
-        data: {"uuid": uuid, "name": name, "path": path},
-
-        success:function(response){
-          $('#RenameModal').modal('hide');
-          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-            filesActions();
-          });
-        },
-
-        error:function (xhr, status, error){
-          $("#rename-error").html(xhr.responseText);
-          $("#rename-error").closest(".control-group").addClass("error");
-        }
+        });
 
       });
 
-    });
+      $('.tags-link').on("click", function() {
+        var name = $(this).closest(".dropdown-menu").attr("data-name");
+        var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
+        var tags = $(this).closest(".dropdown-menu").attr("data-tags");
+        $('#tags-label').html('You are editing tags for "' + name + '"');
+        $('#file-tags').val(tags);
+        $('#tags-save-button').attr('data-uuid', uuid);
+        $('#TagsModal').modal('show');
+      });
 
-    $('#folder-button').on("click", function() {
-      var name = $('#folder-name').attr("value");
-      $.ajax({
-        url: jzDocumentsNewFolder,
-        data: {"documentFilter": documentFilter, "name": name},
+      $('#tags-save-button').on("click", function() {
+        var uuid = $(this).attr('data-uuid');
+        var tags = $('#file-tags').val();
+        $.ajax({
+          url: jzDocumentsEditTags,
+          data: {"uuid": uuid, "tags": tags},
 
-        success:function(response){
-          $('#NewFolderModal').modal('hide');
-          //documentFilter = documentFilter+"/"+name;
-          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-            filesActions();
-          });
-        },
+          success:function(response){
+            $('#TagsModal').modal('hide');
+            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+              filesActions();
+            });
+          },
 
-        error:function (xhr, status, error){
-          $("#folder-error").html(xhr.responseText);
-          $("#folder-error").closest(".control-group").addClass("error");
-        }
+          error:function (xhr, status, error){
+            $("#tags-error").html(xhr.responseText);
+            $("#tags-error").closest(".control-group").addClass("error");
+          }
+
+        });
 
       });
 
-    });
-
-    $('.tags-link').on("click", function() {
-      var name = $(this).closest(".dropdown-menu").attr("data-name");
-      var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
-      var tags = $(this).closest(".dropdown-menu").attr("data-tags");
-      $('#tags-label').html('You are editing tags for "' + name + '"');
-      $('#file-tags').val(tags);
-      $('#tags-save-button').attr('data-uuid', uuid);
-      $('#TagsModal').modal('show');
-    });
-
-    $('#tags-save-button').on("click", function() {
-      var uuid = $(this).attr('data-uuid');
-      var tags = $('#file-tags').val();
-      $.ajax({
-        url: jzDocumentsEditTags,
-        data: {"uuid": uuid, "tags": tags},
-
-        success:function(response){
-          $('#TagsModal').modal('hide');
-          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-            filesActions();
-          });
-        },
-
-        error:function (xhr, status, error){
-          $("#tags-error").html(xhr.responseText);
-          $("#tags-error").closest(".control-group").addClass("error");
-        }
-
+      $('.label-tag').on("click", function() {
+        currentTag = $(this).html();
+        documentFilter = "Folksonomy/"+currentTag;
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+          filesActions();
+          $(".btn-inverse").removeClass("active");
+        });
       });
 
-    });
-
-    $('.label-tag').on("click", function() {
-      currentTag = $(this).html();
-      documentFilter = "Folksonomy/"+currentTag;
-      $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-        filesActions();
-        $(".btn-inverse").removeClass("active");
-      });
-    });
-
-    $('.folder-link').on("click", function() {
-      folderName = $(this).attr("data-name");
-      documentFilter = documentFilter+"/"+folderName;
-      $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-        filesActions();
-      });
-    });
-
-    $('.breadcrumb-link').on("click", function() {
-      folderName = $(this).attr("data-name");
-      documentFilter = folderName;
-      $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-        filesActions();
-      });
-    });
-
-
-    $('#ShareModal input[type=text]').click(function() {
-      $(this).select();
-    });
-
-    $('#RenameModal input[type=text]').click(function() {
-      $(this).select();
-      $(this).closest(".control-group").removeClass("error");
-      $('#rename-error').html("");
-    });
-
-
-    $('#hideDropzone').css("display", "none");
-
-    var bar = $('.bar');
-    var percent = $('.percent');
-    var status = $('#status');
-
-    $('form').ajaxForm({
-      beforeSend: function() {
-        status.empty();
-        var percentVal = '0%';
-        bar.width(percentVal)
-        percent.html(percentVal);
-      },
-      uploadProgress: function(event, position, total, percentComplete) {
-        var percentVal = percentComplete + '%';
-        bar.width(percentVal)
-        percent.html(percentVal);
-      },
-      complete: function(xhr) {
-        status.html(xhr.responseText);
+      $('.folder-link').on("click", function() {
+        folderName = $(this).attr("data-name");
+        documentFilter = documentFilter+"/"+folderName;
         $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
           filesActions();
         });
-      }
-    });
+      });
+
+      $('.breadcrumb-link').on("click", function() {
+        folderName = $(this).attr("data-name");
+        documentFilter = folderName;
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+          filesActions();
+        });
+      });
+
+
+      $('#ShareModal input[type=text]').click(function() {
+        $(this).select();
+      });
+
+      $('#RenameModal input[type=text]').click(function() {
+        $(this).select();
+        $(this).closest(".control-group").removeClass("error");
+        $('#rename-error').html("");
+      });
+
+
+      $('#hideDropzone').css("display", "none");
+
+      var bar = $('.bar');
+      var percent = $('.percent');
+      var status = $('#status');
+
+      $('form').ajaxForm({
+        beforeSend: function() {
+          status.empty();
+          var percentVal = '0%';
+          bar.width(percentVal)
+          percent.html(percentVal);
+        },
+        uploadProgress: function(event, position, total, percentComplete) {
+          var percentVal = percentComplete + '%';
+          bar.width(percentVal)
+          percent.html(percentVal);
+        },
+        complete: function(xhr) {
+          status.html(xhr.responseText);
+          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+            filesActions();
+          });
+        }
+      });
+    }
+
 
   }
 
 
+  var propertiesLoaded = false;
   function propertiesActions() {
 
-    $('#propertiesTab a').click(function (e) {
-      e.preventDefault();
-      $(this).tab('show');
-    })
+    if (!propertiesLoaded) {
+      propertiesLoaded = true;
+      $('#propertiesTab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+      })
 
-    $('.restore-link').on("click", function() {
-      var name = $(this).attr("data");
-      var uuid = $(this).attr("data-uuid");
-      $('#document-properties').load(jzDocumentsRestore, {"uuid": uuid, "name": name}, function () {
+      $('.restore-link').on("click", function() {
+        var name = $(this).attr("data");
+        var uuid = $(this).attr("data-uuid");
+        $('#document-properties').load(jzDocumentsRestore, {"uuid": uuid, "name": name}, function () {
+        });
       });
-    });
+    }
 
   }
 
