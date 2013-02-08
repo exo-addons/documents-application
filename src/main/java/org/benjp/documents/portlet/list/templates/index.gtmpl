@@ -14,14 +14,9 @@
 >
 
   <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;">&{benjp.documents.title}</h3></div>
-  <div class="btn-group filter-files" data-toggle="buttons-radio" style="float:right;">
-    <button class="btn btn-inverse active" id="documents-type-button">&{benjp.documents.documents}</button>
-    <button class="btn btn-inverse" id="images-type-button">&{benjp.documents.images}</button>
-  </div>
-
-  <div class="filter-tag" style="float:right;display:none;">
-    <label class="left" style="padding-top: 5px;">&{benjp.documents.filter.by}&nbsp;</label>
-    <button class="btn btn-inverse active right" id="tag-type-button"></button>
+  <div class="btn-group" style="float:right;">
+    <button class="btn btn-inverse upload-button"><i class="minicon-upload-white"></i>&{benjp.documents.upload}</button>
+    <button class="btn btn-inverse new-folder-link"><i class="minicon-add-white"></i>&{benjp.documents.new.folder}</button>
   </div>
 
   <div style="clear: both;">
@@ -29,7 +24,7 @@
       <li class="breadcrumb-link" data-name=""><a href="#">&{benjp.documents.home}</a> <span class="divider">/</span></li>
       <li class="active" class="breadcrumb-link" data-name="Documents">&{benjp.documents.documents}</li>
     </ul>
-    <a href="#" class="new-folder-link" style="float:right;line-height: 35px;"><i class="minicon-add"></i>&{benjp.documents.new.folder}</a>
+    <span style="float:right;">Sort By <a href="#" class="sort-by-link" style="line-height: 35px;">Name</a></span>
   </div>
 
   <div id="dropzone" style="display: none; clear: both;">
@@ -103,6 +98,7 @@
       <input type="hidden" name="app-context" value="---" id="file-upload-context" />
       <input type="hidden" name="app-space" value="---" id="file-upload-space" />
       <input type="hidden" name="data-uuid" value="---" id="file-upload-input" />
+      <input type="hidden" name="app-filter" value="---" id="file-upload-filter" />
       <input type="file" name="pic" style="width:400px; margin: auto; padding-left: 30px;" />
       <input type="submit" value="&{benjp.documents.upload}"/>
     </form>

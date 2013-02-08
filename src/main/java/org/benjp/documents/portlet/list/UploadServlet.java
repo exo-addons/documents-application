@@ -56,6 +56,7 @@ public class UploadServlet extends HttpServlet
             name = (isPrivateContext)?request.getRemoteUser():item.getString();
           }
           if ("data-uuid".equals(fieldName)) uuid = item.getString();
+          if ("app-filter".equals(fieldName)) path = item.getString();
 
         }
         if (item.getFieldName().equals("pic"))
@@ -139,7 +140,7 @@ public class UploadServlet extends HttpServlet
 //      System.out.println("# docNode :: "+docNode.getPath());
 
 
-      if (!docNode.hasNode(filename) && uuid==null)
+      if (!docNode.hasNode(filename) && (uuid==null || "---".equals(uuid)))
       {
         Node fileNode = docNode.addNode(filename, "nt:file");
         Node jcrContent = fileNode.addNode("jcr:content", "nt:resource");

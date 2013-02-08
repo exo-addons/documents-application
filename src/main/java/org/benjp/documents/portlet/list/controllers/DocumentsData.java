@@ -101,7 +101,7 @@ public class DocumentsData {
 
   protected boolean createNodeIfNotExist(String filter, String name)
   {
-    filter = filter+"/"+name;
+    //filter = filter+"/"+name;
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
     {
@@ -118,10 +118,11 @@ public class DocumentsData {
         filter = filter.replace("Folksonomy/", "ApplicationData/Tags/");
       }
 
-      if (!rootNode.hasNode(path+"/"+filter)) {
-        Node parentNode = rootNode.getNode(path);
-        parentNode.addNode(filter, "nt:folder");
+      if (!rootNode.hasNode(path+"/"+filter+"/"+name)) {
+        Node parentNode = rootNode.getNode(path+"/"+filter);
+        parentNode.addNode(name, "nt:folder");
         parentNode.save();
+        session.save();
       }
     } catch (Exception e)
     {

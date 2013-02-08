@@ -177,30 +177,6 @@ $(document).ready(function(){
   });
 
 
-  $('#images-type-button').on("click", function() {
-    documentFilter = "Pictures";
-    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-      filesActions();
-    });
-  });
-
-  $('#documents-type-button').on("click", function() {
-    documentFilter = "Documents";
-    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-      filesActions();
-    });
-  });
-
-  $('#tag-type-button').on("click", function() {
-    documentFilter = "Documents";
-    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
-      filesActions();
-      $("#documents-type-button").addClass("active");
-      $(".filter-tag").css("display", "none");
-      $(".filter-files").css("display", "inline");
-    });
-  });
-
   $('#hideDropzone').on("click", function() {
     console.log("hiding dropzone");
     $("#dropzone").css("display", "none");
@@ -306,6 +282,14 @@ $(document).ready(function(){
       $('#file-upload-input').attr("value", $(this).attr("data-uuid") );
       $('#file-upload-context').attr("value", docAppContext );
       $('#file-upload-space').attr("value", docAppSpace );
+      $('#file-upload-filter').attr("value", documentFilter );
+      $('#UploadModal').modal('show');
+    });
+
+    $('.upload-button').on("click", function() {
+      $('#file-upload-context').attr("value", docAppContext );
+      $('#file-upload-space').attr("value", docAppSpace );
+      $('#file-upload-filter').attr("value", documentFilter );
       $('#UploadModal').modal('show');
     });
 
@@ -393,6 +377,7 @@ $(document).ready(function(){
 
         success:function(response){
           $('#NewFolderModal').modal('hide');
+          //documentFilter = documentFilter+"/"+name;
           $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
             filesActions();
           });
@@ -446,10 +431,6 @@ $(document).ready(function(){
       $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
         filesActions();
         $(".btn-inverse").removeClass("active");
-        $(".filter-files").css("display", "none");
-        $(".filter-tag").css("display", "inline");
-        $("#tag-type-button").html('<i class="minicon-delete"></i>'+currentTag);
-        });
       });
 
     $('.folder-link').on("click", function() {
@@ -461,9 +442,6 @@ $(document).ready(function(){
     });
 
     $('.breadcrumb-link').on("click", function() {
-      $("#documents-type-button").addClass("active");
-      $(".filter-tag").css("display", "none");
-      $(".filter-files").css("display", "inline");
       folderName = $(this).attr("data-name");
       documentFilter = folderName;
       $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
@@ -503,6 +481,9 @@ $(document).ready(function(){
       },
       complete: function(xhr) {
         status.html(xhr.responseText);
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+          filesActions();
+        });
       }
     });
 
