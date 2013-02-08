@@ -3,8 +3,7 @@ package org.benjp.documents.portlet.list.controllers;
 
 import org.benjp.documents.portlet.list.bean.File;
 import org.benjp.documents.portlet.list.bean.VersionBean;
-import org.benjp.documents.portlet.list.comparator.FileNameComparator;
-import org.benjp.documents.portlet.list.comparator.FileNameReverseComparator;
+import org.benjp.documents.portlet.list.comparator.*;
 import org.benjp.documents.portlet.list.controllers.validator.NameValidator;
 import juzu.SessionScoped;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -140,11 +139,6 @@ public class DocumentsData {
   }
 
 
-  protected List<File> getNodes(String filter)
-  {
-    return getNodes(filter, "asc", "name");
-  }
-
   protected List<File> getNodes(String filter, String order, String by)
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
@@ -185,9 +179,23 @@ public class DocumentsData {
       }
 
       if ("asc".equals(order))
-        Collections.sort(files, new FileNameComparator());
+      {
+        if ("date".equals(by))
+          Collections.sort(files, new FileDateComparator());
+        else if ("size".equals(by))
+          Collections.sort(files, new FileSizeComparator());
+        else
+          Collections.sort(files, new FileNameComparator());
+      }
       else
-        Collections.sort(files, new FileNameReverseComparator());
+      {
+        if ("date".equals(by))
+          Collections.sort(files, new FileDateReverseComparator());
+        else if ("size".equals(by))
+          Collections.sort(files, new FileSizeReverseComparator());
+        else
+          Collections.sort(files, new FileNameReverseComparator());
+      }
 
       return files;
 
@@ -220,7 +228,10 @@ public class DocumentsData {
         double size = contentNode.getProperty("jcr:data").getLength();
         String fileSize = calculateFileSize(size);
         file.setSize(fileSize);
+        file.setSizeValue(size);
       }
+    } else {
+      file.setSizeValue(new Double(0));
     }
     // set versions
     String sversion = "";

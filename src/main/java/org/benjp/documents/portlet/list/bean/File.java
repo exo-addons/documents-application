@@ -3,6 +3,7 @@ package org.benjp.documents.portlet.list.bean;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class File implements Comparable<File> {
@@ -11,6 +12,7 @@ public class File implements Comparable<File> {
   String icon;
   String preview;
   String size;
+  Double sizeValue;
   String path;
   String uuid="";
   String publicUrl;
@@ -37,8 +39,12 @@ public class File implements Comparable<File> {
     this.name = name;
   }
 
+  public Date getCreatedDateAsDate() {
+    return createdDate.getTime();
+  }
+
   public String getCreatedDate() {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy hh:mm aaa");
     return formatter.format(createdDate.getTime());
   }
 
@@ -141,6 +147,15 @@ public class File implements Comparable<File> {
     this.versionBeans = versionBeans;
     if (this.versionBeans.size()>1) Collections.sort(this.versionBeans, Collections.reverseOrder());
   }
+
+  public Double getSizeValue() {
+    return sizeValue;
+  }
+
+  public void setSizeValue(Double sizeValue) {
+    this.sizeValue = sizeValue;
+  }
+
 
   public int compareTo(File file) {
     return this.getName().compareToIgnoreCase(file.getName());

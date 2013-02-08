@@ -1,6 +1,7 @@
 var documentFilter, currentTag, docAppContext, docAppSpace;
 var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAllowed,
   labelDropzoneMsg1, labelDropZoneMsg2, labelHome;
+var by, order;
 
 $(function(){
 
@@ -163,6 +164,9 @@ $(document).ready(function(){
   docAppContext = $documentsApplication.attr("data-app-context");
   docAppSpace = $documentsApplication.attr("data-app-space");
 
+  by = $("#order-by-link").attr('data-by');
+  order = $("#order-by-link").attr('data-order');
+
   labelBrowserNotSupported = $documentsApplication.attr("data-label-browser-not-supported");
   labelTooManyFiles = $documentsApplication.attr("data-label-too-many-files");
   labelFileTooLarge = $documentsApplication.attr("data-label-file-too-large");
@@ -172,7 +176,7 @@ $(document).ready(function(){
   labelHome = $documentsApplication.attr("data-label-home");
 
 
-  $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+  $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
     filesActions();
   });
 
@@ -182,7 +186,7 @@ $(document).ready(function(){
     $("#dropzone").css("display", "none");
     $("#dropbox").html('<span class="message">'+labelDropzoneMsg1+' <br /><i>('+labelDropZoneMsg2+')</i></span>');
 
-    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
       filesActions();
     });
 
@@ -316,7 +320,7 @@ $(document).ready(function(){
 
           success:function(response){
             $('#DeleteModal').modal('hide');
-            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
               filesActions();
             });
           },
@@ -351,8 +355,8 @@ $(document).ready(function(){
       $('ul.order-by-menu > li').on("click", function() {
         var by = $(this).attr('data-by');
         var order = "asc";
-        var oldBy = $("#order-by-link").attr('data-by');
-        var oldOrder = $("#order-by-link").attr('data-order');
+        oldBy = $("#order-by-link").attr('data-by');
+        oldOrder = $("#order-by-link").attr('data-order');
         console.log("by="+by+" ; oldBy="+oldBy+" ; oldOrder="+oldOrder);
         if (by == oldBy) {
           if (oldOrder=="asc") order = "desc";
@@ -362,6 +366,12 @@ $(document).ready(function(){
         }
         $("#order-by-link").attr('data-by', by);
         $("#order-by-link").attr('data-order', order);
+        if (by == "name")
+          $("#order-by-link").text('Name');
+        else if (by == "date")
+          $("#order-by-link").text('Date');
+        else if (by == "size")
+          $("#order-by-link").text('Size');
         $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
           filesActions();
         });
@@ -378,7 +388,7 @@ $(document).ready(function(){
 
           success:function(response){
             $('#RenameModal').modal('hide');
-            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
               filesActions();
             });
           },
@@ -401,7 +411,7 @@ $(document).ready(function(){
           success:function(response){
             $('#NewFolderModal').modal('hide');
             //documentFilter = documentFilter+"/"+name;
-            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
               filesActions();
             });
           },
@@ -434,7 +444,7 @@ $(document).ready(function(){
 
           success:function(response){
             $('#TagsModal').modal('hide');
-            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+            $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
               filesActions();
             });
           },
@@ -451,7 +461,7 @@ $(document).ready(function(){
       $('.label-tag').on("click", function() {
         currentTag = $(this).html();
         documentFilter = "Folksonomy/"+currentTag;
-        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
           filesActions();
           $(".btn-inverse").removeClass("active");
         });
@@ -460,7 +470,7 @@ $(document).ready(function(){
       $('.folder-link').on("click", function() {
         folderName = $(this).attr("data-name");
         documentFilter = documentFilter+"/"+folderName;
-        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
           filesActions();
         });
       });
@@ -468,7 +478,7 @@ $(document).ready(function(){
       $('.breadcrumb-link').on("click", function() {
         folderName = $(this).attr("data-name");
         documentFilter = folderName;
-        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
           filesActions();
         });
       });
@@ -505,7 +515,7 @@ $(document).ready(function(){
         },
         complete: function(xhr) {
           status.html(xhr.responseText);
-          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
+          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
             filesActions();
           });
         }
