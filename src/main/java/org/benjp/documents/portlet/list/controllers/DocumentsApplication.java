@@ -7,6 +7,8 @@ import org.benjp.documents.portlet.list.bean.File;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.MissingResourceException;
 
 /** @author <a href="mailto:benjamin.paillereau@exoplatform.com">Benjamin Paillereau</a> */
 @SessionScoped
@@ -28,6 +30,9 @@ public class DocumentsApplication
 
   @Inject
   DocumentsData documentsData;
+
+  @Inject java.util.ResourceBundle bundle;
+
 
   @View
   public void index() throws IOException
@@ -88,9 +93,9 @@ public class DocumentsApplication
     }
     catch (Exception e)
     {
-      return Response.notFound("Your file cannot be deleted. Please, try later");
+      return Response.notFound(getMessage("benjp.documents.message.error.delete"));
     }
-    return Response.ok("Successfully deleted.");
+    return Response.ok(getMessage("benjp.documents.message.success.delete"));
   }
 
   @Resource
@@ -111,9 +116,9 @@ public class DocumentsApplication
     }
     catch (Exception e)
     {
-      return Response.notFound("Your file cannot be renamed. Please, try later");
+      return Response.notFound(getMessage("benjp.documents.message.error.rename"));
     }
-    return Response.ok("Successfully renamed.");
+    return Response.ok(getMessage("benjp.documents.message.success.rename"));
   }
 
   @Resource
@@ -122,9 +127,9 @@ public class DocumentsApplication
   {
     if (!documentsData.createNodeIfNotExist(documentFilter, name))
     {
-      return Response.notFound("Folder cannot be created or already exists. Please, try later");
+      return Response.notFound(getMessage("benjp.documents.message.error.folder"));
     }
-    return Response.ok("Successfully created.");
+    return Response.ok(getMessage("benjp.documents.message.success.folder"));
   }
 
   @Resource
@@ -141,12 +146,19 @@ public class DocumentsApplication
     }
     catch (Exception e)
     {
-      return Response.notFound("Tags cannot be edited. Please, try later");
+      return Response.notFound(getMessage("benjp.documents.message.error.tags"));
     }
-    return Response.ok("Successfully tagged.");
+    return Response.ok(getMessage("benjp.documents.message.success.tags"));
   }
 
 
+  private String getMessage(String key) {
+    try {
+      return bundle.getString(key);
+    } catch (MissingResourceException mre) {
+    }
+    return "";
+  }
 
 
 }

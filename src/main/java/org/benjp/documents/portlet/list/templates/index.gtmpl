@@ -2,31 +2,40 @@
        data-document-filter="Documents"
        data-current-tag=""
        data-app-context="<%=context%>"
-       data-app-space="<%=space%>">
+       data-app-space="<%=space%>"
 
-  <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;"><%=context%> Files</h3></div>
+       data-label-browser-not-supported="&{benjp.documents.browser.not.supported}"
+       data-label-too-many-files="&{benjp.documents.too.many.files}"
+       data-label-file-too-large="&{benjp.documents.file.too.large}"
+       data-label-only-allowed="&{benjp.documents.only.allowed}"
+       data-label-dropzone-msg1="&{benjp.documents.dropzone.msg1}"
+       data-label-dropzone-msg2="&{benjp.documents.dropzone.msg2}"
+       data-label-home="&{benjp.documents.home}"
+>
+
+  <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;">&{benjp.documents.title}</h3></div>
   <div class="btn-group filter-files" data-toggle="buttons-radio" style="float:right;">
-    <button class="btn btn-inverse active" id="documents-type-button">Documents</button>
-    <button class="btn btn-inverse" id="images-type-button">Images</button>
+    <button class="btn btn-inverse active" id="documents-type-button">&{benjp.documents.documents}</button>
+    <button class="btn btn-inverse" id="images-type-button">&{benjp.documents.images}</button>
   </div>
 
   <div class="filter-tag" style="float:right;display:none;">
-    <label class="left" style="padding-top: 5px;">Filter By&nbsp;</label>
+    <label class="left" style="padding-top: 5px;">&{benjp.documents.filter.by}&nbsp;</label>
     <button class="btn btn-inverse active right" id="tag-type-button"></button>
   </div>
 
   <div style="clear: both;">
     <ul class="breadcrumb" style="float: left;" id="documents-breadcrumb">
-      <li class="breadcrumb-link" data-name=""><a href="#">Home</a> <span class="divider">/</span></li>
-      <li class="active" class="breadcrumb-link" data-name="Documents">Documents</li>
+      <li class="breadcrumb-link" data-name=""><a href="#">&{benjp.documents.home}</a> <span class="divider">/</span></li>
+      <li class="active" class="breadcrumb-link" data-name="Documents">&{benjp.documents.documents}</li>
     </ul>
-    <a href="#" class="new-folder-link" style="float:right;line-height: 35px;"><i class="minicon-add"></i>New Folder</a>
+    <a href="#" class="new-folder-link" style="float:right;line-height: 35px;"><i class="minicon-add"></i>&{benjp.documents.new.folder}</a>
   </div>
 
   <div id="dropzone" style="display: none; clear: both;">
-    <div id="hideDropzone" style="width: 300px; padding: 10px; margin: auto; text-align: center; cursor:pointer;">Click here to clear your Drop zone</div>
+    <div id="hideDropzone" style="width: 300px; padding: 10px; margin: auto; text-align: center; cursor:pointer;">&{benjp.documents.dropzone.hide}</div>
     <div id="dropbox">
-      <span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>
+      <span class="message">&{benjp.documents.dropzone.msg1} <br /><i>(&{benjp.documents.dropzone.msg2})</i></span>
     </div>
   </div>
 
@@ -47,16 +56,16 @@
 <div class="modal hide fade" id="PropertiesModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">x</a>
-    <h3>Properties</h3>
+    <h3>&{benjp.documents.properties}</h3>
   </div>
   <div class="modal-body-no">
 
-    <div id="document-properties" style="width:100%;text-align:center;padding:10px;">Loading Properties, please wait...</div>
+    <div id="document-properties" style="width:100%;text-align:center;padding:10px;">&{benjp.documents.properties.loading}</div>
 
   </div>
 
   <div class="modal-footer">
-    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    <a href="#" class="btn btn-primary" data-dismiss="modal">&{benjp.documents.close}</a>
   </div>
 </div>
 
@@ -66,7 +75,7 @@
 <div class="modal hide fade" id="PreviewModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">x</a>
-    <h3>Preview</h3>
+    <h3>&{benjp.documents.preview}</h3>
   </div>
   <div class="modal-body-no">
 
@@ -76,7 +85,7 @@
 
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    <a href="#" class="btn btn-primary" data-dismiss="modal">&{benjp.documents.close}</a>
   </div>
 </div>
 
@@ -86,7 +95,7 @@
 <div class="modal hide fade" id="UploadModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">x</a>
-    <h3>Upload New Version</h3>
+    <h3>&{benjp.documents.version}</h3>
   </div>
   <div class="modal-body-no" style="padding: 10px;">
 
@@ -107,7 +116,7 @@
 
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    <a href="#" class="btn btn-primary" data-dismiss="modal">&{benjp.documents.close}</a>
   </div>
 </div>
 
@@ -117,21 +126,21 @@
 <div class="modal hide fade" id="ShareModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">x</a>
-    <h3>Sharing settings</h3>
+    <h3>&{benjp.documents.sharing}</h3>
   </div>
   <div class="modal-body-no">
 
     <form class="form-horizontal">
       <fieldset class="medium-padding">
-        <label>Link to share</label>
+        <label>&{benjp.documents.sharing.link}</label>
         <input type="text" class="input-xxlarge" id="file-share-link" value="">
-        <p class="help-block">This is the public address for this file. Use carefully, others can download your file even if it is stored in your Private place</p>
+        <p class="help-block">&{benjp.documents.help.sharing}</p>
       </fieldset>
     </form>
 
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    <a href="#" class="btn btn-primary" data-dismiss="modal">&{benjp.documents.close}</a>
   </div>
 </div>
 
@@ -141,7 +150,7 @@
 <div class="modal hide fade" id="DeleteModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">x</a>
-    <h3>Delete File</h3>
+    <h3>&{benjp.documents.delete}</h3>
   </div>
   <div class="modal-body-no">
 
@@ -153,8 +162,8 @@
 
   </div>
   <div class="modal-footer">
-    <a href="#" class="btn btn-danger" data-uuid="---" data-path="---" id="delete-button">Delete</a>
-    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+    <a href="#" class="btn btn-danger" data-uuid="---" data-path="---" id="delete-button">&{benjp.documents.delete}</a>
+    <a href="#" class="btn" data-dismiss="modal">&{benjp.documents.cancel}</a>
   </div>
 </div>
 
@@ -164,13 +173,13 @@
 <div class="modal hide fade" id="RenameModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">x</a>
-    <h3>Rename File</h3>
+    <h3>&{benjp.documents.rename}</h3>
   </div>
   <div class="modal-body-no">
 
     <form class="form-horizontal">
       <fieldset class="medium-padding control-group">
-        <label>Enter a new name</label>
+        <label>&{benjp.documents.rename.new}</label>
         <input type="text" class="input-xxlarge" id="file-name" value="">
         <label id="rename-error"></label>
       </fieldset>
@@ -179,8 +188,8 @@
   </div>
   <div class="modal-footer">
     <div class="actions">
-      <a href="#" class="btn btn-primary" data-uuid="---" data-path="---" id="rename-button">Rename</a>
-      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+      <a href="#" class="btn btn-primary" data-uuid="---" data-path="---" id="rename-button">&{benjp.documents.rename}</a>
+      <a href="#" class="btn" data-dismiss="modal">&{benjp.documents.cancel}</a>
     </div>
   </div>
 </div>
@@ -191,13 +200,13 @@
 <div class="modal hide fade" id="NewFolderModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">x</a>
-    <h3>New Folder</h3>
+    <h3>&{benjp.documents.new.folder}</h3>
   </div>
   <div class="modal-body-no">
 
     <form class="form-horizontal">
       <fieldset class="medium-padding control-group">
-        <label>Enter a name</label>
+        <label>&{benjp.documents.folder.name}</label>
         <input type="text" class="input-xxlarge" id="folder-name" value="">
         <label id="folder-error"></label>
       </fieldset>
@@ -206,8 +215,8 @@
   </div>
   <div class="modal-footer">
     <div class="actions">
-      <a href="#" class="btn btn-primary" id="folder-button">Save</a>
-      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+      <a href="#" class="btn btn-primary" id="folder-button">&{benjp.documents.save}</a>
+      <a href="#" class="btn" data-dismiss="modal">&{benjp.documents.cancel}</a>
     </div>
   </div>
 </div>
@@ -218,14 +227,14 @@
 <div class="modal hide fade" id="TagsModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">x</a>
-    <h3>Add / Edit Tags</h3>
+    <h3>&{benjp.documents.edit.tags}</h3>
   </div>
   <div class="modal-body-no">
 
     <form class="form-horizontal">
       <label id="tags-label" style="padding-left: 10px;"></label>
       <fieldset class="medium-padding control-group">
-        <label><b>Tags (separate with comma)</b></label>
+        <label><b>&{benjp.documents.tags.comma}</b></label>
         <input type="text" class="input-xxlarge" id="file-tags" value="">
         <label id="tags-error"></label>
       </fieldset>
@@ -234,8 +243,8 @@
   </div>
   <div class="modal-footer">
     <div class="actions">
-      <a href="#" class="btn btn-primary" data-uuid="---" id="tags-save-button">Save</a>
-      <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+      <a href="#" class="btn btn-primary" data-uuid="---" id="tags-save-button">&{benjp.documents.save}</a>
+      <a href="#" class="btn" data-dismiss="modal">&{benjp.documents.cancel}</a>
     </div>
   </div>
 </div>

@@ -1,4 +1,6 @@
 var documentFilter, currentTag, docAppContext, docAppSpace;
+var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAllowed,
+  labelDropzoneMsg1, labelDropZoneMsg2, labelHome;
 
 $(function(){
 
@@ -22,13 +24,13 @@ $(function(){
     error: function(err, file) {
       switch(err) {
         case 'BrowserNotSupported':
-          showMessage('Your browser does not support HTML5 file uploads!');
+          showMessage(labelBrowserNotSupported);
           break;
         case 'TooManyFiles':
-          alert('Too many files! Please select 20 at most!');
+          alert(labelTooManyFiles);
           break;
         case 'FileTooLarge':
-          alert(file.name+' is too large! Please upload files up to 15mb.');
+          alert(file.name+' '+labelFileTooLarge);
           break;
         default:
           break;
@@ -49,7 +51,7 @@ $(function(){
         &&  file.type !== "application/vnd.oasis.opendocument.text"
         &&  file.name.indexOf(".xls")<1
         ){
-        alert('Only images and Office files are allowed!');
+        alert(labelOnlyAllowed);
         console.log(file.type);
 
         // Returning false will cause the
@@ -161,6 +163,14 @@ $(document).ready(function(){
   docAppContext = $documentsApplication.attr("data-app-context");
   docAppSpace = $documentsApplication.attr("data-app-space");
 
+  labelBrowserNotSupported = $documentsApplication.attr("data-label-browser-not-supported");
+  labelTooManyFiles = $documentsApplication.attr("data-label-too-many-files");
+  labelFileTooLarge = $documentsApplication.attr("data-label-file-too-large");
+  labelOnlyAllowed = $documentsApplication.attr("data-label-only-allowed");
+  labelDropzoneMsg1 = $documentsApplication.attr("data-label-dropzone-msg1");
+  labelDropZoneMsg2 = $documentsApplication.attr("data-label-dropzone-msg2");
+  labelHome = $documentsApplication.attr("data-label-home");
+
 
   $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
     filesActions();
@@ -194,7 +204,7 @@ $(document).ready(function(){
   $('#hideDropzone').on("click", function() {
     console.log("hiding dropzone");
     $("#dropzone").css("display", "none");
-    $("#dropbox").html('<span class="message">Drop files here to upload. <br /><i>(they will only be visible to you)</i></span>');
+    $("#dropbox").html('<span class="message">'+labelDropzoneMsg1+' <br /><i>('+labelDropZoneMsg2+')</i></span>');
 
     $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter}, function () {
       filesActions();
@@ -204,7 +214,7 @@ $(document).ready(function(){
 
   function updateBreadcrumb() {
     var $breadcrumb = $("#documents-breadcrumb");
-    var html = '<li class="breadcrumb-link" data-name="Documents"><a href="#">Home</a> <span class="divider">/</span></li>';
+    var html = '<li class="breadcrumb-link" data-name="Documents"><a href="#">'+labelHome+'</a> <span class="divider">/</span></li>';
     var filter = documentFilter;
     var bc = "";
     do {

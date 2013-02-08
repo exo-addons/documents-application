@@ -1,9 +1,9 @@
 <% if (file!=null) { %>
 
 <ul class="nav nav-tabs" id="propertiesTab">
-  <li class="active"><a href="#general">General</a></li>
+  <li class="active"><a href="#general">&{benjp.documents.general}</a></li>
   <% if (file.isFile) { %>
-  <li><a href="#versions">Versions</a></li>
+  <li><a href="#versions">&{benjp.documents.versions}</a></li>
   <% } %>
 </ul>
 
@@ -13,20 +13,20 @@
     <table class="table table-striped table-condensed">
       <tbody>
         <tr>
-          <td>Name</td>
+          <td>&{benjp.documents.name}</td>
           <td><%=file.name%></td>
         </tr>
         <tr>
-          <td>Created Date</td>
+          <td>&{benjp.documents.created.date}</td>
           <td><%=file.createdDate%></td>
         </tr>
         <% if (file.isFile) { %>
           <tr>
-            <td>Size</td>
+            <td>&{benjp.documents.size}</td>
             <td><%=file.size%></td>
           </tr>
           <tr>
-            <td>Tags</td>
+            <td>&{benjp.documents.tags}</td>
             <td>
                <% if (file.tags.size>0) { %>
                  <% file.tags.each { tag -> %>
@@ -48,8 +48,8 @@
     <table class="table table-striped table-condensed">
       <thead>
         <tr>
-          <th>Versions</th>
-          <th>Created Date</th>
+          <th>&{benjp.documents.versions}</th>
+          <th>&{benjp.documents.created.date}</th>
           <th></th>
         </tr>
       </thead>
@@ -60,7 +60,7 @@
             <td><%=version.createdDate%></td>
             <td>
               <% if (!version.isRootVersion()) { %>
-                <a href="#" class="restore-link" data="<%=version.name%>" data-uuid="<%=file.uuid%>">Restore</a>
+                <a href="#" class="restore-link" data="<%=version.name%>" data-uuid="<%=file.uuid%>">&{benjp.documents.restore}</a>
               <% } %>
             </td>
           </tr>

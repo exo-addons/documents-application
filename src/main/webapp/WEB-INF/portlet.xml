@@ -15,6 +15,9 @@
     <supports>
       <mime-type>text/html</mime-type>
     </supports>
+    <supported-locale>en</supported-locale>
+    <supported-locale>fr</supported-locale>
+    <resource-bundle>locale.portlet.documents.Resource</resource-bundle>
     <portlet-info>
       <title>Documents List</title>
       <short-title>Documents List</short-title>

@@ -25,7 +25,7 @@
         <br/>
              <span>
                <% if (!"".equals(file.version)) { %><div class="label label-info left file-version" data-uuid="${file.uuid}">${file.version}</div><% } %>
-               <div class="file-date left">Created ${file.createdDate} by You
+               <div class="file-date left">Created ${file.createdDate} &{benjp.documents.by.you}
                  <% if (file.isFile) { %>
                  - ${file.size}
                  <% } %>
@@ -37,21 +37,21 @@
           <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
           <ul class="dropdown-menu" data-name="${file.name}" data-uuid="${file.uuid}" data-path="${file.path}" data-tags="${file.tagsAsString}">
             <% if (file.isFile) { %>
-            <li><a href="#" class="preview-link" data="${file.preview}"><i class="minicon-preview"></i>Preview</a></li>
-            <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>Download</a></li>
-            <li><a href="#" class="upload-link" data-uuid="${file.uuid}"><i class="minicon-upload"></i>Upload New Version</a></li>
+            <li><a href="#" class="preview-link" data="${file.preview}"><i class="minicon-preview"></i>&{benjp.documents.preview}</a></li>
+            <li><a href="${file.path}" target="_new"><i class="minicon-download"></i>&{benjp.documents.download}</a></li>
+            <li><a href="#" class="upload-link" data-uuid="${file.uuid}"><i class="minicon-upload"></i>&{benjp.documents.version}</a></li>
             <li class="divider"></li>
-            <li><a href="#" class="share-link" data="${file.publicUrl}"><i class="minicon-share"></i>Share</a></li>
-            <li><a href="#" class="tags-link"><i class="minicon-tags"></i>Add/Edit Tags</a></li>
+            <li><a href="#" class="share-link" data="${file.publicUrl}"><i class="minicon-share"></i>&{benjp.documents.share}</a></li>
+            <li><a href="#" class="tags-link"><i class="minicon-tags"></i>&{benjp.documents.edit.tags}</a></li>
             <li class="divider"></li>
             <% } %>
-            <li><a href="#" class="properties-link" data-uuid="${file.uuid}" data-path="${file.path}"><i class="minicon-properties"></i>Properties</a></li>
-            <li><a href="#" class="rename-link"><i class="minicon-rename"></i>Rename</a></li>
-            <li><a href="#" class="delete-link"><i class="minicon-delete"></i>Delete</a></li>
+            <li><a href="#" class="properties-link" data-uuid="${file.uuid}" data-path="${file.path}"><i class="minicon-properties"></i>&{benjp.documents.properties}</a></li>
+            <li><a href="#" class="rename-link"><i class="minicon-rename"></i>&{benjp.documents.rename}</a></li>
+            <li><a href="#" class="delete-link"><i class="minicon-delete"></i>&{benjp.documents.delete}</a></li>
           </ul>
         </li>
         <% if (file.isFile) { %>
-          <div class="document-action right"><a href="#" class="share-link" data="${file.publicUrl}">Share</a></div>
+          <div class="document-action right"><a href="#" class="share-link" data="${file.publicUrl}">&{benjp.documents.share}</a></div>
         <% } %>
         <% if (file.tags.size>0) { %>
         <br/>
