@@ -432,6 +432,7 @@ $(document).ready(function(){
         filesActions();
         $(".btn-inverse").removeClass("active");
       });
+    });
 
     $('.folder-link').on("click", function() {
       folderName = $(this).attr("data-name");
