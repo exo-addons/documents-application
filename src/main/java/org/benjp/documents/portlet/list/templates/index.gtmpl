@@ -11,6 +11,10 @@
        data-label-dropzone-msg1="&{benjp.documents.dropzone.msg1}"
        data-label-dropzone-msg2="&{benjp.documents.dropzone.msg2}"
        data-label-home="&{benjp.documents.home}"
+       data-label-sort-by="&{benjp.documents.sort.by}"
+       data-label-name="&{benjp.documents.name}"
+       data-label-date="&{benjp.documents.date}"
+       data-label-size="&{benjp.documents.size}"
 >
 
   <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;">&{benjp.documents.title}</h3></div>
@@ -26,11 +30,11 @@
     </ul>
     <span style="float:right;">
       <li class="document-action dropdown right">
-        Sort By&nbsp;<a class="dropdown-toggle" id="order-by-link" data-toggle="dropdown" data-target="#" href="#" data-order="asc" data-by="name">Name</a>
+        &{benjp.documents.sort.by}&nbsp;<a class="dropdown-toggle" id="order-by-link" data-toggle="dropdown" data-target="#" href="#" data-order="asc" data-by="name">&{benjp.documents.name}</a>
         <ul class="dropdown-menu order-by-menu" style="min-width: 50px;">
-          <li data-by="name" id="order-by-name"><a href="#"><i class="minicon-asc"></i>Name</a></li>
-          <li data-by="date" id="order-by-date"><a href="#"><i class="minicon-empty"></i>Date</a></li>
-          <li data-by="size" id="order-by-size"><a href="#"><i class="minicon-empty"></i>Size</a></li>
+          <li data-by="name" id="order-by-name"><a href="#"><i class="minicon-asc"></i>&{benjp.documents.name}</a></li>
+          <li data-by="date" id="order-by-date"><a href="#"><i class="minicon-empty"></i>&{benjp.documents.date}</a></li>
+          <li data-by="size" id="order-by-size"><a href="#"><i class="minicon-empty"></i>&{benjp.documents.size}</a></li>
         </ul>
       </li>
 

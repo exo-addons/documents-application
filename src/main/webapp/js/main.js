@@ -1,6 +1,6 @@
 var documentFilter, currentTag, docAppContext, docAppSpace;
 var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAllowed,
-  labelDropzoneMsg1, labelDropZoneMsg2, labelHome;
+  labelDropzoneMsg1, labelDropZoneMsg2, labelHome, labelSortBy, labelName, labelDate, labelSize;
 var by, order;
 
 $(function(){
@@ -174,6 +174,10 @@ $(document).ready(function(){
   labelDropzoneMsg1 = $documentsApplication.attr("data-label-dropzone-msg1");
   labelDropZoneMsg2 = $documentsApplication.attr("data-label-dropzone-msg2");
   labelHome = $documentsApplication.attr("data-label-home");
+  labelSortBy = $documentsApplication.attr("data-label-sort-by");
+  labelName = $documentsApplication.attr("data-label-name");
+  labelDate = $documentsApplication.attr("data-label-date");
+  labelSize = $documentsApplication.attr("data-label-size");
 
 
   $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
@@ -366,16 +370,16 @@ $(document).ready(function(){
         }
         $("#order-by-link").attr('data-by', by);
         $("#order-by-link").attr('data-order', order);
-        var labelBy="Name";
+        var labelBy=labelName;
         if (by == "date")
-          labelBy = 'Date';
+          labelBy = labelDate;
         else if (by == "size")
-          labelBy = 'Size';
+          labelBy = labelSize;
 
         $("#order-by-link").text(labelBy);
-        $("#order-by-name").html('<a href="#"><i class="minicon-empty"></i>Name</a>');
-        $("#order-by-date").html('<a href="#"><i class="minicon-empty"></i>Date</a>');
-        $("#order-by-size").html('<a href="#"><i class="minicon-empty"></i>Size</a>');
+        $("#order-by-name").html('<a href="#"><i class="minicon-empty"></i>'+labelName+'</a>');
+        $("#order-by-date").html('<a href="#"><i class="minicon-empty"></i>'+labelDate+'</a>');
+        $("#order-by-size").html('<a href="#"><i class="minicon-empty"></i>'+labelSize+'</a>');
 
         $("#order-by-"+by).html('<a href="#"><i class="minicon-'+order+'"></i>'+labelBy+'</a>');
 
