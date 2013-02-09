@@ -330,8 +330,8 @@ $(document).ready(function(){
 
     updateOrderBy(order, by);
 
-    jzStoreParam("order", order, 300);
-    jzStoreParam("by", by, 300);
+    jzStoreParam("order", order, 3000);
+    jzStoreParam("by", by, 3000);
 
     loadFiles();
 
