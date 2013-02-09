@@ -3,6 +3,27 @@ var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAll
   labelDropzoneMsg1, labelDropZoneMsg2, labelHome, labelSortBy, labelName, labelDate, labelSize;
 var by, order;
 
+jzGetParam = function(key) {
+  var ts  = localStorage.getItem(key+"TS");
+  var val = localStorage.getItem(key);
+  if (!ts) ts=-1;
+
+  var now = Math.round(new Date()/1000);
+
+  if (val !== undefined && val !== null && (now<ts || ts===-1 )) {
+    return val;
+  }
+
+  return undefined;
+};
+
+jzStoreParam = function(key, value, expire) {
+  expire = typeof expire !== 'undefined' ? expire : 300;
+  localStorage.setItem(key+"TS", Math.round(new Date()/1000) + expire);
+  localStorage.setItem(key, value);
+};
+
+
 $(function(){
 
   var dropbox = $('#dropbox'),
@@ -180,9 +201,33 @@ $(document).ready(function(){
   labelSize = $documentsApplication.attr("data-label-size");
 
 
-  $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-    filesActions();
-  });
+  function loadFiles() {
+
+    order = $("#order-by-link").attr('data-order');
+    by = $("#order-by-link").attr('data-by');
+
+    if (jzGetParam("documentFilter")!==undefined) {
+      documentFilter = jzGetParam("documentFilter");
+    }
+    if (jzGetParam("order")!==undefined) {
+      order = jzGetParam("order");
+    }
+    if (jzGetParam("by")!==undefined) {
+      by = jzGetParam("by");
+    }
+
+    jzStoreParam("documentFilter", documentFilter, 300);
+    jzStoreParam("order", order, 300);
+    jzStoreParam("by", by, 300);
+
+    updateOrderBy(order, by);
+
+    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
+      filesActions();
+    });
+
+  }
+  loadFiles();
 
 
   $('#hideDropzone').on("click", function() {
@@ -190,13 +235,11 @@ $(document).ready(function(){
     $("#dropzone").css("display", "none");
     $("#dropbox").html('<span class="message">'+labelDropzoneMsg1+' <br /><i>('+labelDropZoneMsg2+')</i></span>');
 
-    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-      filesActions();
-    });
-
+    loadFiles();
   });
 
   function updateBreadcrumb() {
+    jzStoreParam("documentFilter", documentFilter, 300);
     var $breadcrumb = $("#documents-breadcrumb");
     var html = '<li class="breadcrumb-link" data-name="Documents"><a href="#">'+labelHome+'</a> <span class="divider">/</span></li>';
     var filter = documentFilter;
@@ -258,9 +301,8 @@ $(document).ready(function(){
       success:function(response){
         $('#NewFolderModal').modal('hide');
         documentFilter = documentFilter+"/"+name;
-        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-          filesActions();
-        });
+        jzStoreParam("documentFilter", documentFilter, 300);
+        loadFiles();
       },
 
       error:function (xhr, status, error){
@@ -285,8 +327,20 @@ $(document).ready(function(){
       if (by=="date")
         order = "desc";
     }
+
+    updateOrderBy(order, by);
+
+    jzStoreParam("order", order, 300);
+    jzStoreParam("by", by, 300);
+
+    loadFiles();
+
+  })
+
+  function updateOrderBy(order, by) {
     $("#order-by-link").attr('data-by', by);
     $("#order-by-link").attr('data-order', order);
+
     var labelBy=labelName;
     if (by == "date")
       labelBy = labelDate;
@@ -300,11 +354,7 @@ $(document).ready(function(){
 
     $("#order-by-"+by).html('<a href="#"><i class="minicon-'+order+'"></i>'+labelBy+'</a>');
 
-    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-      filesActions();
-    });
-
-  })
+  }
 
   $('.upload-button').on("click", function() {
     $('#file-upload-context').attr("value", docAppContext );
@@ -389,9 +439,7 @@ $(document).ready(function(){
 
         success:function(response){
           $('#DeleteModal').modal('hide');
-          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-            filesActions();
-          });
+          loadFiles();
         },
 
         error:function (xhr, status, error){
@@ -427,9 +475,7 @@ $(document).ready(function(){
 
         success:function(response){
           $('#RenameModal').modal('hide');
-          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-            filesActions();
-          });
+          loadFiles();
         },
 
         error:function (xhr, status, error){
@@ -460,9 +506,7 @@ $(document).ready(function(){
 
         success:function(response){
           $('#TagsModal').modal('hide');
-          $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-            filesActions();
-          });
+          loadFiles();
         },
 
         error:function (xhr, status, error){
@@ -477,26 +521,22 @@ $(document).ready(function(){
     $('.label-tag').on("click", function() {
       currentTag = $(this).html();
       documentFilter = "Folksonomy/"+currentTag;
-      $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-        filesActions();
-        $(".btn-inverse").removeClass("active");
-      });
+      jzStoreParam("documentFilter", documentFilter, 300);
+      loadFiles();
     });
 
     $('.folder-link').on("click", function() {
       folderName = $(this).attr("data-name");
       documentFilter = documentFilter+"/"+folderName;
-      $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-        filesActions();
-      });
+      jzStoreParam("documentFilter", documentFilter, 300);
+      loadFiles();
     });
 
     $('.breadcrumb-link').on("click", function() {
       folderName = $(this).attr("data-name");
       documentFilter = folderName;
-      $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-        filesActions();
-      });
+      jzStoreParam("documentFilter", documentFilter, 300);
+      loadFiles();
     });
 
 
@@ -531,9 +571,7 @@ $(document).ready(function(){
       },
       complete: function(xhr) {
         status.html(xhr.responseText);
-        $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
-          filesActions();
-        });
+        loadFiles();
       }
     });
 
