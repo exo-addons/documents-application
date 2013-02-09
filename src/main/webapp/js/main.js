@@ -245,6 +245,7 @@ $(document).ready(function(){
 
   $('.new-folder-link').on("click", function() {
     $('#rename-error').html("");
+    $('#folder-name').val("");
     $('#NewFolderModal').modal('show');
   });
 
@@ -309,6 +310,10 @@ $(document).ready(function(){
     $('#file-upload-context').attr("value", docAppContext );
     $('#file-upload-space').attr("value", docAppSpace );
     $('#file-upload-filter').attr("value", documentFilter );
+    $('.bar').css("width", "0%");
+    $('.percent').text("0%");
+    $("#status").empty();
+    $("input:file").val("");
     $('#UploadModal').modal('show');
   });
 
