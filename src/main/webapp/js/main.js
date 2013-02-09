@@ -366,12 +366,19 @@ $(document).ready(function(){
         }
         $("#order-by-link").attr('data-by', by);
         $("#order-by-link").attr('data-order', order);
-        if (by == "name")
-          $("#order-by-link").text('Name');
-        else if (by == "date")
-          $("#order-by-link").text('Date');
+        var labelBy="Name";
+        if (by == "date")
+          labelBy = 'Date';
         else if (by == "size")
-          $("#order-by-link").text('Size');
+          labelBy = 'Size';
+
+        $("#order-by-link").text(labelBy);
+        $("#order-by-name").html('<a href="#"><i class="minicon-empty"></i>Name</a>');
+        $("#order-by-date").html('<a href="#"><i class="minicon-empty"></i>Date</a>');
+        $("#order-by-size").html('<a href="#"><i class="minicon-empty"></i>Size</a>');
+
+        $("#order-by-"+by).html('<a href="#"><i class="minicon-'+order+'"></i>'+labelBy+'</a>');
+
         $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
           filesActions();
         });
