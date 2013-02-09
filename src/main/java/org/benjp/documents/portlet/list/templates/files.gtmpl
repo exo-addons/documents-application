@@ -3,12 +3,12 @@
   <%
     files.each { file -> %>
   <tr>
-    <td width="32px">
+    <td width="32px" style="padding: 8px 8px 8px 0;">
       <div class="thumbnail" data="${file.preview}" style="cursor:pointer;">
         <img src="${file.icon}" width="32px" height="32px"/>
       </div>
     </td>
-    <td>
+    <td style="padding: 8px 0;">
       <div class="left">
              <span>
                <% if (file.isFile) { %>
