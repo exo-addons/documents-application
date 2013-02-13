@@ -4,9 +4,13 @@
     files.each { file -> %>
   <tr>
     <td width="32px" style="padding: 8px 8px 8px 0;">
-      <div class="thumbnail" data="${file.preview}" style="cursor:pointer;">
-        <img src="${file.icon}" width="32px" height="32px"/>
-      </div>
+      <% if (file.isFile) { %>
+        <div class="thumbnail" data="${file.preview}" style="cursor:pointer;">
+      <% } %>
+          <img src="${file.icon}" width="32px" height="32px"/>
+      <% if (file.isFile) { %>
+        </div>
+      <% } %>
     </td>
     <td style="padding: 8px 0;">
       <div class="left">
