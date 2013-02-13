@@ -37,9 +37,7 @@
           <li data-by="size" id="order-by-size"><a href="#"><i class="minicon-empty"></i>&{benjp.documents.size}</a></li>
         </ul>
       </li>
-
     </span>
-
   </div>
 
   <div id="dropzone" style="display: none; clear: both;">
@@ -55,7 +53,6 @@
          <td>&nbsp;</td>
        </tr>
   </table>
-
   </div>
 
 </div>
@@ -259,4 +256,76 @@
     </div>
   </div>
 </div>
+
+<script id="filesTpl" type="text">
+  <table class="table">
+  {{#files}}
+
+    <tr>
+      <td width="32px" style="padding: 8px 8px 8px 0;">
+
+        {{#isFile}}
+        <div class="thumbnail" data="{{preview}}" style="cursor:pointer;">
+        {{/isFile}}
+          <img src="{{icon}}" width="32px" height="32px"/>
+        {{#isFile}}
+        </div>
+        {{/isFile}}
+      </td>
+      <td style="padding: 8px 0;">
+        <div class="left">
+             <span>
+              {{#isFile}}
+                <b><a href="{{restPath}}" target="_new">{{name}}</a></b>
+              {{/isFile}}
+              {{^isFile}}
+                <b><a href="#" class="folder-link" data-name="{{name}}">{{name}}</a></b>
+              {{/isFile}}
+             </span>
+             <br/>
+             <span>
+               {{#hasVersion}}
+               <div class="label label-info left file-version" data-uuid="{{uuid}}">{{version}}</div>
+               {{/hasVersion}}
+               <div class="file-date left">Created {{createdDate}} &{benjp.documents.by.you}
+                 {{#isFile}}
+                 - {{size}}
+                 {{/isFile}}
+               </div>
+             </span>
+        </div>
+        <div class="right">
+          <li class="document-action dropdown right">
+            <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
+            <ul class="dropdown-menu" style="margin-left:-135px;" data-name="{{name}}" data-uuid="{{uuid}}" data-path="{{path}}" data-tags="{{tagsAsString}}">
+              {{#isFile}}
+              <li><a href="#" class="preview-link" data="{{preview}}"><i class="minicon-preview"></i>&{benjp.documents.preview}</a></li>
+              <li><a href="{{path}}" target="_new"><i class="minicon-download"></i>&{benjp.documents.download}</a></li>
+              <li><a href="#" class="upload-link" data-uuid="{{uuid}}"><i class="minicon-upload"></i>&{benjp.documents.version}</a></li>
+              <li class="divider"></li>
+              <li><a href="#" class="share-link" data="{{publicUrl}}"><i class="minicon-share"></i>&{benjp.documents.share}</a></li>
+              <li><a href="#" class="tags-link"><i class="minicon-tags"></i>&{benjp.documents.edit.tags}</a></li>
+              <li class="divider"></li>
+              {{/isFile}}
+              <li><a href="#" class="properties-link" data-uuid="{{uuid}}" data-path="{{path}}"><i class="minicon-properties"></i>&{benjp.documents.properties}</a></li>
+              <li><a href="#" class="rename-link"><i class="minicon-rename"></i>&{benjp.documents.rename}</a></li>
+              <li><a href="#" class="delete-link"><i class="minicon-delete"></i>&{benjp.documents.delete}</a></li>
+            </ul>
+          </li>
+          {{#isFile}}
+          <div class="document-action right"><a href="#" class="share-link" data="{{publicUrl}}">&{benjp.documents.share}</a></div>
+          {{/isFile}}
+          {{#hasTags}}
+          <br/>
+            {{#tags}}
+            <span class="label label-small right label-tag">{{.}}</span>
+            {{/tags}}
+          {{/hasTags}}
+        </div>
+      </td>
+    </tr>
+
+  {{/files}}
+  </table>
+</script>
 

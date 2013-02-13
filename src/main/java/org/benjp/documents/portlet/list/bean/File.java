@@ -160,4 +160,63 @@ public class File implements Comparable<File> {
   public int compareTo(File file) {
     return this.getName().compareToIgnoreCase(file.getName());
   }
+
+  public String toJSON()
+  {
+    StringBuffer sb = new StringBuffer();
+
+    sb.append("{");
+
+      sb.append("\"name\": \""+this.getName()+"\",");
+      sb.append("\"createdDate\": \""+this.getCreatedDate()+"\",");
+      sb.append("\"preview\": \""+this.getPreview()+"\",");
+      sb.append("\"icon\": \""+this.getIcon()+"\",");
+      sb.append("\"isFile\": "+this.isFile()+",");
+      sb.append("\"restPath\": \""+this.getRestPath()+"\",");
+      sb.append("\"hasVersion\": "+(!"".equals(this.getVersion()))+",");
+      sb.append("\"version\": \""+this.getVersion()+"\",");
+      sb.append("\"uuid\": \""+this.getUuid()+"\",");
+      sb.append("\"path\": \""+this.getPath()+"\",");
+      sb.append("\"publicUrl\": \""+this.getPublicUrl()+"\",");
+      sb.append("\"tagsAsString\": \""+this.getTagsAsString()+"\",");
+      sb.append("\"size\": \""+this.getSize()+"\",");
+      sb.append("\"hasTags\": "+(this.getTags().size()>0)+",");
+
+      sb.append("\"tags\": [");
+      boolean first=true;
+      for (String tag:tags) {
+        if (!first) {
+          sb.append(",");
+        } else {
+          first=false;
+        }
+        sb.append("\""+tag+"\"");
+      }
+      sb.append("]");
+
+    sb.append("}");
+
+    return sb.toString();
+  }
+
+  public static String filesToJSON(List<File> files)
+  {
+    StringBuffer sb = new StringBuffer();
+    sb.append("{ \"files\": [");
+    boolean first=true;
+    for (File file:files) {
+      if (!first) {
+        sb.append(",");
+      } else {
+        first=false;
+      }
+
+      sb.append(file.toJSON());
+
+    }
+    sb.append("]}");
+
+
+    return sb.toString();
+  }
 }

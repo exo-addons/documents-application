@@ -222,9 +222,26 @@ $(document).ready(function(){
 
     updateOrderBy(order, by);
 
-    $('#documents-files').load(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function () {
+
+    // GET MUSTACHE TEMPLATES
+    $.getJSON(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function(data){
+      console.log("OK1");
+      var filesTpl = $('#filesTpl').html();
+      console.log("OK2");
+      // RENDER ROW FILES
+      var html = Mustache.to_html(filesTpl, data);
+      console.log("OK3");
+      $('#documents-files').html(html);
+      console.log("OK4");
+
       filesActions();
+
+
+    })
+    .error(function (response){
+        console.log(response);
     });
+
 
   }
   loadFiles();

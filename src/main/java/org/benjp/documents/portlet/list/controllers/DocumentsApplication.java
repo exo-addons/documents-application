@@ -8,6 +8,7 @@ import org.benjp.documents.portlet.list.bean.File;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.logging.Logger;
 
@@ -54,12 +55,32 @@ public class DocumentsApplication
     indexTemplate.with().set("filter", DocumentsData.TYPE_DOCUMENT).set("context", context).set("space", space).render();
   }
 
+/*
   @Resource
   @Ajax
   public void getFiles(String filter, String order, String by)
   {
     log.info("getFiles::"+filter+" ; "+order+" ; "+by);
     filesTemplate.with().set("files", documentsData.getNodes(filter, order, by)).render();
+  }
+*/
+
+  @Resource
+  @Ajax
+  public Response.Content getFiles(String filter, String order, String by)
+  {
+    //log.info("getFiles::"+filter+" ; "+order+" ; "+by);
+    try
+    {
+      List<File> files = documentsData.getNodes(filter, order, by);
+      //log.info("###"+File.filesToJSON(files)+"###");
+      return Response.ok(File.filesToJSON(files)).withMimeType("text/event-stream; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+
+    }
+    catch (Exception e)
+    {
+      return Response.notFound("error");
+    }
   }
 
   @Resource
