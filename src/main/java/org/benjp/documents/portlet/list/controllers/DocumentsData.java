@@ -570,14 +570,14 @@ public class DocumentsData {
     return "Groups/spaces/"+space;
   }
 
-  public static String calculateFileSize(double fileLengthLong) {
-    int fileLengthDigitCount = Double.toString(fileLengthLong).length();
+  public static String calculateFileSize(long fileLengthLong) {
+    int fileLengthDigitCount = Long.toString(fileLengthLong).length();
     double fileSizeKB = 0.0;
     String howBig = "";
-    if (fileLengthDigitCount < 5) {
+    if (fileLengthDigitCount < 4) {
       fileSizeKB = Math.abs(fileLengthLong);
       howBig = "Byte(s)";
-    } else if (fileLengthDigitCount >= 5 && fileLengthDigitCount <= 6) {
+    } else if (fileLengthDigitCount >= 4 && fileLengthDigitCount <= 6) {
       fileSizeKB = Math.abs((fileLengthLong / 1024));
       howBig = "KB";
     } else if (fileLengthDigitCount >= 7 && fileLengthDigitCount <= 9) {
