@@ -3,27 +3,6 @@ var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAll
   labelDropzoneMsg1, labelDropZoneMsg2, labelHome, labelSortBy, labelName, labelDate, labelSize;
 var by, order;
 
-jzGetParam = function(key) {
-  var ts  = localStorage.getItem(key+"TS");
-  var val = localStorage.getItem(key);
-  if (!ts) ts=-1;
-
-  var now = Math.round(new Date()/1000);
-
-  if (val !== undefined && val !== null && (now<ts || ts===-1 )) {
-    return val;
-  }
-
-  return undefined;
-};
-
-jzStoreParam = function(key, value, expire) {
-  expire = typeof expire !== 'undefined' ? expire : 300;
-  localStorage.setItem(key+"TS", Math.round(new Date()/1000) + expire);
-  localStorage.setItem(key, value);
-};
-
-
 $(function(){
 
   var dropbox = $('#dropbox'),
@@ -209,18 +188,40 @@ $(document).ready(function(){
     }
     jzStoreParam("documentFilter", documentFilter, 300);
 
-    // GET MUSTACHE TEMPLATES
-    $.getJSON(jzDocumentsGetFiles, {"filter": documentFilter}, function(data){
-      files = TAFFY(data.files);
+    var key = getFilesStorageKey();
+    if (jzGetParam(key)!==undefined && jzGetParam(key)!=="" && jzGetParam(key)!=="null") {
+      stringifiedFiles = jzGetParam(key);
+      files = TAFFY(stringifiedFiles);
       orderFilesAndShow();
-    })
-    .error(function (response){
-        console.log(response);
-    });
+    } else {
+      // GET MUSTACHE TEMPLATES
+      $.getJSON(jzDocumentsGetFiles, {"filter": documentFilter}, function(data){
+        files = TAFFY(data.files);
+        var stringified = files().stringify();
+        var key = getFilesStorageKey();
+        jzStoreParam(key, stringified, 300);
 
+        orderFilesAndShow();
+      })
+      .error(function (response){
+        console.log(response);
+      });
+
+    }
 
   }
+
   loadFiles();
+
+  function getFilesStorageKey() {
+    return calcMD5(documentFilter+":"+docAppContext+":"+docAppSpace);
+  }
+
+  function initFilesStorageKey(filter) {
+    key = calcMD5(filter+":"+docAppContext+":"+docAppSpace);
+    jzStoreParam(key, "", -1000);
+
+  }
 
   function orderFilesAndShow() {
     order = $("#order-by-link").attr('data-order');
@@ -232,17 +233,15 @@ $(document).ready(function(){
     if (jzGetParam("by")!==undefined) {
       by = jzGetParam("by");
     }
+    updateOrderBy(order, by);
 
-    console.log("OK1");
+
     var filesTpl = $('#filesTpl').html();
-    console.log("OK2");
     var logicalOrder = 'logical';
     if (order==='desc')
       logicalOrder = 'logicaldesc';
     var html = Mustache.to_html(filesTpl, {"files": files().order(by+' '+logicalOrder).get()});
-    console.log("OK3");
     $('#documents-files').html(html);
-    console.log("OK4");
     filesActions();
 
   }
@@ -251,6 +250,7 @@ $(document).ready(function(){
     console.log("hiding dropzone");
     $("#dropzone").css("display", "none");
     $("#dropbox").html('<span class="message">'+labelDropzoneMsg1+' <br /><i>('+labelDropZoneMsg2+')</i></span>');
+    initFilesStorageKey(documentFilter);
 
     loadFiles();
   });
@@ -317,8 +317,10 @@ $(document).ready(function(){
 
       success:function(response){
         $('#NewFolderModal').modal('hide');
+        initFilesStorageKey(documentFilter);
         documentFilter = documentFilter+"/"+name;
         jzStoreParam("documentFilter", documentFilter, 300);
+        initFilesStorageKey(documentFilter);
         loadFiles();
       },
 
@@ -344,8 +346,6 @@ $(document).ready(function(){
       if (by=="date")
         order = "desc";
     }
-
-    updateOrderBy(order, by);
 
     jzStoreParam("order", order, 3000);
     jzStoreParam("by", by, 3000);
@@ -385,6 +385,79 @@ $(document).ready(function(){
     $('#UploadModal').modal('show');
   });
 
+  $('#delete-button').on("click", function() {
+    var uuid = $(this).attr('data-uuid');
+    var path = $(this).attr('data-path');
+
+    $.ajax({
+      url: jzDocumentsDeleteFile,
+      data: {"uuid": uuid, "path": path},
+
+      success:function(response){
+        $('#DeleteModal').modal('hide');
+        initFilesStorageKey(documentFilter);
+        if (documentFilter.indexOf("/")>-1) {
+          parent = documentFilter.substring(0, documentFilter.lastIndexOf("/"))
+          console.log("parent="+parent);
+          initFilesStorageKey(parent);
+        }
+        loadFiles();
+      },
+
+      error:function (xhr, status, error){
+        $("#delete-label").html(xhr.responseText);
+        $("#delete-label").addClass("error");
+      }
+
+    });
+
+  });
+
+  $('#rename-button').on("click", function() {
+    var uuid = $(this).attr('data-uuid');
+    var path = $(this).attr('data-path');
+    var name = $('#file-name').attr("value");
+    $.ajax({
+      url: jzDocumentsRenameFile,
+      data: {"uuid": uuid, "name": name, "path": path},
+
+      success:function(response){
+        $('#RenameModal').modal('hide');
+        initFilesStorageKey(documentFilter);
+        loadFiles();
+      },
+
+      error:function (xhr, status, error){
+        $("#rename-error").html(xhr.responseText);
+        $("#rename-error").closest(".control-group").addClass("error");
+      }
+
+    });
+
+  });
+
+  $('#tags-save-button').on("click", function() {
+    var uuid = $(this).attr('data-uuid');
+    var tags = $('#file-tags').val();
+    $.ajax({
+      url: jzDocumentsEditTags,
+      data: {"uuid": uuid, "tags": tags},
+
+      success:function(response){
+        $('#TagsModal').modal('hide');
+        initFilesStorageKey(documentFilter);
+        initFilesStorageKey("Documents");
+        loadFiles();
+      },
+
+      error:function (xhr, status, error){
+        $("#tags-error").html(xhr.responseText);
+        $("#tags-error").closest(".control-group").addClass("error");
+      }
+
+    });
+
+  });
 
 
 
@@ -447,27 +520,6 @@ $(document).ready(function(){
       $('#DeleteModal').modal('show');
     });
 
-    $('#delete-button').on("click", function() {
-      var uuid = $(this).attr('data-uuid');
-      var path = $(this).attr('data-path');
-
-      $.ajax({
-        url: jzDocumentsDeleteFile,
-        data: {"uuid": uuid, "path": path},
-
-        success:function(response){
-          $('#DeleteModal').modal('hide');
-          loadFiles();
-        },
-
-        error:function (xhr, status, error){
-          $("#delete-label").html(xhr.responseText);
-          $("#delete-label").addClass("error");
-        }
-
-      });
-
-    });
 
 
     $('.rename-link').on("click", function() {
@@ -483,28 +535,6 @@ $(document).ready(function(){
     });
 
 
-    $('#rename-button').on("click", function() {
-      var uuid = $(this).attr('data-uuid');
-      var path = $(this).attr('data-path');
-      var name = $('#file-name').attr("value");
-      $.ajax({
-        url: jzDocumentsRenameFile,
-        data: {"uuid": uuid, "name": name, "path": path},
-
-        success:function(response){
-          $('#RenameModal').modal('hide');
-          loadFiles();
-        },
-
-        error:function (xhr, status, error){
-          $("#rename-error").html(xhr.responseText);
-          $("#rename-error").closest(".control-group").addClass("error");
-        }
-
-      });
-
-    });
-
     $('.tags-link').on("click", function() {
       var name = $(this).closest(".dropdown-menu").attr("data-name");
       var uuid = $(this).closest(".dropdown-menu").attr("data-uuid");
@@ -513,27 +543,6 @@ $(document).ready(function(){
       $('#file-tags').val(tags);
       $('#tags-save-button').attr('data-uuid', uuid);
       $('#TagsModal').modal('show');
-    });
-
-    $('#tags-save-button').on("click", function() {
-      var uuid = $(this).attr('data-uuid');
-      var tags = $('#file-tags').val();
-      $.ajax({
-        url: jzDocumentsEditTags,
-        data: {"uuid": uuid, "tags": tags},
-
-        success:function(response){
-          $('#TagsModal').modal('hide');
-          loadFiles();
-        },
-
-        error:function (xhr, status, error){
-          $("#tags-error").html(xhr.responseText);
-          $("#tags-error").closest(".control-group").addClass("error");
-        }
-
-      });
-
     });
 
     $('.label-tag').on("click", function() {
@@ -607,11 +616,214 @@ $(document).ready(function(){
       var name = $(this).attr("data");
       var uuid = $(this).attr("data-uuid");
       $('#document-properties').load(jzDocumentsRestore, {"uuid": uuid, "name": name}, function () {
+        initFilesStorageKey(documentFilter);
       });
     });
 
   }
 
 });
+
+
+jzGetParam = function(key) {
+  var ts  = localStorage.getItem(key+"TS");
+  var val = localStorage.getItem(key);
+  if (!ts) ts=-1;
+
+  var now = Math.round(new Date()/1000);
+
+  if (val !== undefined && val !== null && (now<ts || ts===-1 )) {
+    return val;
+  }
+
+  return undefined;
+};
+
+jzStoreParam = function(key, value, expire) {
+  expire = typeof expire !== 'undefined' ? expire : 300;
+  localStorage.setItem(key+"TS", Math.round(new Date()/1000) + expire);
+  localStorage.setItem(key, value);
+};
+
+gravatar = function(email) {
+  return "http://www.gravatar.com/avatar/" + calcMD5(email) + ".jpg?s=30&d=mm";
+}
+
+
+/*
+ * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+ * Digest Algorithm, as defined in RFC 1321.
+ * Copyright (C) Paul Johnston 1999 - 2000.
+ * Updated by Greg Holt 2000 - 2001.
+ * See http://pajhome.org.uk/site/legal.html for details.
+ */
+
+/*
+ * Convert a 32-bit number to a hex string with ls-byte first
+ */
+var hex_chr = "0123456789abcdef";
+function rhex(num)
+{
+  str = "";
+  for(j = 0; j <= 3; j++)
+    str += hex_chr.charAt((num >> (j * 8 + 4)) & 0x0F) +
+      hex_chr.charAt((num >> (j * 8)) & 0x0F);
+  return str;
+}
+
+/*
+ * Convert a string to a sequence of 16-word blocks, stored as an array.
+ * Append padding bits and the length, as described in the MD5 standard.
+ */
+function str2blks_MD5(str)
+{
+  nblk = ((str.length + 8) >> 6) + 1;
+  blks = new Array(nblk * 16);
+  for(i = 0; i < nblk * 16; i++) blks[i] = 0;
+  for(i = 0; i < str.length; i++)
+    blks[i >> 2] |= str.charCodeAt(i) << ((i % 4) * 8);
+  blks[i >> 2] |= 0x80 << ((i % 4) * 8);
+  blks[nblk * 16 - 2] = str.length * 8;
+  return blks;
+}
+
+/*
+ * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+ * to work around bugs in some JS interpreters.
+ */
+function add(x, y)
+{
+  var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+  return (msw << 16) | (lsw & 0xFFFF);
+}
+
+/*
+ * Bitwise rotate a 32-bit number to the left
+ */
+function rol(num, cnt)
+{
+  return (num << cnt) | (num >>> (32 - cnt));
+}
+
+/*
+ * These functions implement the basic operation for each round of the
+ * algorithm.
+ */
+function cmn(q, a, b, x, s, t)
+{
+  return add(rol(add(add(a, q), add(x, t)), s), b);
+}
+function ff(a, b, c, d, x, s, t)
+{
+  return cmn((b & c) | ((~b) & d), a, b, x, s, t);
+}
+function gg(a, b, c, d, x, s, t)
+{
+  return cmn((b & d) | (c & (~d)), a, b, x, s, t);
+}
+function hh(a, b, c, d, x, s, t)
+{
+  return cmn(b ^ c ^ d, a, b, x, s, t);
+}
+function ii(a, b, c, d, x, s, t)
+{
+  return cmn(c ^ (b | (~d)), a, b, x, s, t);
+}
+
+/*
+ * Take a string and return the hex representation of its MD5.
+ */
+function calcMD5(str)
+{
+  x = str2blks_MD5(str);
+  a =  1732584193;
+  b = -271733879;
+  c = -1732584194;
+  d =  271733878;
+
+  for(i = 0; i < x.length; i += 16)
+  {
+    olda = a;
+    oldb = b;
+    oldc = c;
+    oldd = d;
+
+    a = ff(a, b, c, d, x[i+ 0], 7 , -680876936);
+    d = ff(d, a, b, c, x[i+ 1], 12, -389564586);
+    c = ff(c, d, a, b, x[i+ 2], 17,  606105819);
+    b = ff(b, c, d, a, x[i+ 3], 22, -1044525330);
+    a = ff(a, b, c, d, x[i+ 4], 7 , -176418897);
+    d = ff(d, a, b, c, x[i+ 5], 12,  1200080426);
+    c = ff(c, d, a, b, x[i+ 6], 17, -1473231341);
+    b = ff(b, c, d, a, x[i+ 7], 22, -45705983);
+    a = ff(a, b, c, d, x[i+ 8], 7 ,  1770035416);
+    d = ff(d, a, b, c, x[i+ 9], 12, -1958414417);
+    c = ff(c, d, a, b, x[i+10], 17, -42063);
+    b = ff(b, c, d, a, x[i+11], 22, -1990404162);
+    a = ff(a, b, c, d, x[i+12], 7 ,  1804603682);
+    d = ff(d, a, b, c, x[i+13], 12, -40341101);
+    c = ff(c, d, a, b, x[i+14], 17, -1502002290);
+    b = ff(b, c, d, a, x[i+15], 22,  1236535329);
+
+    a = gg(a, b, c, d, x[i+ 1], 5 , -165796510);
+    d = gg(d, a, b, c, x[i+ 6], 9 , -1069501632);
+    c = gg(c, d, a, b, x[i+11], 14,  643717713);
+    b = gg(b, c, d, a, x[i+ 0], 20, -373897302);
+    a = gg(a, b, c, d, x[i+ 5], 5 , -701558691);
+    d = gg(d, a, b, c, x[i+10], 9 ,  38016083);
+    c = gg(c, d, a, b, x[i+15], 14, -660478335);
+    b = gg(b, c, d, a, x[i+ 4], 20, -405537848);
+    a = gg(a, b, c, d, x[i+ 9], 5 ,  568446438);
+    d = gg(d, a, b, c, x[i+14], 9 , -1019803690);
+    c = gg(c, d, a, b, x[i+ 3], 14, -187363961);
+    b = gg(b, c, d, a, x[i+ 8], 20,  1163531501);
+    a = gg(a, b, c, d, x[i+13], 5 , -1444681467);
+    d = gg(d, a, b, c, x[i+ 2], 9 , -51403784);
+    c = gg(c, d, a, b, x[i+ 7], 14,  1735328473);
+    b = gg(b, c, d, a, x[i+12], 20, -1926607734);
+
+    a = hh(a, b, c, d, x[i+ 5], 4 , -378558);
+    d = hh(d, a, b, c, x[i+ 8], 11, -2022574463);
+    c = hh(c, d, a, b, x[i+11], 16,  1839030562);
+    b = hh(b, c, d, a, x[i+14], 23, -35309556);
+    a = hh(a, b, c, d, x[i+ 1], 4 , -1530992060);
+    d = hh(d, a, b, c, x[i+ 4], 11,  1272893353);
+    c = hh(c, d, a, b, x[i+ 7], 16, -155497632);
+    b = hh(b, c, d, a, x[i+10], 23, -1094730640);
+    a = hh(a, b, c, d, x[i+13], 4 ,  681279174);
+    d = hh(d, a, b, c, x[i+ 0], 11, -358537222);
+    c = hh(c, d, a, b, x[i+ 3], 16, -722521979);
+    b = hh(b, c, d, a, x[i+ 6], 23,  76029189);
+    a = hh(a, b, c, d, x[i+ 9], 4 , -640364487);
+    d = hh(d, a, b, c, x[i+12], 11, -421815835);
+    c = hh(c, d, a, b, x[i+15], 16,  530742520);
+    b = hh(b, c, d, a, x[i+ 2], 23, -995338651);
+
+    a = ii(a, b, c, d, x[i+ 0], 6 , -198630844);
+    d = ii(d, a, b, c, x[i+ 7], 10,  1126891415);
+    c = ii(c, d, a, b, x[i+14], 15, -1416354905);
+    b = ii(b, c, d, a, x[i+ 5], 21, -57434055);
+    a = ii(a, b, c, d, x[i+12], 6 ,  1700485571);
+    d = ii(d, a, b, c, x[i+ 3], 10, -1894986606);
+    c = ii(c, d, a, b, x[i+10], 15, -1051523);
+    b = ii(b, c, d, a, x[i+ 1], 21, -2054922799);
+    a = ii(a, b, c, d, x[i+ 8], 6 ,  1873313359);
+    d = ii(d, a, b, c, x[i+15], 10, -30611744);
+    c = ii(c, d, a, b, x[i+ 6], 15, -1560198380);
+    b = ii(b, c, d, a, x[i+13], 21,  1309151649);
+    a = ii(a, b, c, d, x[i+ 4], 6 , -145523070);
+    d = ii(d, a, b, c, x[i+11], 10, -1120210379);
+    c = ii(c, d, a, b, x[i+ 2], 15,  718787259);
+    b = ii(b, c, d, a, x[i+ 9], 21, -343485551);
+
+    a = add(a, olda);
+    b = add(b, oldb);
+    c = add(c, oldc);
+    d = add(d, oldd);
+  }
+  return rhex(a) + rhex(b) + rhex(c) + rhex(d);
+}
+
 
 
