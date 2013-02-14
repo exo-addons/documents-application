@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Named("documentsData")
 @SessionScoped
@@ -136,6 +137,9 @@ public class DocumentsData {
 
       Node node = session.getNodeByUUID(uuid);
       node.restore(name, true);
+      updateTimestamp(node);
+      updateTimestamp(node.getParent());
+      session.save();
       return true;
     }
     catch (Exception e)
@@ -200,8 +204,10 @@ public class DocumentsData {
 
       if (!rootNode.hasNode(path+"/"+filter+"/"+name)) {
         Node parentNode = rootNode.getNode(path+"/"+filter);
-        parentNode.addNode(name, "nt:folder");
-        parentNode.save();
+        Node node = parentNode.addNode(name, "nt:folder");
+        updateTimestamp(node);
+        updateTimestamp(parentNode);
+        updateSize(parentNode);
         session.save();
       }
     } catch (Exception e)
@@ -441,8 +447,11 @@ public class DocumentsData {
       Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
 
       Node node = getNodeById(id, session);
-
+      Node parentNode = node.getParent();
+      updateTimestamp(parentNode);
+      updateTimestamp(parentNode.getParent());
       node.remove();
+      updateSize(parentNode);
       session.save();
     }
     finally
@@ -462,6 +471,8 @@ public class DocumentsData {
 
       Node node = getNodeById(id, session);
       String extension = (!id.contains("/"))?node.getName().substring(node.getName().lastIndexOf(".")):"";
+      updateTimestamp(node);
+      updateTimestamp(node.getParent());
 
       StringBuilder newPath = new StringBuilder(node.getParent().getPath()).append('/')
               .append(name).append(extension);
@@ -614,7 +625,28 @@ public class DocumentsData {
     return suri;
   }
 
+  private static void checkIfHasMetaType(Node node) throws RepositoryException {
+    if (!node.isNodeType(META_NODETYPE))
+    {
+      node.addMixin(META_NODETYPE);
+      node.save();
+    }
+  }
 
+  public static void updateTimestamp(Node node) throws RepositoryException {
+    checkIfHasMetaType(node);
+    node.setProperty(TIMESTAMP_PROPERTY, System.currentTimeMillis());
+    node.save();
+  }
+
+  public static void updateSize(Node node) throws RepositoryException {
+    checkIfHasMetaType(node);
+    long size = node.getNodes().getSize();
+    if (node.hasNode("exo:thumbnails")) size-=1;
+    System.out.println("Path="+node.getPath()+" ; Size="+size);
+    node.setProperty(SIZE_PROPERTY, size);
+    node.save();
+  }
 
 
   private static String roundTwoDecimals(double d) {

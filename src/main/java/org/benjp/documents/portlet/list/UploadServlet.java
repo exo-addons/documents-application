@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.benjp.documents.portlet.list.controllers.DocumentsData;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -128,8 +129,10 @@ public class UploadServlet extends HttpServlet
       if (isImage(filename))
       {
         if (!homeNode.hasNode("Pictures")) {
-          homeNode.addNode("Pictures", "nt:folder");
+          Node node = homeNode.addNode("Pictures", "nt:folder");
+          DocumentsData.updateTimestamp(node);
           homeNode.save();
+          DocumentsData.updateTimestamp(homeNode);
         }
         docNode = homeNode.getNode("Pictures");
       }
@@ -172,6 +175,9 @@ public class UploadServlet extends HttpServlet
         else if (filename.endsWith(".ods"))
           jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.spreadsheet");
         docNode.save();
+        DocumentsData.updateTimestamp(docNode);
+        DocumentsData.updateSize(docNode);
+        DocumentsData.updateTimestamp(docNode.getParent());
         session.save();
         uuid = fileNode.getUUID();
       }
@@ -194,6 +200,8 @@ public class UploadServlet extends HttpServlet
         fileNode.checkout();
         Node jcrContent = fileNode.getNode("jcr:content");
         jcrContent.setProperty("jcr:data", item.getInputStream());
+        DocumentsData.updateTimestamp(fileNode);
+        DocumentsData.updateTimestamp(fileNode.getParent());
         session.save();
       }
 
@@ -209,6 +217,10 @@ public class UploadServlet extends HttpServlet
           linkNode.setProperty("exo:workspace", "collaboration");
           linkNode.setProperty("exo:primaryType", "nt:file");
           tagNode.save();
+          DocumentsData.updateTimestamp(tagNode);
+          DocumentsData.updateTimestamp(tagNode.getParent());
+          DocumentsData.updateTimestamp(homeNode);
+
           session.save();
 
         }
