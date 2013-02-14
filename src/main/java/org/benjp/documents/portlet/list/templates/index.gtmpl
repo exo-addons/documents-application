@@ -15,6 +15,9 @@
        data-label-name="&{benjp.documents.name}"
        data-label-date="&{benjp.documents.date}"
        data-label-size="&{benjp.documents.size}"
+       data-label-date-minutes="&{benjp.documents.date.minutes}"
+       data-label-date-today="&{benjp.documents.date.today}"
+       data-label-date-yesterday="&{benjp.documents.date.yesterday}"
 >
 
   <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;">&{benjp.documents.title}</h3></div>
@@ -53,6 +56,18 @@
          <td>&nbsp;</td>
        </tr>
   </table>
+  </div>
+
+  <div class="pagination pagination-centered" style="display:none;">
+    <ul>
+      <li class="disabled"><a href="#">&laquo;</a></li>
+      <li class="active"><a href="#">1</a></li>
+      <li><a href="#">2</a></li>
+      <li><a href="#">3</a></li>
+      <li><a href="#">4</a></li>
+      <li><a href="#">5</a></li>
+      <li><a href="#">Next</a></li>
+    </ul>
   </div>
 
 </div>
@@ -266,10 +281,11 @@
 
         {{#isFile}}
         <div class="thumbnail" data="{{preview}}" style="cursor:pointer;">
-        {{/isFile}}
           <img src="{{icon}}" width="32px" height="32px"/>
-        {{#isFile}}
         </div>
+        {{/isFile}}
+        {{^isFile}}
+          <img src="{{icon}}" width="24px" height="24px" style="padding:4px;"/>
         {{/isFile}}
       </td>
       <td style="padding: 8px 0;">
@@ -287,7 +303,7 @@
                {{#hasVersion}}
                <div class="label label-info left file-version" data-uuid="{{uuid}}">{{version}}</div>
                {{/hasVersion}}
-               <div class="file-date left">Created {{createdDate}} &{benjp.documents.by.you}
+               <div class="file-date left">Modified <span class="timestamp-label" data-timestamp="{{timestamp}}">{{createdDate}}</span> &{benjp.documents.by.you}
                  {{#isFile}}
                  - {{sizeLabel}}
                  {{/isFile}}

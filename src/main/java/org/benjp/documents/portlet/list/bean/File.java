@@ -54,11 +54,14 @@ public class File implements Comparable<File> {
   }
 
   public String getIcon() {
-    if (name.endsWith(".pdf") || name.endsWith(".doc") || name.endsWith(".docx") || name.endsWith(".xls")
-            || name.endsWith(".xlsx") || name.endsWith(".ppt") || name.endsWith(".pptx")
-            || name.endsWith(".odt") || name.endsWith(".ods") || name.endsWith(".odp"))
-      return "/portal/rest/pdfviewer/repository/collaboration/1/0.0/0.25/"+getUuid();
-//      return "/documents/img/Files-text.png";
+    if (name.endsWith(".ppt") || name.endsWith(".pptx") || name.endsWith(".odp"))
+      return "/documents/img/Files-ppt.png";
+    else if (name.endsWith(".xls") || name.endsWith(".xlsx") || name.endsWith(".ods"))
+      return "/documents/img/Files-xls.png";
+    else if (name.endsWith(".doc") || name.endsWith(".docx") || name.endsWith(".odt"))
+      return "/documents/img/Files-doc.png";
+    else if (name.endsWith(".pdf"))
+      return "/documents/img/Files-pdf.png";
     else if (!isFile())
       return "/documents/img/Files-folder.png";
      else

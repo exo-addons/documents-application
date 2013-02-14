@@ -179,6 +179,9 @@ $(document).ready(function(){
   labelName = $documentsApplication.attr("data-label-name");
   labelDate = $documentsApplication.attr("data-label-date");
   labelSize = $documentsApplication.attr("data-label-size");
+  labelMinutes = $documentsApplication.attr("data-label-date-minutes");
+  labelToday = $documentsApplication.attr("data-label-date-today");
+  labelYesterday = $documentsApplication.attr("data-label-date-yesterday");
 
 
   function loadFiles() {
@@ -242,9 +245,20 @@ $(document).ready(function(){
       logicalOrder = 'logicaldesc';
     var html = Mustache.to_html(filesTpl, {"files": files().order(by+' '+logicalOrder).get()});
     $('#documents-files').html(html);
-    filesActions();
+    $('.timestamp-label').each(function(index) {
+      var ts = $(this).attr("data-timestamp");
+      var now = new Date();
+      var sec = Math.round((now-ts)/1000);
+      var label="";
+      if (sec<60*5) label = labelMinutes;
+      else if (sec<60*60*24) label = labelToday;
+      else if (sec<60*60*24*2) label = labelYesterday;
 
+      if (label!=="") $(this).text(label);
+    });
+    filesActions();
   }
+  //setInterval(orderFilesAndShow, 5000);
 
   $('#hideDropzone').on("click", function() {
     console.log("hiding dropzone");
