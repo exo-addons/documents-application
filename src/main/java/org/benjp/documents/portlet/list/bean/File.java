@@ -13,6 +13,7 @@ public class File implements Comparable<File> {
   String preview;
   String size;
   Long sizeValue;
+  Long timestamp;
   String path;
   String uuid="";
   String publicUrl;
@@ -156,6 +157,13 @@ public class File implements Comparable<File> {
     this.sizeValue = sizeValue;
   }
 
+  public Long getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Long timestamp) {
+    this.timestamp = timestamp;
+  }
 
   public int compareTo(File file) {
     return this.getName().compareToIgnoreCase(file.getName());
@@ -180,6 +188,8 @@ public class File implements Comparable<File> {
       sb.append("\"publicUrl\": \""+this.getPublicUrl()+"\",");
       sb.append("\"tagsAsString\": \""+this.getTagsAsString()+"\",");
       sb.append("\"size\": \""+this.getSize()+"\",");
+      sb.append("\"timestamp\": "+this.getTimestamp()+",");
+      sb.append("\"sizeValue\": "+this.getSizeValue()+",");
       sb.append("\"hasTags\": "+(this.getTags().size()>0)+",");
 
       sb.append("\"tags\": [");

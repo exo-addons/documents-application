@@ -305,12 +305,18 @@ public class DocumentsData {
     // set created date
     Calendar date = node.getProperty("exo:dateModified").getDate();
     file.setCreatedDate(date);
+    Long ts;
     if (!node.hasProperty(TIMESTAMP_PROPERTY))
     {
-      node.setProperty(TIMESTAMP_PROPERTY, date.getTimeInMillis());
+      ts = date.getTimeInMillis();
+      node.setProperty(TIMESTAMP_PROPERTY, ts);
       node.save();
     }
-
+    else
+    {
+      ts = node.getProperty(TIMESTAMP_PROPERTY).getLong();
+    }
+    file.setTimestamp(ts);
     // is file or folder
     if (node.isNodeType("nt:folder")) file.setAsFolder();
     //set file size
