@@ -11,8 +11,8 @@ public class File implements Comparable<File> {
   Calendar createdDate;
   String icon;
   String preview;
-  String size;
-  Long sizeValue;
+  String sizeLabel;
+  Long size;
   Long timestamp;
   String path;
   String uuid="";
@@ -77,12 +77,12 @@ public class File implements Comparable<File> {
       return "/rest/thumbnailImage/custom/550x0/repository/collaboration"+path;
   }
 
-  public String getSize() {
-    return size;
+  public String getSizeLabel() {
+    return sizeLabel;
   }
 
-  public void setSize(String size) {
-    this.size = size;
+  public void setSizeLabel(String sizeLabel) {
+    this.sizeLabel = sizeLabel;
   }
 
   public String getRestPath() {
@@ -149,12 +149,12 @@ public class File implements Comparable<File> {
     if (this.versionBeans.size()>1) Collections.sort(this.versionBeans, Collections.reverseOrder());
   }
 
-  public Long getSizeValue() {
-    return sizeValue;
+  public Long getSize() {
+    return size;
   }
 
-  public void setSizeValue(Long sizeValue) {
-    this.sizeValue = sizeValue;
+  public void setSize(Long size) {
+    this.size = size;
   }
 
   public Long getTimestamp() {
@@ -176,6 +176,9 @@ public class File implements Comparable<File> {
     sb.append("{");
 
       sb.append("\"name\": \""+this.getName()+"\",");
+      sb.append("\"date\": "+this.getTimestamp()+",");
+      sb.append("\"size\": "+this.getSize()+",");
+      sb.append("\"timestamp\": "+this.getTimestamp()+",");
       sb.append("\"createdDate\": \""+this.getCreatedDate()+"\",");
       sb.append("\"preview\": \""+this.getPreview()+"\",");
       sb.append("\"icon\": \""+this.getIcon()+"\",");
@@ -187,9 +190,7 @@ public class File implements Comparable<File> {
       sb.append("\"path\": \""+this.getPath()+"\",");
       sb.append("\"publicUrl\": \""+this.getPublicUrl()+"\",");
       sb.append("\"tagsAsString\": \""+this.getTagsAsString()+"\",");
-      sb.append("\"size\": \""+this.getSize()+"\",");
-      sb.append("\"timestamp\": "+this.getTimestamp()+",");
-      sb.append("\"sizeValue\": "+this.getSizeValue()+",");
+      sb.append("\"sizeLabel\": \""+this.getSizeLabel()+"\",");
       sb.append("\"hasTags\": "+(this.getTags().size()>0)+",");
 
       sb.append("\"tags\": [");

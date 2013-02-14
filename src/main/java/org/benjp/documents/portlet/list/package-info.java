@@ -18,7 +18,8 @@
                 @Script(src = "js/jquery.form.js", depends = "jquery", id = "jqform"),
                 @Script(src = "js/bootstrap.min.js", id="bootstrap"),
                 @Script(src = "js/mustache.js", id="mustache"),
-                @Script(src = "js/main.js", depends = "jquery, filedrop, jqform, bootstrap, mustache")
+                @Script(src = "js/taffy-min.js", id="taffy"),
+                @Script(src = "js/main.js", depends = "jquery, filedrop, jqform, bootstrap, mustache, taffy")
         },
         stylesheets = {
                 @Stylesheet(src = "css/bootstrap.min.css"),

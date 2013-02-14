@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Named("documentsData")
 @SessionScoped
@@ -222,7 +221,7 @@ public class DocumentsData {
   }
 
 
-  protected List<File> getNodes(String filter, String order, String by)
+  protected List<File> getNodes(String filter)
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
@@ -262,24 +261,6 @@ public class DocumentsData {
       }
       session.save();
 
-      if ("asc".equals(order))
-      {
-        if ("date".equals(by))
-          Collections.sort(files, new FileDateComparator());
-        else if ("size".equals(by))
-          Collections.sort(files, new FileSizeComparator());
-        else
-          Collections.sort(files, new FileNameComparator());
-      }
-      else
-      {
-        if ("date".equals(by))
-          Collections.sort(files, new FileDateReverseComparator());
-        else if ("size".equals(by))
-          Collections.sort(files, new FileSizeReverseComparator());
-        else
-          Collections.sort(files, new FileNameReverseComparator());
-      }
 
       return files;
 
@@ -294,6 +275,32 @@ public class DocumentsData {
     }
     return null;
   }
+
+  protected List<File> orderNodes(List<File> files, String order, String by)
+  {
+    if ("asc".equals(order))
+    {
+      if ("date".equals(by))
+        Collections.sort(files, new FileDateComparator());
+      else if ("size".equals(by))
+        Collections.sort(files, new FileSizeComparator());
+      else
+        Collections.sort(files, new FileNameComparator());
+    }
+    else
+    {
+      if ("date".equals(by))
+        Collections.sort(files, new FileDateReverseComparator());
+      else if ("size".equals(by))
+        Collections.sort(files, new FileSizeReverseComparator());
+      else
+        Collections.sort(files, new FileNameReverseComparator());
+    }
+
+    return files;
+  }
+
+
 
   private File getFileFromNode(Node node, String space, boolean full) throws Exception {
     File file = new File();
@@ -347,12 +354,11 @@ public class DocumentsData {
         node.save();
       }
     }
-    String fileSize = calculateFileSize(size);
     if (file.isFile())
-      file.setSize(fileSize);
+      file.setSizeLabel(calculateFileSize(size));
     else
-      file.setSize(""+size);
-    file.setSizeValue(size);
+      file.setSizeLabel("" + size);
+    file.setSize(size);
 
 
     // set versions

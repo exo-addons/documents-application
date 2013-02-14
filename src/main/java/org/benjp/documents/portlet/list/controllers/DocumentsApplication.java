@@ -64,8 +64,9 @@ public class DocumentsApplication
     sleep(2);
     try
     {
-      List<File> files = documentsData.getNodes(filter, order, by);
-      //log.info("###"+File.filesToJSON(files)+"###");
+      List<File> files = documentsData.getNodes(filter);
+      //files = documentsData.orderNodes(files, order, by);
+//      log.info("##############################\n"+File.filesToJSON(files)+"\n##############################");
       return Response.ok(File.filesToJSON(files)).withMimeType("text/event-stream; charset=UTF-8").withHeader("Cache-Control", "no-cache");
 
     }

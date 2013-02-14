@@ -23,7 +23,7 @@
         <% if (file.isFile) { %>
           <tr>
             <td>&{benjp.documents.size}</td>
-            <td><%=file.size%></td>
+            <td><%=file.sizeLabel%></td>
           </tr>
           <tr>
             <td>&{benjp.documents.tags}</td>

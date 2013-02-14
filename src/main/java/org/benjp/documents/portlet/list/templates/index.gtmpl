@@ -279,7 +279,7 @@
                 <b><a href="{{restPath}}" target="_new">{{name}}</a></b>
               {{/isFile}}
               {{^isFile}}
-                <b><a href="#" class="folder-link" data-name="{{name}}">{{name}}</a></b><span class="folder-size">{{size}}</span>
+                <b><a href="#" class="folder-link" data-name="{{name}}">{{name}}</a></b><span class="folder-size">{{sizeLabel}}</span>
               {{/isFile}}
              </span>
              <br/>
@@ -289,7 +289,7 @@
                {{/hasVersion}}
                <div class="file-date left">Created {{createdDate}} &{benjp.documents.by.you}
                  {{#isFile}}
-                 - {{size}}
+                 - {{sizeLabel}}
                  {{/isFile}}
                </div>
              </span>

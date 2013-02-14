@@ -13,6 +13,6 @@ import java.util.Comparator;
  */
 public class FileSizeComparator implements Comparator<File> {
   public int compare(File file, File file2) {
-    return file.getSizeValue().compareTo(file2.getSizeValue());
+    return file.getSize().compareTo(file2.getSize());
   }
 }

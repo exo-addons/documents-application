@@ -224,12 +224,17 @@ $(document).ready(function(){
 
 
     // GET MUSTACHE TEMPLATES
-    $.getJSON(jzDocumentsGetFiles, {"filter": documentFilter, "order": order, "by": by}, function(data){
+    $.getJSON(jzDocumentsGetFiles, {"filter": documentFilter}, function(data){
       console.log("OK1");
       var filesTpl = $('#filesTpl').html();
       console.log("OK2");
       // RENDER ROW FILES
-      var html = Mustache.to_html(filesTpl, data);
+      var files = TAFFY(data.files);
+      var logicalOrder = 'logical';
+      if (order==='desc')
+        logicalOrder = 'logicaldesc';
+
+      var html = Mustache.to_html(filesTpl, {"files": files().order(by+' '+logicalOrder).get()});
       console.log("OK3");
       $('#documents-files').html(html);
       console.log("OK4");
