@@ -12,7 +12,7 @@ public class File implements Comparable<File> {
   String icon;
   String preview;
   String size;
-  Double sizeValue;
+  Long sizeValue;
   String path;
   String uuid="";
   String publicUrl;
@@ -148,11 +148,11 @@ public class File implements Comparable<File> {
     if (this.versionBeans.size()>1) Collections.sort(this.versionBeans, Collections.reverseOrder());
   }
 
-  public Double getSizeValue() {
+  public Long getSizeValue() {
     return sizeValue;
   }
 
-  public void setSizeValue(Double sizeValue) {
+  public void setSizeValue(Long sizeValue) {
     this.sizeValue = sizeValue;
   }
 

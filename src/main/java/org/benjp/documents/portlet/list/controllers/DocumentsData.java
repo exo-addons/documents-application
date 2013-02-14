@@ -1,27 +1,33 @@
 package org.benjp.documents.portlet.list.controllers;
 
 
+import juzu.SessionScoped;
 import org.benjp.documents.portlet.list.bean.File;
 import org.benjp.documents.portlet.list.bean.VersionBean;
 import org.benjp.documents.portlet.list.comparator.*;
 import org.benjp.documents.portlet.list.controllers.validator.NameValidator;
-import juzu.SessionScoped;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.cms.folksonomy.NewFolksonomyService;
 import org.exoplatform.services.cms.link.LinkManager;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
+import org.exoplatform.services.jcr.core.nodetype.NodeTypeValue;
+import org.exoplatform.services.jcr.core.nodetype.PropertyDefinitionValue;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jcr.*;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.nodetype.NodeType;
+import javax.jcr.version.OnParentVersionAction;
 import javax.jcr.version.VersionIterator;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,6 +43,11 @@ public class DocumentsData {
 
   LinkManager linkManager_;
 
+  private static final String META_NODETYPE = "adn:meta";
+  private static final String SIZE_PROPERTY = "adn:size";
+  private static final String TIMESTAMP_PROPERTY = "adn:timestamp";
+
+
   public static final String TYPE_DOCUMENT="Documents";
   public static final String TYPE_IMAGE="Pictures";
 
@@ -47,6 +58,72 @@ public class DocumentsData {
     nodeHierarchyCreator_= nodeHierarchyCreator;
     newFolksonomyService_ = newFolksonomyService;
     linkManager_ = linkManager;
+  }
+
+  protected void initNodetypes()
+  {
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try
+    {
+      //get info
+      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+
+      NamespaceRegistry namespaceRegistry = session.getWorkspace().getNamespaceRegistry();
+      try
+      {
+        String uri = namespaceRegistry.getURI("adn");
+      }
+      catch (NamespaceException ne)
+      {
+        namespaceRegistry.registerNamespace("adn", "http://www.exoplatform.com/jcr/adn/1.0");
+      }
+
+      ExtendedNodeTypeManager nodeTypeManager = (ExtendedNodeTypeManager) session.getWorkspace().getNodeTypeManager();
+      try {
+        NodeType ntMeta = nodeTypeManager.getNodeType(META_NODETYPE);
+
+      } catch (NoSuchNodeTypeException nsne)
+      {
+        NodeTypeValue adnMeta = new NodeTypeValue();
+        adnMeta.setName(META_NODETYPE);
+        adnMeta.setMixin(true);
+
+        PropertyDefinitionValue sizeProperty = new PropertyDefinitionValue();
+        sizeProperty.setMultiple(false);
+        sizeProperty.setAutoCreate(false);
+        sizeProperty.setName(SIZE_PROPERTY);
+        sizeProperty.setReadOnly(false);
+        sizeProperty.setRequiredType(PropertyType.LONG);
+        sizeProperty.setOnVersion(OnParentVersionAction.IGNORE);
+
+        PropertyDefinitionValue tsProperty = new PropertyDefinitionValue();
+        tsProperty.setMultiple(false);
+        tsProperty.setAutoCreate(false);
+        tsProperty.setName(TIMESTAMP_PROPERTY);
+        tsProperty.setReadOnly(false);
+        tsProperty.setRequiredType(PropertyType.LONG);
+        tsProperty.setOnVersion(OnParentVersionAction.IGNORE);
+
+        List<PropertyDefinitionValue> props = new ArrayList<PropertyDefinitionValue>();
+        props.add(sizeProperty);
+        props.add(tsProperty);
+
+        adnMeta.setDeclaredPropertyDefinitionValues(props);
+
+        nodeTypeManager.registerNodeType(adnMeta, ExtendedNodeTypeManager.REPLACE_IF_EXISTS);
+      }
+
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      sessionProvider.close();
+    }
+
+
   }
 
   protected boolean restoreVersion(String uuid, String name)
@@ -177,6 +254,7 @@ public class DocumentsData {
           files.add(file);
         }
       }
+      session.save();
 
       if ("asc".equals(order))
       {
@@ -217,22 +295,54 @@ public class DocumentsData {
     file.setName(node.getName());
     //set uuid
     if (node.isNodeType("mix:referenceable")) file.setUuid(node.getUUID());
+    //hasMeta?
+    if (!node.isNodeType(META_NODETYPE))
+    {
+      node.addMixin(META_NODETYPE);
+      node.save();
+    }
+
     // set created date
-    file.setCreatedDate(node.getProperty("exo:dateCreated").getDate());
+    Calendar date = node.getProperty("exo:dateModified").getDate();
+    file.setCreatedDate(date);
+    if (!node.hasProperty(TIMESTAMP_PROPERTY))
+    {
+      node.setProperty(TIMESTAMP_PROPERTY, date.getTimeInMillis());
+      node.save();
+    }
+
     // is file or folder
     if (node.isNodeType("nt:folder")) file.setAsFolder();
     //set file size
-    if (node.hasNode("jcr:content")) {
-      Node contentNode = node.getNode("jcr:content");
-      if (contentNode.hasProperty("jcr:data")) {
-        double size = contentNode.getProperty("jcr:data").getLength();
-        String fileSize = calculateFileSize(size);
-        file.setSize(fileSize);
-        file.setSizeValue(size);
-      }
-    } else {
-      file.setSizeValue(new Double(0));
+    Long size;
+    if (node.hasProperty(SIZE_PROPERTY))
+    {
+      size = node.getProperty(SIZE_PROPERTY).getLong();
     }
+    else
+    {
+      if (node.hasNode("jcr:content"))
+      {
+        Node contentNode = node.getNode("jcr:content");
+        size = contentNode.getProperty("jcr:data").getLength();
+        node.setProperty(SIZE_PROPERTY, size);
+        node.save();
+      }
+      else
+      {
+        size = node.getNodes().getSize();
+        node.setProperty(SIZE_PROPERTY, size);
+        node.save();
+      }
+    }
+    String fileSize = calculateFileSize(size);
+    if (file.isFile())
+      file.setSize(fileSize);
+    else
+      file.setSize(""+size);
+    file.setSizeValue(size);
+
+
     // set versions
     String sversion = "";
     if (node.isNodeType("mix:versionable"))

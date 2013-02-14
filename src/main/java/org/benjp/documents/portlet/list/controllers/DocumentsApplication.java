@@ -40,6 +40,7 @@ public class DocumentsApplication
   @View
   public void index() throws IOException
   {
+    documentsData.initNodetypes();
     String space = documentsData.getSpaceName();
     String context;
     if (space!=null)
@@ -55,21 +56,12 @@ public class DocumentsApplication
     indexTemplate.with().set("filter", DocumentsData.TYPE_DOCUMENT).set("context", context).set("space", space).render();
   }
 
-/*
-  @Resource
-  @Ajax
-  public void getFiles(String filter, String order, String by)
-  {
-    log.info("getFiles::"+filter+" ; "+order+" ; "+by);
-    filesTemplate.with().set("files", documentsData.getNodes(filter, order, by)).render();
-  }
-*/
-
   @Resource
   @Ajax
   public Response.Content getFiles(String filter, String order, String by)
   {
     //log.info("getFiles::"+filter+" ; "+order+" ; "+by);
+    sleep(2);
     try
     {
       List<File> files = documentsData.getNodes(filter, order, by);
@@ -87,6 +79,7 @@ public class DocumentsApplication
   @Ajax
   public void getProperties(String uuid, String path)
   {
+    sleep(1);
     File file = null;
     if (uuid!=null && !"".equals(uuid))
       file = documentsData.getNode(uuid);
@@ -100,6 +93,7 @@ public class DocumentsApplication
   @Ajax
   public void restore(String uuid, String name)
   {
+    sleep(2);
     documentsData.restoreVersion(uuid, name);
     propertiesTemplate.with().set("file", documentsData.getNode(uuid)).render();
   }
@@ -108,6 +102,7 @@ public class DocumentsApplication
   @Ajax
   public Response.Content deleteFile(String uuid, String path)
   {
+    sleep(3);
     try
     {
       if (uuid!=null && !"".equals(uuid))
@@ -126,6 +121,7 @@ public class DocumentsApplication
   @Ajax
   public Response.Content renameFile(String uuid, String name, String path)
   {
+    sleep(3);
     try
     {
       if (uuid!=null && !"".equals(uuid))
@@ -149,6 +145,7 @@ public class DocumentsApplication
   @Ajax
   public Response.Content newFolder(String documentFilter, String name)
   {
+    sleep(1);
     if (!documentsData.createNodeIfNotExist(documentFilter, name))
     {
       return Response.notFound(getMessage("benjp.documents.message.error.folder"));
@@ -160,6 +157,7 @@ public class DocumentsApplication
   @Ajax
   public Response.Content editTags(String uuid, String tags)
   {
+    sleep(2);
     try
     {
       documentsData.editTags(uuid, tags);
@@ -184,5 +182,12 @@ public class DocumentsApplication
     return "";
   }
 
+  private void sleep(int sec)
+  {
+    try {
+      Thread.sleep(sec*1);
+    } catch (InterruptedException e) {
+    }
+  }
 
 }

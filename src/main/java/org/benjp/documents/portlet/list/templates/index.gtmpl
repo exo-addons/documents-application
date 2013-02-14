@@ -279,7 +279,7 @@
                 <b><a href="{{restPath}}" target="_new">{{name}}</a></b>
               {{/isFile}}
               {{^isFile}}
-                <b><a href="#" class="folder-link" data-name="{{name}}">{{name}}</a></b>
+                <b><a href="#" class="folder-link" data-name="{{name}}">{{name}}</a></b><span class="folder-size">{{size}}</span>
               {{/isFile}}
              </span>
              <br/>
