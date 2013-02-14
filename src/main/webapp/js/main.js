@@ -172,6 +172,7 @@ $(document).ready(function(){
   /** end bug fix **/
 
   var $documentsApplication = $("#container-documents");
+  var files;
 
   var jzDocumentsGetFiles = $documentsApplication.jzURL("DocumentsApplication.getFiles");
   var jzDocumentsGetProperties = $documentsApplication.jzURL("DocumentsApplication.getProperties");
@@ -203,45 +204,15 @@ $(document).ready(function(){
 
   function loadFiles() {
 
-    order = $("#order-by-link").attr('data-order');
-    by = $("#order-by-link").attr('data-by');
-
     if (jzGetParam("documentFilter")!==undefined) {
       documentFilter = jzGetParam("documentFilter");
     }
-    if (jzGetParam("order")!==undefined) {
-      order = jzGetParam("order");
-    }
-    if (jzGetParam("by")!==undefined) {
-      by = jzGetParam("by");
-    }
-
     jzStoreParam("documentFilter", documentFilter, 300);
-    jzStoreParam("order", order, 300);
-    jzStoreParam("by", by, 300);
-
-    updateOrderBy(order, by);
-
 
     // GET MUSTACHE TEMPLATES
     $.getJSON(jzDocumentsGetFiles, {"filter": documentFilter}, function(data){
-      console.log("OK1");
-      var filesTpl = $('#filesTpl').html();
-      console.log("OK2");
-      // RENDER ROW FILES
-      var files = TAFFY(data.files);
-      var logicalOrder = 'logical';
-      if (order==='desc')
-        logicalOrder = 'logicaldesc';
-
-      var html = Mustache.to_html(filesTpl, {"files": files().order(by+' '+logicalOrder).get()});
-      console.log("OK3");
-      $('#documents-files').html(html);
-      console.log("OK4");
-
-      filesActions();
-
-
+      files = TAFFY(data.files);
+      orderFilesAndShow();
     })
     .error(function (response){
         console.log(response);
@@ -251,6 +222,30 @@ $(document).ready(function(){
   }
   loadFiles();
 
+  function orderFilesAndShow() {
+    order = $("#order-by-link").attr('data-order');
+    by = $("#order-by-link").attr('data-by');
+
+    if (jzGetParam("order")!==undefined) {
+      order = jzGetParam("order");
+    }
+    if (jzGetParam("by")!==undefined) {
+      by = jzGetParam("by");
+    }
+
+    console.log("OK1");
+    var filesTpl = $('#filesTpl').html();
+    console.log("OK2");
+    var logicalOrder = 'logical';
+    if (order==='desc')
+      logicalOrder = 'logicaldesc';
+    var html = Mustache.to_html(filesTpl, {"files": files().order(by+' '+logicalOrder).get()});
+    console.log("OK3");
+    $('#documents-files').html(html);
+    console.log("OK4");
+    filesActions();
+
+  }
 
   $('#hideDropzone').on("click", function() {
     console.log("hiding dropzone");
@@ -355,7 +350,8 @@ $(document).ready(function(){
     jzStoreParam("order", order, 3000);
     jzStoreParam("by", by, 3000);
 
-    loadFiles();
+    orderFilesAndShow();
+    //loadFiles();
 
   })
 

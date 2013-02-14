@@ -58,9 +58,9 @@ public class DocumentsApplication
 
   @Resource
   @Ajax
-  public Response.Content getFiles(String filter, String order, String by)
+  public Response.Content getFiles(String filter)
   {
-    //log.info("getFiles::"+filter+" ; "+order+" ; "+by);
+    log.info("getFiles::"+filter);
     sleep(2);
     try
     {
