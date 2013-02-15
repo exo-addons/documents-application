@@ -249,6 +249,9 @@ $(document).ready(function(){
             jzStoreParam(keyts, ""+ts, 300);
 
             orderFilesAndShow();
+
+            $("#dropzone").css("display", "none");
+            $("#dropbox").html('<span class="message">'+labelDropzoneMsg1+' <br /><i>('+labelDropZoneMsg2+')</i></span>');
           }
 
         } else {
