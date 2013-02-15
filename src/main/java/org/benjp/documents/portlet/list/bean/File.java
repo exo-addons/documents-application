@@ -45,7 +45,7 @@ public class File implements Comparable<File> {
   }
 
   public String getCreatedDate() {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy hh:mm aaa");
+    SimpleDateFormat formatter = new SimpleDateFormat("d/M/yy hh:mm aaa");
     return formatter.format(createdDate.getTime());
   }
 

@@ -1,15 +1,20 @@
 package org.benjp.documents.portlet.list.controllers;
 
 import juzu.*;
+import juzu.bridge.portlet.JuzuPortlet;
 import juzu.plugin.ajax.Ajax;
+import juzu.request.RenderContext;
 import juzu.template.Template;
 import org.benjp.documents.portlet.list.bean.File;
 import org.benjp.documents.portlet.list.bean.Folder;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletPreferences;
+import javax.portlet.ReadOnlyException;
+import javax.portlet.ValidatorException;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.MissingResourceException;
 import java.util.logging.Logger;
 
@@ -19,10 +24,18 @@ public class DocumentsApplication
 {
 
   Logger log = Logger.getLogger("DocumentsApplication");
+
+  @Inject
+  Provider<PortletPreferences> providerPreferences;
+
   /** . */
   @Inject
   @Path("index.gtmpl")
   Template indexTemplate;
+
+  @Inject
+  @Path("edit.gtmpl")
+  Template editTemplate;
 
   @Inject
   @Path("files.gtmpl")
@@ -39,23 +52,57 @@ public class DocumentsApplication
 
 
   @View
-  public void index() throws IOException
+  public void index(RenderContext renderContext) throws IOException
   {
-    documentsData.initNodetypes();
-    String space = documentsData.getSpaceName();
-    String context;
-    if (space!=null)
+    PortletPreferences portletPreferences = providerPreferences.get();
+    String refresh = portletPreferences.getValue("refresh", "10");
+    if ("".equals(refresh)) refresh="10";
+
+    PortletMode portletMode = renderContext.getProperty(JuzuPortlet.PORTLET_MODE);
+    if (portletMode.equals(PortletMode.VIEW))
     {
-      context = "Community";
+      String space = documentsData.getSpaceName();
+      String context;
+      if (space!=null)
+      {
+        context = "Community";
+      }
+      else
+      {
+        context = "Personal";
+        space = "";
+      }
+
+      indexTemplate.with().set("filter", DocumentsData.TYPE_DOCUMENT)
+              .set("context", context).set("space", space)
+              .set("refresh", refresh)
+              .render();
     }
     else
     {
-      context = "Personal";
-      space = "";
+      documentsData.initNodetypes();
+      editTemplate.with().set("refresh", refresh).render();
+
     }
 
-    indexTemplate.with().set("filter", DocumentsData.TYPE_DOCUMENT).set("context", context).set("space", space).render();
   }
+
+  @Action
+  public void save(String refresh)
+  {
+    try {
+      PortletPreferences portletPreferences = providerPreferences.get();
+      portletPreferences.setValue("refresh", refresh);
+      portletPreferences.store();
+    } catch (ReadOnlyException e) {
+      e.printStackTrace();
+    } catch (ValidatorException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 
   @Resource
   @Ajax

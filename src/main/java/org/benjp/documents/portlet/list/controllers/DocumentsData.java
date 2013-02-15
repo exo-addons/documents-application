@@ -205,8 +205,10 @@ public class DocumentsData {
       if (!rootNode.hasNode(path+"/"+filter+"/"+name)) {
         Node parentNode = rootNode.getNode(path+"/"+filter);
         Node node = parentNode.addNode(name, "nt:folder");
+        session.save();
         updateTimestamp(node);
         updateTimestamp(parentNode);
+        updateTimestamp(parentNode.getParent());
         updateSize(parentNode);
         session.save();
       }

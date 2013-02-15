@@ -1,0 +1,5 @@
+  <form action="@{save()}" method="POST">
+    Auto Refresh : <input name="refresh" value="${refresh}" size="2"><br>
+    <br>
+    <input type="submit" value="Save">
+  </form>

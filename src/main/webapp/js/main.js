@@ -1,4 +1,4 @@
-var documentFilter, currentTag, docAppContext, docAppSpace;
+var documentFilter, currentTag, docAppContext, docAppSpace, refresh;
 var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAllowed,
   labelDropzoneMsg1, labelDropZoneMsg2, labelHome, labelSortBy, labelName, labelDate, labelSize;
 var by, order, ts;
@@ -165,6 +165,7 @@ $(document).ready(function(){
   currentTag = $documentsApplication.attr("data-current-tag");
   docAppContext = $documentsApplication.attr("data-app-context");
   docAppSpace = $documentsApplication.attr("data-app-space");
+  refresh = $documentsApplication.attr("data-refresh");
 
   by = $("#order-by-link").attr('data-by');
   order = $("#order-by-link").attr('data-order');
@@ -265,7 +266,8 @@ $(document).ready(function(){
     }
 
   }
-  setInterval(checkChanges, 5000);
+  if (refresh != "-1")
+    setInterval(checkChanges, Math.round(1000*refresh));
 
   function getFilesStorageKey() {
     return calcMD5("FLS:"+documentFilter+":"+docAppContext+":"+docAppSpace);

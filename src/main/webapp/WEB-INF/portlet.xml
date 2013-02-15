@@ -14,6 +14,8 @@
     </init-param>
     <supports>
       <mime-type>text/html</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+      <portlet-mode>EDIT</portlet-mode>
     </supports>
     <supported-locale>en</supported-locale>
     <supported-locale>fr</supported-locale>
@@ -23,6 +25,13 @@
       <short-title>Documents List</short-title>
       <keywords>Content</keywords>
     </portlet-info>
+    <portlet-preferences>
+      <preference>
+        <name>refresh</name>
+        <value>10</value>
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>
   </portlet>
 
 </portlet-app>

@@ -1,8 +1,9 @@
 <div class="container" id="container-documents"
        data-document-filter="Documents"
        data-current-tag=""
-       data-app-context="<%=context%>"
-       data-app-space="<%=space%>"
+       data-app-context="${context}"
+       data-app-space="${space}"
+       data-refresh="${refresh}"
 
        data-label-browser-not-supported="&{benjp.documents.browser.not.supported}"
        data-label-too-many-files="&{benjp.documents.too.many.files}"
