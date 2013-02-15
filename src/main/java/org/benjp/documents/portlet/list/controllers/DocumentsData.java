@@ -15,6 +15,7 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
 import org.exoplatform.services.jcr.core.nodetype.NodeTypeValue;
 import org.exoplatform.services.jcr.core.nodetype.PropertyDefinitionValue;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
@@ -42,6 +43,8 @@ public class DocumentsData {
 
   NodeHierarchyCreator nodeHierarchyCreator_;
 
+  SessionProviderService sessionProviderService_;
+
   LinkManager linkManager_;
 
   private static final String META_NODETYPE = "adn:meta";
@@ -53,12 +56,18 @@ public class DocumentsData {
   public static final String TYPE_IMAGE="Pictures";
 
   @Inject
-  public DocumentsData(RepositoryService repositoryService, NodeHierarchyCreator nodeHierarchyCreator, NewFolksonomyService newFolksonomyService, LinkManager linkManager)
+  public DocumentsData(RepositoryService repositoryService, SessionProviderService sessionProviderService, NodeHierarchyCreator nodeHierarchyCreator, NewFolksonomyService newFolksonomyService, LinkManager linkManager)
   {
     repositoryService_ = repositoryService;
     nodeHierarchyCreator_= nodeHierarchyCreator;
     newFolksonomyService_ = newFolksonomyService;
+    sessionProviderService_ = sessionProviderService;
     linkManager_ = linkManager;
+  }
+
+  public SessionProvider getUserSessionProvider() {
+    SessionProvider sessionProvider = sessionProviderService_.getSessionProvider(null);
+    return sessionProvider;
   }
 
   protected void initNodetypes()
@@ -156,7 +165,7 @@ public class DocumentsData {
   protected File getNode(String id)
   {
 
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    SessionProvider sessionProvider = getUserSessionProvider();
     try
     {
       //get info
@@ -174,10 +183,6 @@ public class DocumentsData {
     {
       System.out.println("JCR::\n" + e.getMessage());
     }
-    finally
-    {
-      sessionProvider.close();
-    }
 
 
     return null;
@@ -186,7 +191,7 @@ public class DocumentsData {
   protected boolean createNodeIfNotExist(String filter, String name)
   {
     //filter = filter+"/"+name;
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    SessionProvider sessionProvider = getUserSessionProvider();
     try
     {
       //get info
@@ -216,9 +221,6 @@ public class DocumentsData {
     {
       return false;
     }
-    finally {
-      sessionProvider.close();
-    }
     return true;
 
   }
@@ -226,7 +228,7 @@ public class DocumentsData {
 
   protected Folder getNodes(String filter)
   {
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    SessionProvider sessionProvider = getUserSessionProvider();
     try
     {
       //get info
@@ -282,15 +284,11 @@ public class DocumentsData {
     {
       System.out.println("JCR::\n" + e.getMessage());
     }
-    finally
-    {
-      sessionProvider.close();
-    }
     return null;
   }
   protected Long getTimestamp(String filter)
   {
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    SessionProvider sessionProvider = getUserSessionProvider();
     try
     {
       //get info
@@ -322,10 +320,6 @@ public class DocumentsData {
     catch (Exception e)
     {
       System.out.println("JCR::\n" + e.getMessage());
-    }
-    finally
-    {
-      sessionProvider.close();
     }
     return null;
   }
@@ -414,6 +408,11 @@ public class DocumentsData {
       file.setSizeLabel("" + size);
     file.setSize(size);
 
+    if (node.hasProperty("exo:lastModifier")) {
+      String owner = node.getProperty("exo:lastModifier").getString();
+      if ("__system".equals(owner)) owner="System";
+      file.setOwner(owner);
+    }
 
     // set versions
     String sversion = "";
@@ -501,49 +500,34 @@ public class DocumentsData {
 
   protected void deleteFile(String id) throws Exception
   {
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
-    try
-    {
-      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+    SessionProvider sessionProvider = getUserSessionProvider();
+    Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
 
-      Node node = getNodeById(id, session);
-      Node parentNode = node.getParent();
-      updateTimestamp(parentNode);
-      updateTimestamp(parentNode.getParent());
-      node.remove();
-      updateSize(parentNode);
-      session.save();
-    }
-    finally
-    {
-      sessionProvider.close();
-    }
+    Node node = getNodeById(id, session);
+    Node parentNode = node.getParent();
+    updateTimestamp(parentNode);
+    updateTimestamp(parentNode.getParent());
+    node.remove();
+    updateSize(parentNode);
+    session.save();
 
   }
 
   protected void renameFile(String id, String name) throws Exception
   {
     NameValidator.validateName(name);
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
-    try
-    {
-      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+    SessionProvider sessionProvider = getUserSessionProvider();
+    Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
 
-      Node node = getNodeById(id, session);
-      String extension = (!id.contains("/"))?node.getName().substring(node.getName().lastIndexOf(".")):"";
-      updateTimestamp(node);
-      updateTimestamp(node.getParent());
+    Node node = getNodeById(id, session);
+    String extension = (!id.contains("/"))?node.getName().substring(node.getName().lastIndexOf(".")):"";
+    updateTimestamp(node);
+    updateTimestamp(node.getParent());
 
-      StringBuilder newPath = new StringBuilder(node.getParent().getPath()).append('/')
-              .append(name).append(extension);
-      session.move(node.getPath(), newPath.toString());
-      session.save();
-    }
-    finally
-    {
-      sessionProvider.close();
-    }
-
+    StringBuilder newPath = new StringBuilder(node.getParent().getPath()).append('/')
+            .append(name).append(extension);
+    session.move(node.getPath(), newPath.toString());
+    session.save();
   }
 
   private Node getNodeById(String id, Session session) throws Exception
@@ -624,7 +608,7 @@ public class DocumentsData {
   {
     String userName = Util.getPortalRequestContext().getRemoteUser();
 
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    SessionProvider sessionProvider = getUserSessionProvider();
     try
     {
       Node userNode = nodeHierarchyCreator_.getUserNode(sessionProvider, userName);
@@ -633,10 +617,6 @@ public class DocumentsData {
     catch (Exception e)
     {
       System.out.println("JCR::" + e.getMessage());
-    }
-    finally
-    {
-      sessionProvider.close();
     }
 
     return null;

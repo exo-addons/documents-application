@@ -71,7 +71,7 @@ public class UploadServlet extends HttpServlet
 
           if (uuid!=null)
           {
-            storeFile(path, item, name, isPrivateContext, uuid);
+            storeFile(path, item, name, isPrivateContext, uuid, request);
             response.setContentType("text/html");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write("<div style='background-color:#ffa; padding:20px'>File has been uploaded successfully!</div>");
@@ -79,7 +79,7 @@ public class UploadServlet extends HttpServlet
           }
           else
           {
-            storeFile(path, item, name, isPrivateContext);
+            storeFile(path, item, name, isPrivateContext, request);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write("{\"status\":\"File has been uploaded successfully!\"}");
@@ -94,12 +94,12 @@ public class UploadServlet extends HttpServlet
     }
   }
 
-  private void storeFile(String path, FileItem item, String name, boolean isPrivateContext)
+  private void storeFile(String path, FileItem item, String name, boolean isPrivateContext, HttpServletRequest request)
   {
-    storeFile(path, item, name, isPrivateContext, null);
+    storeFile(path, item, name, isPrivateContext, null, request);
   }
 
-   private void storeFile(String path, FileItem item, String name, boolean isPrivateContext, String uuid)
+   private void storeFile(String path, FileItem item, String name, boolean isPrivateContext, String uuid, HttpServletRequest request)
   {
     String filename = FilenameUtils.getName(item.getName());
     RepositoryService repositoryService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
@@ -164,7 +164,7 @@ public class UploadServlet extends HttpServlet
           jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.text");
         else if (filename.endsWith(".ods"))
           jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.spreadsheet");
-        docNode.save();
+        fileNode.setProperty("exo:lastModifier", request.getRemoteUser());
         DocumentsData.updateTimestamp(docNode);
         DocumentsData.updateSize(docNode);
         DocumentsData.updateTimestamp(docNode.getParent());
@@ -192,6 +192,8 @@ public class UploadServlet extends HttpServlet
         jcrContent.setProperty("jcr:data", item.getInputStream());
         DocumentsData.updateTimestamp(fileNode);
         DocumentsData.updateTimestamp(fileNode.getParent());
+        fileNode.setProperty("exo:lastModifier", request.getRemoteUser());
+        fileNode.save();
         session.save();
       }
 

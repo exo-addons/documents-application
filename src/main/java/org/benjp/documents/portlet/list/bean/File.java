@@ -8,6 +8,7 @@ import java.util.List;
 
 public class File implements Comparable<File> {
   String name;
+  String owner;
   Calendar createdDate;
   String icon;
   String preview;
@@ -174,6 +175,15 @@ public class File implements Comparable<File> {
     this.timestamp = timestamp;
   }
 
+  public String getOwner() {
+    if (owner==null || "".equals(owner)) return "Someone";
+    return owner.substring(0, 1).toUpperCase() + owner.substring(1);
+  }
+
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
+
   public int compareTo(File file) {
     return this.getName().compareToIgnoreCase(file.getName());
   }
@@ -188,6 +198,7 @@ public class File implements Comparable<File> {
       sb.append("\"date\": "+this.getTimestamp()+",");
       sb.append("\"size\": "+this.getSize()+",");
       sb.append("\"timestamp\": "+this.getTimestamp()+",");
+      sb.append("\"owner\": \""+this.getOwner()+"\",");
       sb.append("\"createdDate\": \""+this.getCreatedDate()+"\",");
       sb.append("\"preview\": \""+this.getPreview()+"\",");
       sb.append("\"icon\": \""+this.getIcon()+"\",");

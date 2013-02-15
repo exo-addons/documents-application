@@ -3,6 +3,7 @@
 @Bindings(
         {
                 @Binding(value = org.exoplatform.services.jcr.RepositoryService.class),
+                @Binding(value = org.exoplatform.services.jcr.ext.app.SessionProviderService.class),
                 @Binding(value = org.exoplatform.services.cms.folksonomy.NewFolksonomyService.class),
                 @Binding(value = org.exoplatform.services.cms.link.LinkManager.class),
                 @Binding(value = org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator.class)

@@ -304,9 +304,9 @@
                {{#hasVersion}}
                <div class="label label-info left file-version" data-uuid="{{uuid}}">{{version}}</div>
                {{/hasVersion}}
-               <div class="file-date left">Modified <span class="timestamp-label" data-timestamp="{{timestamp}}">{{createdDate}}</span> &{benjp.documents.by.you}
+               <div class="file-date left">Modified <span class="timestamp-label" data-timestamp="{{timestamp}}">{{createdDate}}</span>
                  {{#isFile}}
-                 - {{sizeLabel}}
+                 &{benjp.documents.by.you} {{owner}} - {{sizeLabel}}
                  {{/isFile}}
                </div>
              </span>
