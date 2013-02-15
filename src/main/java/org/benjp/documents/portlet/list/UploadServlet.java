@@ -126,16 +126,6 @@ public class UploadServlet extends HttpServlet
       }
 
       Node docNode = homeNode.getNode("Documents");
-      if (isImage(filename))
-      {
-        if (!homeNode.hasNode("Pictures")) {
-          Node node = homeNode.addNode("Pictures", "nt:folder");
-          DocumentsData.updateTimestamp(node);
-          homeNode.save();
-          DocumentsData.updateTimestamp(homeNode);
-        }
-        docNode = homeNode.getNode("Pictures");
-      }
       if (path.contains("/") && !path.startsWith("Folksonomy/")) {
         docNode = homeNode.getNode(path);
       }
