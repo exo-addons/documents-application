@@ -2,6 +2,7 @@ var documentFilter, currentTag, docAppContext, docAppSpace, refresh;
 var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAllowed,
   labelDropzoneMsg1, labelDropZoneMsg2, labelHome, labelSortBy, labelName, labelDate, labelSize;
 var by, order, ts;
+var uploadFiles=0;
 
 $(function(){
 
@@ -17,6 +18,8 @@ $(function(){
     url: '/documents/uploadServlet',
 
     uploadFinished:function(i,file,response){
+      uploadFiles--;
+      console.log("uploaded : "+uploadFiles);
       $.data(file).addClass('done');
       $('#hideDropzone').css("display", "block");
       // response is the JSON object that post_file.php returns
@@ -36,6 +39,7 @@ $(function(){
         default:
           break;
       }
+      $("#dropzone").css("display", "none");
     },
 
     // Called before each upload is started
@@ -62,32 +66,43 @@ $(function(){
     },
 
     uploadStarted:function(i, file, len){
+      uploadFiles++;
+      console.log("uploading : "+uploadFiles);
       createImage(file);
     },
 
     progressUpdated: function(i, file, progress) {
-      $.data(file).find('.progress').width(progress);
+      $.data(file).find('.bar').width(progress+"%");
+      var percent = $.data(file).find('.percent');
+      percent.html(progress+"%");
+      percent.attr("data-percent", progress+"%");
     }
 
   });
 
-  var template = '<div class="preview">'+
-    '<span class="imageHolder">'+
-    '<img />'+
-    '<span class="uploaded"></span>'+
-    '</span>'+
-    '<div class="progressHolder">'+
-    '<div class="progress"></div>'+
+  var template2 = '<tr>'+
+    '<td width="32px" style="padding: 8px 8px 8px 0;">'+
+    '<div class="thumbnail">'+
+    '<img width="32px" height="32px"/>'+
     '</div>'+
-    '</div>';
-
+    '</td>'+
+    '<td style="padding: 8px 0;">'+
+    '<span class="filename" style="float:left;"></span>'+
+    '<div class="progress" style="float:right;margin:0;">'+
+    '<div class="bar"></div>'+
+    '<div class="percent percent-bulk" data-percent="0%">0%</div>'+
+    '</div>'+
+    '</td>'+
+    '</tr>';
 
   function createImage(file){
 
-    var preview = $(template),
+    var preview = $(template2),
       image = $('img', preview);
 
     var reader = new FileReader();
+
+    var table = $('#documents-files > table').first();
 
     image.width = 100;
     image.height = 100;
@@ -121,12 +136,23 @@ $(function(){
     reader.readAsDataURL(file);
 
     message.hide();
-    preview.appendTo(dropbox);
+    preview.appendTo(table);
 
     // Associating a preview container
     // with the file, using jQuery's $.data():
 
     $.data(file,preview);
+
+    $.data(file).find('.filename').text(file.name);
+    $("#dropzone").css("display", "none");
+    var progress = "0%";
+    var bar = $.data(file).find('.bar');
+    var percent = $.data(file).find('.percent')
+    bar.width(progress)
+    percent.html(progress);
+
+//    preview.find('.filename').text(file.name);
+
   }
 
   function showMessage(msg){
@@ -212,9 +238,9 @@ $(document).ready(function(){
 
         orderFilesAndShow();
       })
-      .error(function (response){
-        console.log(response);
-      });
+        .error(function (response){
+          console.log(response);
+        });
 
     }
 
@@ -222,6 +248,7 @@ $(document).ready(function(){
   loadFiles();
 
   function checkChanges() {
+    if (uploadFiles>0) return;
 
     if (jzGetParam("documentFilter")!==undefined) {
       documentFilter = jzGetParam("documentFilter");
@@ -259,15 +286,16 @@ $(document).ready(function(){
           console.log("NO UPDATE NEEDED")
         }
       })
-      .error(function (response){
-        console.log(response);
-      });
+        .error(function (response){
+          console.log(response);
+        });
 
     }
 
   }
-  if (refresh != "-1")
+  if (refresh != "-1") {
     setInterval(checkChanges, Math.round(1000*refresh));
+  }
 
   function getFilesStorageKey() {
     return calcMD5("FLS:"+documentFilter+":"+docAppContext+":"+docAppSpace);
