@@ -213,24 +213,4 @@ public class File implements Comparable<File> {
     return sb.toString();
   }
 
-  public static String filesToJSON(List<File> files)
-  {
-    StringBuffer sb = new StringBuffer();
-    sb.append("{ \"files\": [");
-    boolean first=true;
-    for (File file:files) {
-      if (!first) {
-        sb.append(",");
-      } else {
-        first=false;
-      }
-
-      sb.append(file.toJSON());
-
-    }
-    sb.append("]}");
-
-
-    return sb.toString();
-  }
 }

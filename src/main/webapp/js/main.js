@@ -1,7 +1,7 @@
 var documentFilter, currentTag, docAppContext, docAppSpace;
 var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAllowed,
   labelDropzoneMsg1, labelDropZoneMsg2, labelHome, labelSortBy, labelName, labelDate, labelSize;
-var by, order;
+var by, order, ts;
 
 $(function(){
 
@@ -154,6 +154,7 @@ $(document).ready(function(){
   var files;
 
   var jzDocumentsGetFiles = $documentsApplication.jzURL("DocumentsApplication.getFiles");
+  var jzDocumentsCheckTimestamp = $documentsApplication.jzURL("DocumentsApplication.checkTimestamp");
   var jzDocumentsGetProperties = $documentsApplication.jzURL("DocumentsApplication.getProperties");
   var jzDocumentsRestore = $documentsApplication.jzURL("DocumentsApplication.restore");
   var jzDocumentsDeleteFile = $documentsApplication.jzURL("DocumentsApplication.deleteFile");
@@ -185,24 +186,28 @@ $(document).ready(function(){
 
 
   function loadFiles() {
-
     if (jzGetParam("documentFilter")!==undefined) {
       documentFilter = jzGetParam("documentFilter");
     }
     jzStoreParam("documentFilter", documentFilter, 300);
 
     var key = getFilesStorageKey();
-    if (jzGetParam(key)!==undefined && jzGetParam(key)!=="" && jzGetParam(key)!=="null") {
-      stringifiedFiles = jzGetParam(key);
+    var stringifiedFiles = jzGetParam(key);
+    if (stringifiedFiles!==undefined && stringifiedFiles!=="" && stringifiedFiles!=="null") {
       files = TAFFY(stringifiedFiles);
       orderFilesAndShow();
     } else {
       // GET MUSTACHE TEMPLATES
       $.getJSON(jzDocumentsGetFiles, {"filter": documentFilter}, function(data){
+        console.log("LOAD FILES : TS="+data.timestamp+" ; HASDATA="+data.hasData);
         files = TAFFY(data.files);
-        var stringified = files().stringify();
+        stringifiedFiles = files().stringify();
         var key = getFilesStorageKey();
-        jzStoreParam(key, stringified, 300);
+        jzStoreParam(key, stringifiedFiles, 300);
+
+        ts = data.timestamp;
+        var keyts = getFilesStorageTSKey();
+        jzStoreParam(keyts, ts, 300);
 
         orderFilesAndShow();
       })
@@ -213,16 +218,65 @@ $(document).ready(function(){
     }
 
   }
-
   loadFiles();
 
+  function checkChanges() {
+
+    if (jzGetParam("documentFilter")!==undefined) {
+      documentFilter = jzGetParam("documentFilter");
+    }
+    jzStoreParam("documentFilter", documentFilter, 300);
+
+    var keyts = getFilesStorageTSKey();
+    ts = jzGetParam(keyts);
+    if (ts!==undefined && ts!=="" && ts!=="null" && ts!==null) {
+      console.log("CHECK TIMESTAMP : TS="+ts);
+      $.getJSON(jzDocumentsCheckTimestamp, {"filter": documentFilter, "timestamp": ts}, function(data){
+        var newts = data.timestamp;
+        var keyts = getFilesStorageTSKey();
+        ts = jzGetParam(keyts);
+        if (newts!==ts) {
+          console.log("NEEDS UPDATE : OLD="+ts+" ; NEW="+newts+" ; HASDATA="+data.hasData);
+
+          if (data.hasData) {
+            files = TAFFY(data.files);
+            var stringifiedFiles = files().stringify();
+            var key = getFilesStorageKey();
+            jzStoreParam(key, stringifiedFiles, 300);
+
+            ts = data.timestamp;
+            var keyts = getFilesStorageTSKey();
+            jzStoreParam(keyts, ""+ts, 300);
+
+            orderFilesAndShow();
+          }
+
+        } else {
+          console.log("NO UPDATE NEEDED")
+        }
+      })
+      .error(function (response){
+        console.log(response);
+      });
+
+    }
+
+  }
+  setInterval(checkChanges, 5000);
+
   function getFilesStorageKey() {
-    return calcMD5(documentFilter+":"+docAppContext+":"+docAppSpace);
+    return calcMD5("FLS:"+documentFilter+":"+docAppContext+":"+docAppSpace);
+  }
+
+  function getFilesStorageTSKey() {
+    return calcMD5("TST:"+documentFilter+":"+docAppContext+":"+docAppSpace);
   }
 
   function initFilesStorageKey(filter) {
-    key = calcMD5(filter+":"+docAppContext+":"+docAppSpace);
+    key = getFilesStorageKey();
     jzStoreParam(key, "", -1000);
+    keyts = getFilesStorageTSKey();
+    jzStoreParam(keyts, "", -1000);
 
   }
 

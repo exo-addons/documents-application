@@ -4,6 +4,7 @@ import juzu.*;
 import juzu.plugin.ajax.Ajax;
 import juzu.template.Template;
 import org.benjp.documents.portlet.list.bean.File;
+import org.benjp.documents.portlet.list.bean.Folder;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -60,14 +61,41 @@ public class DocumentsApplication
   @Ajax
   public Response.Content getFiles(String filter)
   {
-    log.info("getFiles::"+filter);
+    log.info("getFiles::" + filter);
     sleep(2);
     try
     {
-      List<File> files = documentsData.getNodes(filter);
-      //files = documentsData.orderNodes(files, order, by);
-//      log.info("##############################\n"+File.filesToJSON(files)+"\n##############################");
-      return Response.ok(File.filesToJSON(files)).withMimeType("text/event-stream; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+      Folder folder = documentsData.getNodes(filter);
+      return Response.ok(folder.filesToJSON()).withMimeType("text/event-stream; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+
+    }
+    catch (Exception e)
+    {
+      return Response.notFound("error");
+    }
+  }
+
+  @Resource
+  @Ajax
+  public Response.Content checkTimestamp(String filter, String timestamp)
+  {
+    log.info("checkTimestamp::"+filter+"::"+timestamp);
+    sleep(2);
+    try
+    {
+
+
+      Long timestampNew = documentsData.getTimestamp(filter);
+
+      if (!(""+timestampNew).equals(timestamp))
+      {
+        Folder folder = documentsData.getNodes(filter);
+        return Response.ok(folder.filesToJSON()).withMimeType("text/event-stream; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+      }
+      else
+      {
+        return Response.ok("{\"timestamp\": \""+timestamp+"\", \"hasData\": false}").withMimeType("text/event-stream; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+      }
 
     }
     catch (Exception e)

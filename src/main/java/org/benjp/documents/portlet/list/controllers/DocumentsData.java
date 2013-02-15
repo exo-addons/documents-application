@@ -3,6 +3,7 @@ package org.benjp.documents.portlet.list.controllers;
 
 import juzu.SessionScoped;
 import org.benjp.documents.portlet.list.bean.File;
+import org.benjp.documents.portlet.list.bean.Folder;
 import org.benjp.documents.portlet.list.bean.VersionBean;
 import org.benjp.documents.portlet.list.comparator.*;
 import org.benjp.documents.portlet.list.controllers.validator.NameValidator;
@@ -221,7 +222,7 @@ public class DocumentsData {
   }
 
 
-  protected List<File> getNodes(String filter)
+  protected Folder getNodes(String filter)
   {
     SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
@@ -259,10 +260,61 @@ public class DocumentsData {
           files.add(file);
         }
       }
+
+      Folder folder = new Folder();
+      folder.setFiles(files);
+      folder.setFilter(filter);
+      folder.setPath(docNode.getPath());
+      if (docNode.hasProperty(TIMESTAMP_PROPERTY)) {
+        folder.setTimestamp(docNode.getProperty(TIMESTAMP_PROPERTY).getLong());
+      } else {
+        folder.setTimestamp(updateTimestamp(docNode));
+      }
       session.save();
 
 
-      return files;
+      return folder;
+
+    }
+    catch (Exception e)
+    {
+      System.out.println("JCR::\n" + e.getMessage());
+    }
+    finally
+    {
+      sessionProvider.close();
+    }
+    return null;
+  }
+  protected Long getTimestamp(String filter)
+  {
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try
+    {
+      //get info
+      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+
+
+      Node rootNode = session.getRootNode();
+      String space = getSpaceName();
+      String path = (space!=null)?getSpacePath(space):getUserPrivatePath();
+
+      if (space != null && filter.startsWith("Folksonomy/"))
+      {
+        filter = filter.replace("Folksonomy/", "ApplicationData/Tags/");
+      }
+
+      if (!rootNode.hasNode(path+"/"+filter)) {
+        Node parentNode = rootNode.getNode(path);
+        parentNode.addNode(filter, "nt:folder");
+        parentNode.save();
+      }
+
+      Node docNode = rootNode.getNode(path+"/"+filter);
+      if (docNode.hasProperty(TIMESTAMP_PROPERTY))
+        return docNode.getProperty(TIMESTAMP_PROPERTY).getLong();
+      else
+        return updateTimestamp(docNode);
 
     }
     catch (Exception e)
@@ -639,10 +691,12 @@ public class DocumentsData {
     }
   }
 
-  public static void updateTimestamp(Node node) throws RepositoryException {
+  public static Long updateTimestamp(Node node) throws RepositoryException {
     checkIfHasMetaType(node);
-    node.setProperty(TIMESTAMP_PROPERTY, System.currentTimeMillis());
+    Long ts = System.currentTimeMillis();
+    node.setProperty(TIMESTAMP_PROPERTY, ts);
     node.save();
+    return ts;
   }
 
   public static void updateSize(Node node) throws RepositoryException {
