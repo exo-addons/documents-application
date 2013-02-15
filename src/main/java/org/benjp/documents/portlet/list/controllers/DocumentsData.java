@@ -50,6 +50,7 @@ public class DocumentsData {
   private static final String META_NODETYPE = "adn:meta";
   private static final String SIZE_PROPERTY = "adn:size";
   private static final String TIMESTAMP_PROPERTY = "adn:timestamp";
+  private static final String LOG_PROPERTY = "adn:log";
 
 
   public static final String TYPE_DOCUMENT="Documents";
@@ -114,9 +115,18 @@ public class DocumentsData {
         tsProperty.setRequiredType(PropertyType.LONG);
         tsProperty.setOnVersion(OnParentVersionAction.IGNORE);
 
+        PropertyDefinitionValue logProperty = new PropertyDefinitionValue();
+        logProperty.setMultiple(true);
+        logProperty.setAutoCreate(false);
+        logProperty.setName(LOG_PROPERTY);
+        logProperty.setReadOnly(false);
+        logProperty.setRequiredType(PropertyType.STRING);
+        logProperty.setOnVersion(OnParentVersionAction.IGNORE);
+
         List<PropertyDefinitionValue> props = new ArrayList<PropertyDefinitionValue>();
         props.add(sizeProperty);
         props.add(tsProperty);
+        props.add(logProperty);
 
         adnMeta.setDeclaredPropertyDefinitionValues(props);
 
