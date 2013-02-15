@@ -54,14 +54,20 @@ public class File implements Comparable<File> {
   }
 
   public String getIcon() {
-    if (name.endsWith(".ppt") || name.endsWith(".pptx") || name.endsWith(".odp"))
-      return "/documents/img/Files-ppt.png";
-    else if (name.endsWith(".xls") || name.endsWith(".xlsx") || name.endsWith(".ods"))
-      return "/documents/img/Files-xls.png";
-    else if (name.endsWith(".doc") || name.endsWith(".docx") || name.endsWith(".odt"))
-      return "/documents/img/Files-doc.png";
+    if (name.endsWith(".ppt") || name.endsWith(".pptx"))
+      return "/documents/img/icon-ppt.png";
+    else if (name.endsWith(".xls") || name.endsWith(".xlsx"))
+      return "/documents/img/icon-xls.png";
+    else if (name.endsWith(".doc") || name.endsWith(".docx"))
+      return "/documents/img/icon-doc.png";
+    else if (name.endsWith(".odp"))
+      return "/documents/img/icon-odp.png";
+    else if (name.endsWith(".ods"))
+      return "/documents/img/icon-ods.png";
+    else if (name.endsWith(".odt"))
+      return "/documents/img/icon-odt.png";
     else if (name.endsWith(".pdf"))
-      return "/documents/img/Files-pdf.png";
+      return "/documents/img/icon-pdf.png";
     else if (!isFile())
       return "/documents/img/Files-folder.png";
      else
