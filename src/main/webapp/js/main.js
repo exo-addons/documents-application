@@ -4,165 +4,171 @@ var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAll
 var by, order, ts;
 var uploadFiles=0;
 
-$(function(){
+$(document).ready(function(){
 
-  var dropbox = $('#dropbox'),
-    message = $('.message', dropbox);
+  $(function(){
 
-  dropbox.filedrop({
-    // The name of the $_FILES entry:
-    paramname:'pic',
+    var dropbox = $('#dropbox'),
+      message = $('.message', dropbox);
 
-    maxfiles: 20,
-    maxfilesize: 15,
-    url: '/documents/uploadServlet',
+    dropbox.filedrop({
+      // The name of the $_FILES entry:
+      paramname:'pic',
 
-    uploadFinished:function(i,file,response){
-      uploadFiles--;
-      console.log("uploaded : "+uploadFiles);
-      $.data(file).addClass('done');
-      $('#hideDropzone').css("display", "block");
-      // response is the JSON object that post_file.php returns
-    },
+      maxfiles: 20,
+      maxfilesize: 15,
+      url: '/documents/uploadServlet',
 
-    error: function(err, file) {
-      switch(err) {
-        case 'BrowserNotSupported':
-          showMessage(labelBrowserNotSupported);
-          break;
-        case 'TooManyFiles':
-          alert(labelTooManyFiles);
-          break;
-        case 'FileTooLarge':
-          alert(file.name+' '+labelFileTooLarge);
-          break;
-        default:
-          break;
+      uploadFinished:function(i,file,response){
+        uploadFiles--;
+        $.data(file).addClass('done');
+        //$('#hideDropzone').css("display", "block");
+        // response is the JSON object that post_file.php returns
+        if (uploadFiles===0) {
+          setTimeout(checkChanges, 2000);
+        }
+      },
+
+      error: function(err, file) {
+        switch(err) {
+          case 'BrowserNotSupported':
+            showMessage(labelBrowserNotSupported);
+            break;
+          case 'TooManyFiles':
+            alert(labelTooManyFiles);
+            break;
+          case 'FileTooLarge':
+            alert(file.name+' '+labelFileTooLarge);
+            break;
+          default:
+            break;
+        }
+        $("#dropzone").css("display", "none");
+      },
+
+      // Called before each upload is started
+
+      beforeEach: function(file){
+        if(!file.type.match(/^image\//) && file.type !== "application/pdf"
+          &&  file.type !== "application/vnd.ms-excel" &&  file.type !== "application/vnd.ms-powerpoint" &&  file.type !== "application/vnd.ms-word"
+          &&  file.type !== "application/msexcel" &&  file.type !== "application/mspowerpoint" &&  file.type !== "application/msword"
+          &&  file.type !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          &&  file.type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          &&  file.type !== "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+          &&  file.type !== "application/vnd.oasis.opendocument.spreadsheet"
+          &&  file.type !== "application/vnd.oasis.opendocument.presentation"
+          &&  file.type !== "application/vnd.oasis.opendocument.text"
+          &&  file.name.indexOf(".xls")<1
+          ){
+          alert(labelOnlyAllowed);
+          console.log(file.type);
+
+          // Returning false will cause the
+          // file to be rejected
+          return false;
+        }
+      },
+
+      uploadStarted:function(i, file, len){
+        uploadFiles++;
+        //console.log("uploading : "+uploadFiles);
+        createImage(file);
+      },
+
+      progressUpdated: function(i, file, progress) {
+        $.data(file).find('.bar').width(progress+"%");
+        var percent = $.data(file).find('.percent');
+        percent.html(progress+"%");
+        percent.attr("data-percent", progress+"%");
       }
+
+    });
+
+    var template2 = '<tr>'+
+      '<td width="32px" style="padding: 8px 8px 8px 0;">'+
+      '<div class="thumbnail">'+
+      '<img width="32px" height="32px"/>'+
+      '</div>'+
+      '</td>'+
+      '<td style="padding: 8px 0;">'+
+      '<span class="filename" style="float:left;"></span>'+
+      '<div class="progress" style="float:right;margin:0;">'+
+      '<div class="bar"></div>'+
+      '<div class="percent percent-bulk" data-percent="0%">0%</div>'+
+      '</div>'+
+      '</td>'+
+      '</tr>';
+
+    function createImage(file){
+
+      var preview = $(template2),
+        image = $('img', preview);
+
+      var reader = new FileReader();
+
+      var table = $('#documents-files > table').first();
+
+      image.width = 100;
+      image.height = 100;
+
+      reader.onload = function(e){
+
+        // e.target.result holds the DataURL which
+        // can be used as a source of the image:
+        console.log("type="+file.type);
+        if (file.type == "application/pdf"){
+          image.attr('src','/documents/img/icon-pdf.png');
+        } else if (file.type == "application/vnd.ms-excel" || file.type == "application/msexcel" || file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.name.indexOf(".xls")>0){
+          image.attr('src','/documents/img/icon-xls.png');
+        } else if (file.type == "application/vnd.ms-powerpoint" || file.type == "application/mspowerpoint" || file.type == "application/vnd.openxmlformats-officedocument.presentationml.presentation"){
+          image.attr('src','/documents/img/icon-ppt.png');
+        } else if (file.type == "application/vnd.ms-word" || file.type == "application/msword" || file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+          image.attr('src','/documents/img/icon-doc.png');
+        } else if (file.type == "application/vnd.oasis.opendocument.text"){
+          image.attr('src','/documents/img/icon-odt.png');
+        } else if (file.type == "application/vnd.oasis.opendocument.spreadsheet"){
+          image.attr('src','/documents/img/icon-ods.png');
+        } else if (file.type == "application/vnd.oasis.opendocument.presentation"){
+          image.attr('src','/documents/img/icon-odp.png');
+        } else {
+          image.attr('src',e.target.result);
+        }
+      };
+
+      // Reading the file as a DataURL. When finished,
+      // this will trigger the onload function above:
+      reader.readAsDataURL(file);
+
+      message.hide();
+      preview.appendTo(table);
+
+      // Associating a preview container
+      // with the file, using jQuery's $.data():
+
+      $.data(file,preview);
+
+      $.data(file).find('.filename').text(file.name);
       $("#dropzone").css("display", "none");
-    },
+      var progress = "0%";
+      var bar = $.data(file).find('.bar');
+      var percent = $.data(file).find('.percent')
+      bar.width(progress)
+      percent.html(progress);
 
-    // Called before each upload is started
+//    preview.find('.filename').text(file.name);
 
-    beforeEach: function(file){
-      if(!file.type.match(/^image\//) && file.type !== "application/pdf"
-        &&  file.type !== "application/vnd.ms-excel" &&  file.type !== "application/vnd.ms-powerpoint" &&  file.type !== "application/vnd.ms-word"
-        &&  file.type !== "application/msexcel" &&  file.type !== "application/mspowerpoint" &&  file.type !== "application/msword"
-        &&  file.type !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        &&  file.type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        &&  file.type !== "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-        &&  file.type !== "application/vnd.oasis.opendocument.spreadsheet"
-        &&  file.type !== "application/vnd.oasis.opendocument.presentation"
-        &&  file.type !== "application/vnd.oasis.opendocument.text"
-        &&  file.name.indexOf(".xls")<1
-        ){
-        alert(labelOnlyAllowed);
-        console.log(file.type);
+    }
 
-        // Returning false will cause the
-        // file to be rejected
-        return false;
-      }
-    },
-
-    uploadStarted:function(i, file, len){
-      uploadFiles++;
-      console.log("uploading : "+uploadFiles);
-      createImage(file);
-    },
-
-    progressUpdated: function(i, file, progress) {
-      $.data(file).find('.bar').width(progress+"%");
-      var percent = $.data(file).find('.percent');
-      percent.html(progress+"%");
-      percent.attr("data-percent", progress+"%");
+    function showMessage(msg){
+      message.html(msg);
     }
 
   });
 
-  var template2 = '<tr>'+
-    '<td width="32px" style="padding: 8px 8px 8px 0;">'+
-    '<div class="thumbnail">'+
-    '<img width="32px" height="32px"/>'+
-    '</div>'+
-    '</td>'+
-    '<td style="padding: 8px 0;">'+
-    '<span class="filename" style="float:left;"></span>'+
-    '<div class="progress" style="float:right;margin:0;">'+
-    '<div class="bar"></div>'+
-    '<div class="percent percent-bulk" data-percent="0%">0%</div>'+
-    '</div>'+
-    '</td>'+
-    '</tr>';
-
-  function createImage(file){
-
-    var preview = $(template2),
-      image = $('img', preview);
-
-    var reader = new FileReader();
-
-    var table = $('#documents-files > table').first();
-
-    image.width = 100;
-    image.height = 100;
-
-    reader.onload = function(e){
-
-      // e.target.result holds the DataURL which
-      // can be used as a source of the image:
-      console.log("type="+file.type);
-      if (file.type == "application/pdf"){
-        image.attr('src','/documents/img/icon-pdf.png');
-      } else if (file.type == "application/vnd.ms-excel" || file.type == "application/msexcel" || file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.name.indexOf(".xls")>0){
-        image.attr('src','/documents/img/icon-xls.png');
-      } else if (file.type == "application/vnd.ms-powerpoint" || file.type == "application/mspowerpoint" || file.type == "application/vnd.openxmlformats-officedocument.presentationml.presentation"){
-        image.attr('src','/documents/img/icon-ppt.png');
-      } else if (file.type == "application/vnd.ms-word" || file.type == "application/msword" || file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
-        image.attr('src','/documents/img/icon-doc.png');
-      } else if (file.type == "application/vnd.oasis.opendocument.text"){
-        image.attr('src','/documents/img/icon-odt.png');
-      } else if (file.type == "application/vnd.oasis.opendocument.spreadsheet"){
-        image.attr('src','/documents/img/icon-ods.png');
-      } else if (file.type == "application/vnd.oasis.opendocument.presentation"){
-        image.attr('src','/documents/img/icon-odp.png');
-      } else {
-        image.attr('src',e.target.result);
-      }
-    };
-
-    // Reading the file as a DataURL. When finished,
-    // this will trigger the onload function above:
-    reader.readAsDataURL(file);
-
-    message.hide();
-    preview.appendTo(table);
-
-    // Associating a preview container
-    // with the file, using jQuery's $.data():
-
-    $.data(file,preview);
-
-    $.data(file).find('.filename').text(file.name);
-    $("#dropzone").css("display", "none");
-    var progress = "0%";
-    var bar = $.data(file).find('.bar');
-    var percent = $.data(file).find('.percent')
-    bar.width(progress)
-    percent.html(progress);
-
-//    preview.find('.filename').text(file.name);
-
-  }
-
-  function showMessage(msg){
-    message.html(msg);
-  }
-
-});
 
 
-$(document).ready(function(){
+
+
   /** somewhat, jz ajax methods are not loaded **/
   $.fn.extend({
     jz: function() {
