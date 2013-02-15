@@ -2,11 +2,14 @@ package org.benjp.documents.portlet.list.controllers;
 
 
 import juzu.SessionScoped;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.FilenameUtils;
 import org.benjp.documents.portlet.list.bean.File;
 import org.benjp.documents.portlet.list.bean.Folder;
 import org.benjp.documents.portlet.list.bean.VersionBean;
 import org.benjp.documents.portlet.list.comparator.*;
 import org.benjp.documents.portlet.list.controllers.validator.NameValidator;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.cms.folksonomy.NewFolksonomyService;
@@ -613,6 +616,142 @@ public class DocumentsData {
     }
 
   }
+
+
+  protected void storeFile(String path, FileItem item, String name, boolean isPrivateContext)
+  {
+    storeFile(path, item, name, isPrivateContext, null);
+  }
+
+  protected void storeFile(String path, FileItem item, String name, boolean isPrivateContext, String uuid)
+  {
+    String filename = FilenameUtils.getName(item.getName());
+    SessionProvider sessionProvider = getUserSessionProvider();
+
+
+    try
+    {
+      //get info
+      Session session = sessionProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+
+      Node homeNode;
+
+      if (isPrivateContext)
+      {
+        Node userNode = nodeHierarchyCreator_.getUserNode(sessionProvider, name);
+        homeNode = userNode.getNode("Private");
+      }
+      else
+      {
+        Node rootNode = session.getRootNode();
+        homeNode = rootNode.getNode(getSpacePath(name));
+      }
+
+      Node docNode = homeNode.getNode("Documents");
+      if (path.contains("/") && !path.startsWith("Folksonomy/")) {
+        docNode = homeNode.getNode(path);
+      }
+
+//      System.out.println("# docNode :: "+docNode.getPath());
+
+
+      if (!docNode.hasNode(filename) && (uuid==null || "---".equals(uuid)))
+      {
+        Node fileNode = docNode.addNode(filename, "nt:file");
+        Node jcrContent = fileNode.addNode("jcr:content", "nt:resource");
+        jcrContent.setProperty("jcr:data", item.getInputStream());
+        jcrContent.setProperty("jcr:lastModified", Calendar.getInstance());
+        jcrContent.setProperty("jcr:encoding", "UTF-8");
+        if (filename.endsWith(".jpg"))
+          jcrContent.setProperty("jcr:mimeType", "image/jpeg");
+        else if (filename.endsWith(".png"))
+          jcrContent.setProperty("jcr:mimeType", "image/png");
+        else if (filename.endsWith(".pdf"))
+          jcrContent.setProperty("jcr:mimeType", "application/pdf");
+        else if (filename.endsWith(".doc"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.ms-word");
+        else if (filename.endsWith(".xls"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.ms-excel");
+        else if (filename.endsWith(".ppt"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.ms-powerpoint");
+        else if (filename.endsWith(".docx"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        else if (filename.endsWith(".xlsx"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        else if (filename.endsWith(".pptx"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+        else if (filename.endsWith(".odp"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.presentation");
+        else if (filename.endsWith(".odt"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.text");
+        else if (filename.endsWith(".ods"))
+          jcrContent.setProperty("jcr:mimeType", "application/vnd.oasis.opendocument.spreadsheet");
+        DocumentsData.updateTimestamp(docNode);
+        DocumentsData.updateSize(docNode);
+        DocumentsData.updateTimestamp(docNode.getParent());
+        session.save();
+        uuid = fileNode.getUUID();
+      }
+      else
+      {
+        Node fileNode=null;
+        if (uuid!=null) {
+          fileNode = session.getNodeByUUID(uuid);
+        }
+        else
+        {
+          fileNode = docNode.getNode(filename);
+        }
+        if (fileNode.canAddMixin("mix:versionable")) fileNode.addMixin("mix:versionable");
+        if (!fileNode.isCheckedOut()) {
+          fileNode.checkout();
+        }
+        fileNode.save();
+        fileNode.checkin();
+        fileNode.checkout();
+        Node jcrContent = fileNode.getNode("jcr:content");
+        jcrContent.setProperty("jcr:data", item.getInputStream());
+        DocumentsData.updateTimestamp(fileNode);
+        DocumentsData.updateTimestamp(fileNode.getParent());
+        session.save();
+      }
+
+      if (path.startsWith("Folksonomy/")) {
+        if (uuid!=null)
+        {
+          if (!isPrivateContext)
+            path = path.replace("Folksonomy/", "ApplicationData/Tags/");
+          //Node fileNode = session.getNodeByUUID(uuid);
+          Node tagNode = homeNode.getNode(path);
+          Node linkNode = tagNode.addNode(filename, "exo:symlink");
+          linkNode.setProperty("exo:uuid", uuid);
+          linkNode.setProperty("exo:workspace", "collaboration");
+          linkNode.setProperty("exo:primaryType", "nt:file");
+          tagNode.save();
+          DocumentsData.updateTimestamp(tagNode);
+          DocumentsData.updateTimestamp(tagNode.getParent());
+          DocumentsData.updateTimestamp(homeNode);
+
+          session.save();
+
+        }
+      }
+
+    }
+    catch (Exception e)
+    {
+      System.out.println("JCR::" + e.getMessage());
+//      e.printStackTrace();
+    }
+  }
+
+  private boolean isImage(String filename)
+  {
+    if (filename.endsWith(".jpg") || filename.endsWith(".png"))
+      return true;
+    return false;
+  }
+
 
   private String getUserPrivatePath()
   {

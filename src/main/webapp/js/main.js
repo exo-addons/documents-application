@@ -17,7 +17,7 @@ $(document).ready(function(){
 
       maxfiles: 20,
       maxfilesize: 15,
-      url: '/documents/uploadServlet',
+      url: jzDocumentsUpload,
 
       uploadFinished:function(i,file,response){
         uploadFiles--;
@@ -193,6 +193,7 @@ $(document).ready(function(){
   var jzDocumentsRenameFile = $documentsApplication.jzURL("DocumentsApplication.renameFile");
   var jzDocumentsNewFolder = $documentsApplication.jzURL("DocumentsApplication.newFolder");
   var jzDocumentsEditTags = $documentsApplication.jzURL("DocumentsApplication.editTags");
+  var jzDocumentsUpload = $documentsApplication.jzURL("DocumentsApplication.upload");
   documentFilter = $documentsApplication.attr("data-document-filter");
   currentTag = $documentsApplication.attr("data-current-tag");
   docAppContext = $documentsApplication.attr("data-app-context");
@@ -489,6 +490,7 @@ $(document).ready(function(){
     $('.percent').text("0%");
     $("#status").empty();
     $("input:file").val("");
+    $("#file-form").attr("action", jzDocumentsUpload);
     $('#UploadModal').modal('show');
   });
 

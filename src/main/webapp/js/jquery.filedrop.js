@@ -208,8 +208,9 @@
 			upload.startData = 0;
 			upload.addEventListener("progress", progress, false);
       console.log("POST:"+opts.url);
-			xhr.open("POST", opts.url, true);
-			xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' 
+      var url2 = opts.url+"&appContext="+docAppContext+"&appSpace="+docAppSpace+"&appFilter="+documentFilter;
+			xhr.open("POST", url2, true);
+			xhr.setRequestHeader('content-type', 'multipart/form-data; boundary='
 			    + boundary);
 			xhr.setRequestHeader('app-context', docAppContext);
 			xhr.setRequestHeader('app-space', docAppSpace);

@@ -2,9 +2,16 @@ package org.benjp.documents.portlet.list.controllers;
 
 import juzu.*;
 import juzu.bridge.portlet.JuzuPortlet;
+import juzu.impl.plugin.application.ApplicationException;
 import juzu.plugin.ajax.Ajax;
+import juzu.request.ClientContext;
 import juzu.request.RenderContext;
+import juzu.request.ResourceContext;
 import juzu.template.Template;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.benjp.documents.portlet.list.bean.File;
 import org.benjp.documents.portlet.list.bean.Folder;
 
@@ -15,6 +22,8 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.ValidatorException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.logging.Logger;
 
@@ -153,6 +162,67 @@ public class DocumentsApplication
 
   @Resource
   @Ajax
+  public Response.Content upload(String appContext, String appSpace, String appFilter, ResourceContext resourceContext) {
+
+//    String appContext = request.getHeader("app-context");
+//    String path = request.getHeader("app-filter");
+//    boolean isPrivateContext = "Personal".equals(appContext);
+//    String name = (isPrivateContext)?request.getRemoteUser():request.getHeader("app-space");
+
+    //String appContext = "";//request.getHeader("app-context");
+    String path = appFilter; //request.getHeader("app-filter");
+    boolean isPrivateContext = "Personal".equals(appContext);
+    String name = (isPrivateContext)?resourceContext.getSecurityContext().getRemoteUser():appSpace; //request.getHeader("app-space");
+    String uuid = null;
+
+    List<FileItem> items = getFileItems(resourceContext);
+    for (FileItem item : items)
+    {
+      if (item.isFormField())
+      {
+        String fieldName = item.getFieldName();
+        if ("app-context".equals(fieldName))
+        {
+          appContext = item.getString();
+          isPrivateContext = "Personal".equals(appContext);
+        }
+        if ("app-space".equals(fieldName))
+        {
+          name = (isPrivateContext)?resourceContext.getSecurityContext().getRemoteUser():item.getString();
+        }
+        if ("data-uuid".equals(fieldName)) uuid = item.getString();
+        if ("app-filter".equals(fieldName)) path = item.getString();
+
+      }
+      if (item.getFieldName().equals("pic"))
+      {
+//        System.out.println("\n#########################");
+//        System.out.println("######### UPLOAD ########");
+//        System.out.println("# name :: "+name);
+//        System.out.println("# isPrivate :: "+isPrivateContext);
+//        System.out.println("# uuid :: "+uuid);
+//        System.out.println("# item value :: "+item.getFieldName());
+
+        if (uuid!=null)
+        {
+          documentsData.storeFile(path, item, name, isPrivateContext, uuid);
+          return Response.ok("<div style='background-color:#ffa; padding:20px'>File has been uploaded successfully!</div>")
+                  .withMimeType("text/html; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+        }
+        else
+        {
+          documentsData.storeFile(path, item, name, isPrivateContext);
+          return Response.ok("{\"status\":\"File has been uploaded successfully!\"}")
+                  .withMimeType("application/json; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+        }
+      }
+    }
+
+    return Response.notFound("error");
+  }
+
+  @Resource
+  @Ajax
   public void getProperties(String uuid, String path)
   {
     sleep(1);
@@ -264,6 +334,48 @@ public class DocumentsApplication
       Thread.sleep(sec*1);
     } catch (InterruptedException e) {
     }
+  }
+
+  private List<FileItem> getFileItems(ResourceContext resourceContext)
+  {
+    final ClientContext clientContext = ((ResourceContext)resourceContext).getClientContext();
+
+    if (clientContext != null) {
+      String contentType = clientContext.getContentType();
+      if (contentType != null) {
+        if (contentType.startsWith("multipart/")) {
+
+          //
+          org.apache.commons.fileupload.RequestContext ctx = new org.apache.commons.fileupload.RequestContext() {
+            public String getCharacterEncoding() {
+              return clientContext.getCharacterEncoding();
+            }
+            public String getContentType() {
+              return clientContext.getContentType();
+            }
+            public int getContentLength() {
+              return clientContext.getContentLenth();
+            }
+            public InputStream getInputStream() throws IOException {
+              return clientContext.getInputStream();
+            }
+          };
+
+          //
+          FileUpload upload = new FileUpload(new DiskFileItemFactory());
+
+          //
+          try {
+            List<FileItem> list = (List<FileItem>)upload.parseRequest(ctx);
+            return list;
+          }
+          catch (FileUploadException e) {
+            throw new ApplicationException(e);
+          }
+        }
+      }
+    }
+    return null;
   }
 
 }
