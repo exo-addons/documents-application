@@ -17,10 +17,11 @@
                 @Script(src = "js/jquery-1.7.1.min.js", id = "jquery"),
                 @Script(src = "js/jquery.filedrop.js", depends = "jquery", id = "filedrop"),
                 @Script(src = "js/jquery.form.js", depends = "jquery", id = "jqform"),
+                @Script(src = "js/purl.js", depends = "jquery", id="purl"),
                 @Script(src = "js/bootstrap.min.js", id="bootstrap"),
                 @Script(src = "js/mustache.js", id="mustache"),
                 @Script(src = "js/taffy-min.js", id="taffy"),
-                @Script(src = "js/main.js", depends = "jquery, filedrop, jqform, bootstrap, mustache, taffy")
+                @Script(src = "js/main.js", depends = "jquery, filedrop, jqform, bootstrap, mustache, taffy, purl")
         },
         stylesheets = {
                 @Stylesheet(src = "css/bootstrap.min.css"),

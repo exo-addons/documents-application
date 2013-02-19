@@ -3,6 +3,7 @@ var labelBrowserNotSupported, labelTooManyFiles, labelFileTooLarge, labelOnlyAll
   labelDropzoneMsg1, labelDropZoneMsg2, labelHome, labelSortBy, labelName, labelDate, labelSize;
 var by, order, ts;
 var uploadFiles=0;
+var urlFilter;
 
 $(document).ready(function(){
 
@@ -166,9 +167,6 @@ $(document).ready(function(){
   });
 
 
-
-
-
   /** somewhat, jz ajax methods are not loaded **/
   $.fn.extend({
     jz: function() {
@@ -199,6 +197,8 @@ $(document).ready(function(){
   docAppContext = $documentsApplication.attr("data-app-context");
   docAppSpace = $documentsApplication.attr("data-app-space");
   refresh = $documentsApplication.attr("data-refresh");
+  urlFilter = $.url().attr("fragment");
+  console.log("urlFilter:"+urlFilter);
 
   by = $("#order-by-link").attr('data-by');
   order = $("#order-by-link").attr('data-order');
@@ -224,6 +224,20 @@ $(document).ready(function(){
       documentFilter = jzGetParam("documentFilter");
     }
     jzStoreParam("documentFilter", documentFilter, 300);
+
+    if (urlFilter!="") {
+      documentFilter = urlFilter;
+      jzStoreParam("documentFilter", documentFilter, 300);
+      urlFilter = "";
+    } else {
+      var url = window.location.href;
+      if (url.indexOf("#")>-1) {
+        url = url.substring(0, url.indexOf("#"))
+      }
+      url += "#"+documentFilter;
+      window.history.pushState(documentFilter, "New Path", url);
+
+    }
 
     var key = getFilesStorageKey();
     var stringifiedFiles = jzGetParam(key);
@@ -661,7 +675,8 @@ $(document).ready(function(){
       loadFiles();
     });
 
-    $('.folder-link').on("click", function() {
+    $('.folder-link').on("click", function(event) {
+      event.preventDefault();
       folderName = $(this).attr("data-name");
       documentFilter = documentFilter+"/"+folderName;
       jzStoreParam("documentFilter", documentFilter, 300);
