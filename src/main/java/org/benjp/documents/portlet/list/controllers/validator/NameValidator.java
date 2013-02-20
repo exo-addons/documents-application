@@ -20,13 +20,14 @@ public class NameValidator {
       boolean isValidChar = (Character.isLetter(character)
               || Character.isDigit(character)
               //|| Character.isSpaceChar(character)
+              || character ==' '
               || character =='_'
               || character =='-');
       if ( isValidChar ) {
         //do nothing
       }
       else {
-        String message = "Name can contain only letters, digits, dash and underscore characters.";
+        String message = "Name can contain only letters, digits, space, dash and underscore characters.";
         throw new IllegalArgumentException(message);
       }
       character = iterator.next();
