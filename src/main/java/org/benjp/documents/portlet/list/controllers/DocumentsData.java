@@ -712,7 +712,8 @@ public class DocumentsData {
         Node jcrContent = fileNode.getNode("jcr:content");
         jcrContent.setProperty("jcr:data", item.getInputStream());
         DocumentsData.updateTimestamp(fileNode);
-        DocumentsData.updateTimestamp(fileNode.getParent());
+        DocumentsData.updateTimestamp(docNode);
+        DocumentsData.updateTimestamp(docNode.getParent());
         session.save();
       }
 
