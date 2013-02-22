@@ -282,11 +282,11 @@
 
         {{#isFile}}
         <div class="thumbnail" data="{{preview}}" style="cursor:pointer;">
-          <img src="{{icon}}" width="32px" height="32px"/>
+          <img src="{{icon}}" width="32px" height="32px" style="width:22px;height:22px;"/>
         </div>
         {{/isFile}}
         {{^isFile}}
-          <img src="{{icon}}" width="24px" height="24px" style="padding:4px;"/>
+          <img src="{{icon}}" width="24px" height="24px" style="padding:4px;width:24px;"/>
         {{/isFile}}
       </td>
       <td style="padding: 8px 0;">

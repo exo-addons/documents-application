@@ -5,6 +5,13 @@ var by, order, ts;
 var uploadFiles=0;
 var urlFilter;
 
+var console = console || {
+  log:function(){},
+  warn:function(){},
+  error:function(){}
+};
+
+
 $(document).ready(function(){
 
   $(function(){
@@ -235,7 +242,9 @@ $(document).ready(function(){
         url = url.substring(0, url.indexOf("#"))
       }
       url += "#"+documentFilter;
-      window.history.pushState(documentFilter, "New Path", url);
+      if (!IsIE8Browser()) {
+        window.history.pushState(documentFilter, "New Path", url);
+      }
 
     }
 
@@ -251,11 +260,11 @@ $(document).ready(function(){
         files = TAFFY(data.files);
         stringifiedFiles = files().stringify();
         var key = getFilesStorageKey();
-        jzStoreParam(key, stringifiedFiles, 300);
+        jzStoreParam(key, stringifiedFiles, 3000);
 
         ts = data.timestamp;
         var keyts = getFilesStorageTSKey();
-        jzStoreParam(keyts, ts, 300);
+        jzStoreParam(keyts, ts, 3000);
 
         orderFilesAndShow();
       })
@@ -274,7 +283,7 @@ $(document).ready(function(){
     if (jzGetParam("documentFilter")!==undefined) {
       documentFilter = jzGetParam("documentFilter");
     }
-    jzStoreParam("documentFilter", documentFilter, 300);
+    jzStoreParam("documentFilter", documentFilter, 3000);
 
     var keyts = getFilesStorageTSKey();
     ts = jzGetParam(keyts);
@@ -291,11 +300,11 @@ $(document).ready(function(){
             files = TAFFY(data.files);
             var stringifiedFiles = files().stringify();
             var key = getFilesStorageKey();
-            jzStoreParam(key, stringifiedFiles, 300);
+            jzStoreParam(key, stringifiedFiles, 3000);
 
             ts = data.timestamp;
             var keyts = getFilesStorageTSKey();
-            jzStoreParam(keyts, ""+ts, 300);
+            jzStoreParam(keyts, ""+ts, 3000);
 
             orderFilesAndShow();
 
@@ -353,6 +362,11 @@ $(document).ready(function(){
       logicalOrder = 'logicaldesc';
     var html = Mustache.to_html(filesTpl, {"files": files().order(by+' '+logicalOrder).get()});
     $('#documents-files').html(html);
+    if (files().count()==0) {
+      $("#dropzone").css("display", "block");
+    } else {
+      $("#dropzone").css("display", "none");
+    }
     $('.timestamp-label').each(function(index) {
       var ts = $(this).attr("data-timestamp");
       var now = new Date();
@@ -378,7 +392,7 @@ $(document).ready(function(){
   });
 
   function updateBreadcrumb() {
-    jzStoreParam("documentFilter", documentFilter, 300);
+    jzStoreParam("documentFilter", documentFilter, 3000);
     var $breadcrumb = $("#documents-breadcrumb");
     var html = '<li class="breadcrumb-link" data-name="Documents"><a href="#">'+labelHome+'</a> <span class="divider">/</span></li>';
     var filter = documentFilter;
@@ -441,7 +455,7 @@ $(document).ready(function(){
         $('#NewFolderModal').modal('hide');
         initFilesStorageKey(documentFilter);
         documentFilter = documentFilter+"/"+name;
-        jzStoreParam("documentFilter", documentFilter, 300);
+        jzStoreParam("documentFilter", documentFilter, 3000);
         initFilesStorageKey(documentFilter);
         loadFiles();
       },
@@ -671,7 +685,7 @@ $(document).ready(function(){
     $('.label-tag').on("click", function() {
       currentTag = $(this).html();
       documentFilter = "Folksonomy/"+currentTag;
-      jzStoreParam("documentFilter", documentFilter, 300);
+      jzStoreParam("documentFilter", documentFilter, 3000);
       loadFiles();
     });
 
@@ -679,14 +693,14 @@ $(document).ready(function(){
       event.preventDefault();
       folderName = $(this).attr("data-name");
       documentFilter = documentFilter+"/"+folderName;
-      jzStoreParam("documentFilter", documentFilter, 300);
+      jzStoreParam("documentFilter", documentFilter, 3000);
       loadFiles();
     });
 
     $('.breadcrumb-link').on("click", function() {
       folderName = $(this).attr("data-name");
       documentFilter = folderName;
-      jzStoreParam("documentFilter", documentFilter, 300);
+      jzStoreParam("documentFilter", documentFilter, 3000);
       loadFiles();
     });
 
@@ -950,4 +964,13 @@ function calcMD5(str)
 }
 
 
+function IsIE8Browser() {
+  var rv = -1;
+  var ua = navigator.userAgent;
+  var re = new RegExp("Trident\/([0-9]{1,}[\.0-9]{0,})");
+  if (re.exec(ua) != null) {
+    rv = parseFloat(RegExp.$1);
+  }
+  return (rv == 4);
+}
 
