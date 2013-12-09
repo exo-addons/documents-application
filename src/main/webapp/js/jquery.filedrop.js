@@ -320,4 +320,4 @@
 		}
 	} catch(e) {}
      
-})(jQuery);
+})(jqdoc);

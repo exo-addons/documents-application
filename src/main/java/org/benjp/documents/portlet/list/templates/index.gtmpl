@@ -23,8 +23,8 @@
 
   <div class="btn-group-title" style="float:left"><h3 style="line-height:20px;">&{benjp.documents.title}</h3></div>
   <div class="btn-group" style="float:right;">
-    <button class="btn btn-inverse upload-button"><i class="minicon-upload-white"></i>&{benjp.documents.upload}</button>
-    <button class="btn btn-inverse new-folder-link"><i class="minicon-add-white"></i>&{benjp.documents.new.folder}</button>
+    <button class="btn btn-primary upload-button"><i class="icon-download-alt icon-white"></i> &{benjp.documents.upload}</button>
+    <button class="btn btn-primary new-folder-link"><i class="icon-plus icon-white"></i> &{benjp.documents.new.folder}</button>
   </div>
 
   <div style="clear: both;">
@@ -33,14 +33,14 @@
       <li class="active" class="breadcrumb-link" data-name="Documents">&{benjp.documents.documents}</li>
     </ul>
     <span style="float:right;">
-      <li class="document-action dropdown right">
+      <span class="document-action dropdown right">
         &{benjp.documents.sort.by}&nbsp;<a class="dropdown-toggle" id="order-by-link" data-toggle="dropdown" data-target="#" href="#" data-order="asc" data-by="name">&{benjp.documents.name}</a>
         <ul class="dropdown-menu order-by-menu" style="min-width: 50px;">
           <li data-by="name" id="order-by-name"><a href="#"><i class="minicon-asc"></i>&{benjp.documents.name}</a></li>
           <li data-by="date" id="order-by-date"><a href="#"><i class="minicon-empty"></i>&{benjp.documents.date}</a></li>
           <li data-by="size" id="order-by-size"><a href="#"><i class="minicon-empty"></i>&{benjp.documents.size}</a></li>
         </ul>
-      </li>
+      </span>
     </span>
   </div>
 
@@ -83,7 +83,7 @@
   </div>
   <div class="modal-body-no">
 
-    <div id="document-properties" style="width:100%;text-align:center;padding:10px;">&{benjp.documents.properties.loading}</div>
+    <div id="document-properties" style="width:96%;text-align:center;padding:10px;">&{benjp.documents.properties.loading}</div>
 
   </div>
 
@@ -123,10 +123,10 @@
   <div class="modal-body-no" style="padding: 10px;">
 
     <form action="/documents/uploadServlet" id="file-form" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="app-context" value="---" id="file-upload-context" />
-      <input type="hidden" name="app-space" value="---" id="file-upload-space" />
-      <input type="hidden" name="data-uuid" value="---" id="file-upload-input" />
-      <input type="hidden" name="app-filter" value="---" id="file-upload-filter" />
+      <input type="hidden" name="appContext" value="---" id="file-upload-context" />
+      <input type="hidden" name="appSpace" value="---" id="file-upload-space" />
+      <input type="hidden" name="dataUuid" value="---" id="file-upload-input" />
+      <input type="hidden" name="appFilter" value="---" id="file-upload-filter" />
       <input type="file" name="pic" style="width:400px; margin: auto; padding-left: 30px;" />
       <input type="submit" value="&{benjp.documents.upload}"/>
     </form>
@@ -312,7 +312,7 @@
              </span>
         </div>
         <div class="right">
-          <li class="document-action dropdown right">
+          <span class="document-action dropdown right">
             <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="minicon-more no-margin"></i></a>
             <ul class="dropdown-menu" style="margin-left:-135px;" data-name="{{name}}" data-uuid="{{uuid}}" data-path="{{path}}" data-tags="{{tagsAsString}}">
               {{#isFile}}
@@ -328,7 +328,7 @@
               <li><a href="#" class="rename-link"><i class="minicon-rename"></i>&{benjp.documents.rename}</a></li>
               <li><a href="#" class="delete-link"><i class="minicon-delete"></i>&{benjp.documents.delete}</a></li>
             </ul>
-          </li>
+          </span>
           {{#isFile}}
           <div class="document-action right"><a href="#" class="share-link" data="{{publicUrl}}">&{benjp.documents.share}</a></div>
           {{/isFile}}
