@@ -22,20 +22,22 @@ public class DownloadServlet extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
     String[] params = request.getRequestURI().split("/");
+    RepositoryService repositoryService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
     try
     {
       if (params.length==6)
       {
         String uuid = params[4];
 
-        Node node = getFile(uuid);
+        Session session = sessionProvider.getSession("collaboration", repositoryService.getCurrentRepository());
+
+        Node node = session.getNodeByUUID(uuid);
         response.setContentType(getMimeType(node));
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
         InputStream in = getStream(node);
         OutputStream out = response.getOutputStream();
-
-
         byte[] buffer = new byte[1024];
         int len = in.read(buffer);
         while (len != -1) {
@@ -43,38 +45,18 @@ public class DownloadServlet extends HttpServlet
           len = in.read(buffer);
         }
 
+
       }
     }
     catch (Exception e)
     {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
-    return;
-  }
-
-  private Node getFile(String uuid)
-  {
-    RepositoryService repositoryService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
-    NodeHierarchyCreator nodeHierarchyCreator = (NodeHierarchyCreator)PortalContainer.getInstance().getComponentInstanceOfType(NodeHierarchyCreator.class);
-
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
-    try
-    {
-      //get info
-      Session session = sessionProvider.getSession("collaboration", repositoryService.getCurrentRepository());
-
-      Node node = session.getNodeByUUID(uuid);
-      return node;
-    }
-    catch (Exception e)
-    {
-      System.out.println("JCR::" + e.getMessage());
-    }
     finally
     {
       sessionProvider.close();
     }
-    return null;
+    return;
   }
 
   private InputStream getStream(Node node) throws Exception
