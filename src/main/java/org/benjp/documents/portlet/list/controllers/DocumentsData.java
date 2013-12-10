@@ -257,7 +257,7 @@ public class DocumentsData {
       if (filter.startsWith("Folksonomy/"))
       {
         tag = filter.substring(filter.indexOf("Folksonomy/")+11);
-        Node parentNode = rootNode.getNode(path+"/Folksonomy/");
+        Node parentNode = (space!=null)?rootNode.getNode(path+"/ApplicationData/Tags/"):rootNode.getNode(path+"/Folksonomy/");
         docNode = newFolksonomyService_.getDataDistributionType().getDataNode(parentNode, tag);
       }
       else
