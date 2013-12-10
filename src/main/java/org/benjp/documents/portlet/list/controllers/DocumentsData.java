@@ -251,19 +251,26 @@ public class DocumentsData {
       Node rootNode = session.getRootNode();
       String space = getSpaceName();
       String path = (space!=null)?getSpacePath(space):getUserPrivatePath();
+      String tag=null;
 
-      if (space != null && filter.startsWith("Folksonomy/"))
+      Node docNode;
+      if (filter.startsWith("Folksonomy/"))
       {
-        filter = filter.replace("Folksonomy/", "ApplicationData/Tags/");
+        tag = filter.substring(filter.indexOf("Folksonomy/")+11);
+        Node parentNode = rootNode.getNode(path+"/Folksonomy/");
+        docNode = newFolksonomyService_.getDataDistributionType().getDataNode(parentNode, tag);
       }
+      else
+      {
+        if (!rootNode.hasNode(path+"/"+filter))
+        {
+          Node parentNode = rootNode.getNode(path);
+          parentNode.addNode(filter, "nt:folder");
+          parentNode.save();
+        }
+        docNode = rootNode.getNode(path+"/"+filter);
 
-      if (!rootNode.hasNode(path+"/"+filter)) {
-        Node parentNode = rootNode.getNode(path);
-        parentNode.addNode(filter, "nt:folder");
-        parentNode.save();
       }
-
-      Node docNode = rootNode.getNode(path+"/"+filter);
 
       NodeIterator nodes = docNode.getNodes();
       List<File> files = new ArrayList<File>();
@@ -591,7 +598,7 @@ public class DocumentsData {
       {
         for (Node tag:tagsNodes)
         {
-          newFolksonomyService_.removeTagOfDocument(tagsPath+tag.getName(), node, "collaboration");
+          newFolksonomyService_.removeTagOfDocument(tag.getPath(), node, "collaboration");
         }
       }
 
