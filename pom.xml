@@ -17,6 +17,20 @@
     <exoplatform.version>4.0.0</exoplatform.version>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <!-- Import versions from platform project -->
+      <dependency>
+        <groupId>org.exoplatform.platform</groupId>
+        <artifactId>platform</artifactId>
+        <version>${exoplatform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
 
     <!-- Application dependencies-->
@@ -46,35 +60,30 @@
     </dependency>
 
 
-    <!-- eXo Platform 3.5.4 Dependencies -->
+    <!-- eXo Platform 4.0.3 Dependencies -->
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
-      <version>2.4.5-GA</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>org.exoplatform.core</groupId>
         <artifactId>exo.core.component.organization.api</artifactId>
-        <version>2.5.5-GA</version>
         <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>org.exoplatform.portal</groupId>
+        <groupId>org.gatein.portal</groupId>
         <artifactId>exo.portal.component.portal</artifactId>
-        <version>3.2.7-PLF</version>
         <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>org.exoplatform.portal</groupId>
+        <groupId>org.gatein.portal</groupId>
         <artifactId>exo.portal.webui.portal</artifactId>
-        <version>3.2.7-PLF</version>
         <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>org.exoplatform.ecms</groupId>
-        <artifactId>exo-ecms-core-services</artifactId>
-        <version>2.3.10</version>
+        <artifactId>ecms-core-services</artifactId>
         <scope>provided</scope>
     </dependency>
 
@@ -121,9 +130,6 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
