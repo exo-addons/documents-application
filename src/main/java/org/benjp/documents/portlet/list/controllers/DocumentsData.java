@@ -9,7 +9,6 @@ import org.benjp.documents.portlet.list.bean.Folder;
 import org.benjp.documents.portlet.list.bean.VersionBean;
 import org.benjp.documents.portlet.list.comparator.*;
 import org.benjp.documents.portlet.list.controllers.validator.NameValidator;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.cms.folksonomy.NewFolksonomyService;
@@ -225,10 +224,26 @@ public class DocumentsData {
         Node node = parentNode.addNode(name, "nt:folder");
         session.save();
         updateTimestamp(node);
-        updateTimestamp(parentNode);
-        updateTimestamp(parentNode.getParent());
-        updateSize(parentNode);
+        String pathParent = node.getPath();
         session.save();
+
+        SessionProvider systemProvider = SessionProvider.createSystemProvider();
+        Session sysSession = systemProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+        try {
+          parentNode = getNodeById(pathParent, sysSession);
+          updateTimestamp(parentNode);
+          updateTimestamp(parentNode.getParent());
+          updateSize(parentNode);
+          sysSession.save();
+        } catch (Exception e) {
+
+        }
+        finally {
+          systemProvider.close();
+        }
+
+
+
       }
     } catch (Exception e)
     {
@@ -525,12 +540,24 @@ public class DocumentsData {
 
     Node node = getNodeById(id, session);
     Node parentNode = node.getParent();
-    updateTimestamp(parentNode);
-    updateTimestamp(parentNode.getParent());
+    String pathParent = parentNode.getPath();
     node.remove();
-    updateSize(parentNode);
     session.save();
 
+    SessionProvider systemProvider = SessionProvider.createSystemProvider();
+    Session sysSession = systemProvider.getSession("collaboration", repositoryService_.getCurrentRepository());
+    try {
+      parentNode = getNodeById(pathParent, sysSession);
+      updateTimestamp(parentNode);
+      updateTimestamp(parentNode.getParent());
+      updateSize(parentNode);
+      sysSession.save();
+    } catch (Exception e) {
+
+    }
+    finally {
+      systemProvider.close();
+    }
   }
 
   protected void renameFile(String id, String name) throws Exception
