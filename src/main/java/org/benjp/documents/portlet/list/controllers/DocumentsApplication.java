@@ -3,14 +3,10 @@ package org.benjp.documents.portlet.list.controllers;
 import juzu.*;
 import juzu.bridge.portlet.JuzuPortlet;
 import juzu.plugin.ajax.Ajax;
-import juzu.request.ClientContext;
 import juzu.request.RenderContext;
 import juzu.request.ResourceContext;
 import juzu.template.Template;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.benjp.documents.portlet.list.bean.File;
 import org.benjp.documents.portlet.list.bean.Folder;
 
@@ -21,9 +17,6 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.ValidatorException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.logging.Logger;
 
@@ -45,10 +38,6 @@ public class DocumentsApplication
   @Inject
   @Path("edit.gtmpl")
   Template editTemplate;
-
-  @Inject
-  @Path("files.gtmpl")
-  Template filesTemplate;
 
   @Inject
   @Path("properties.gtmpl")
@@ -118,7 +107,6 @@ public class DocumentsApplication
   public Response.Content getFiles(String filter)
   {
     log.info("getFiles::" + filter);
-    sleep(2);
     try
     {
       Folder folder = documentsData.getNodes(filter);
@@ -164,22 +152,20 @@ public class DocumentsApplication
   @Ajax
   public Response.Content upload(String appContext, String appSpace, String appFilter, String dataUuid, FileItem pic, ResourceContext resourceContext) {
 
-    String path = appFilter;
     boolean isPrivateContext = "Personal".equals(appContext);
-    String name = (isPrivateContext)?resourceContext.getSecurityContext().getRemoteUser():appSpace; //request.getHeader("app-space");
-    String uuid = dataUuid;
+    String name = (isPrivateContext)?resourceContext.getSecurityContext().getRemoteUser():appSpace;
 
     if (pic != null)
     {
-      if (uuid!=null)
+      if (dataUuid!=null)
       {
-        documentsData.storeFile(path, pic, name, isPrivateContext, uuid);
+        documentsData.storeFile(appFilter, pic, name, isPrivateContext, dataUuid);
         return Response.ok("<div style='background-color:#ffa; padding:20px'>File has been uploaded successfully!</div>")
                 .withMimeType("text/html; charset=UTF-8").withHeader("Cache-Control", "no-cache");
       }
       else
       {
-        documentsData.storeFile(path, pic, name, isPrivateContext);
+        documentsData.storeFile(appFilter, pic, name, isPrivateContext);
         return Response.ok("{\"status\":\"File has been uploaded successfully!\"}")
                 .withMimeType("application/json; charset=UTF-8").withHeader("Cache-Control", "no-cache");
       }
@@ -192,8 +178,7 @@ public class DocumentsApplication
   @Ajax
   public void getProperties(String uuid, String path)
   {
-    sleep(1);
-    File file = null;
+    File file;
     if (uuid!=null && !"".equals(uuid))
       file = documentsData.getNode(uuid);
     else
@@ -206,7 +191,6 @@ public class DocumentsApplication
   @Ajax
   public void restore(String uuid, String name)
   {
-    sleep(2);
     documentsData.restoreVersion(uuid, name);
     propertiesTemplate.with().set("file", documentsData.getNode(uuid)).render();
   }
@@ -215,7 +199,6 @@ public class DocumentsApplication
   @Ajax
   public Response.Content deleteFile(String uuid, String path)
   {
-    sleep(3);
     try
     {
       if (uuid!=null && !"".equals(uuid))
@@ -234,7 +217,6 @@ public class DocumentsApplication
   @Ajax
   public Response.Content renameFile(String uuid, String name, String path)
   {
-    sleep(3);
     try
     {
       if (uuid!=null && !"".equals(uuid))
@@ -258,7 +240,6 @@ public class DocumentsApplication
   @Ajax
   public Response.Content newFolder(String documentFilter, String name)
   {
-    sleep(1);
     if (!documentsData.createNodeIfNotExist(documentFilter, name))
     {
       return Response.notFound(getMessage("benjp.documents.message.error.folder"));
@@ -270,7 +251,6 @@ public class DocumentsApplication
   @Ajax
   public Response.Content editTags(String uuid, String tags)
   {
-    sleep(2);
     try
     {
       documentsData.editTags(uuid, tags);
@@ -291,16 +271,9 @@ public class DocumentsApplication
     try {
       return bundle.getString(key);
     } catch (MissingResourceException mre) {
+      log.info("no resource for key: "+key);
     }
     return "";
-  }
-
-  private void sleep(int sec)
-  {
-    try {
-      Thread.sleep(sec*1);
-    } catch (InterruptedException e) {
-    }
   }
 
 }
